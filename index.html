@@ -62,7 +62,8 @@ tr:hover td{background:#f8fafc}
 .err-msg{font-size:13px;color:#64748b;margin:8px auto 16px;max-width:500px}
 .retry-btn{padding:8px 22px;border-radius:8px;border:1px solid;background:#fff;cursor:pointer;font-weight:600}
 /* Responsive */
-@media(max-width:600px){.tracker-grid{grid-template-columns:1fr}.stats-row{flex-direction:column}}
+@media(max-width:700px){.perm-split{grid-template-columns:1fr!important}}
+
 </style>
 </head>
 <body>
@@ -117,10 +118,10 @@ const CONFIGS = {
   utilities:{
     sheetId:"1bPlzWPzarOI03QO1_LqUrhlrxM8AMc2MPrQHiYrPCns",
     color:"#3b82f6",
-    desc:"Utility Set Up & Utility Validation tabs",
+    desc:"Utility Setup Status & Utility Validation Status tabs",
     sheets:[
-      {name:"Utility Set Up",    range:"Utility Set Up"},
-      {name:"Utility Validation",range:"Utility Validation"},
+      {name:"Utility Setup Status",     range:"Utility Setup Status"},
+      {name:"Utility Validation Status",range:"Utility Validation Status"},
     ],
     nameCol:"address",
     statusCol:"status",
@@ -129,11 +130,11 @@ const CONFIGS = {
   onboarding:{
     sheetId:"13JffxAKNLUaPm2n1iBWNCL48k-7CCEaf4xwu0xgjZN4",
     color:"#10b981",
-    desc:"Full property onboarding pipeline",
+    desc:"Full property onboarding pipeline — all tabs",
     sheets:[{name:"Onboarding",range:"Sheet1"}],
     nameCol:"address",
     statusCol:"status",
-    analyze: analyzeStatus,
+    analyze: analyzeOnboarding,
   },
   vegetation:{
     sheetId:"1omzFAmQLUUk-g9tOd9b3fm9NbnxhXVbnGUQXUb6-6mg",
@@ -195,12 +196,12 @@ function daysDiff(d){
 
 function analyzePermitting(tabName, {headers, rows}, cfg){
   const dateKey   = findCol(headers, cfg.dateCol||"expir");
-  const nameKey   = findCol(headers, cfg.nameCol||"permit") || headers[0];
+  const nameKey   = findCol(headers, cfg.nameCol||"permit") || findCol(headers,"address") || findCol(headers,"property") || headers[0];
   const statusKey = findCol(headers, cfg.statusCol||"status");
-  const noteKey   = findCol(headers, cfg.noteCol||"note");
+  const noteKey   = findCol(headers, cfg.noteCol||"note") || findCol(headers,"comment") || findCol(headers,"action");
 
-  const callouts=[], tableRows=[];
-  let critical=0, warning=0, ok=0, total=rows.length;
+  const callouts=[],tableRows=[];
+  let critical=0,warning=0,ok=0,total=rows.length;
 
   rows.forEach(row=>{
     const name   = nameKey   ? row[nameKey]   : Object.values(row)[0]||"";
@@ -210,29 +211,26 @@ function analyzePermitting(tabName, {headers, rows}, cfg){
     const d      = parseDate(dateStr);
     const diff   = d ? daysDiff(d) : null;
 
-    let level="info", label="", rowClass="";
+    let level="ok", label="", rowClass="row-ok";
     if(diff!==null){
       if(diff<0){level="critical";label="EXPIRED";critical++;rowClass="row-critical";}
       else if(diff<=30){level="critical";label=diff+"d left";critical++;rowClass="row-critical";}
       else if(diff<=90){level="warning";label=diff+"d left";warning++;rowClass="row-warning";}
-      else{ok++;rowClass="row-ok";label=diff+"d left";}
-    } else { ok++; rowClass="row-ok"; }
+      else{ok++;label=diff+"d left";}
+    } else { ok++; }
 
     if(level==="critical"||level==="warning"){
-      callouts.push({level,title:name||(dateStr||"Item"),detail:(note||status||("Expires: "+dateStr))+(note?" — "+note:"")});
+      callouts.push({level,title:name||(dateStr||"Item"),detail:(note||status||"Expires: "+dateStr),note,status,dateStr,label});
     }
-
     tableRows.push({rowClass,cols:[name,dateStr,label,status,note]});
   });
 
   callouts.sort((a,b)=>({critical:0,warning:1,info:2}[a.level]??2)-({critical:0,warning:1,info:2}[b.level]??2));
+  const summary = total===0?"No data found.":critical+" expired/critical, "+warning+" expiring within 90 days, "+ok+" items OK out of "+total+" total permits.";
 
-  const summary = total===0
-    ? "No data found in this tab."
-    : critical+" expired/critical, "+warning+" expiring within 90 days, "+ok+" items OK out of "+total+" total permits.";
-
-  return {
-    summary, callouts,
+  return{
+    summary,callouts,
+    isPermitting:true,
     stats:[
       {label:"Total",value:total,color:cfg.color},
       {label:"🔴 Critical",value:critical,color:"#dc2626"},
@@ -288,6 +286,47 @@ function analyzeStatus(tabName, {headers, rows}, cfg){
     tableHeaders: headers.slice(0,5),
     tableRows,
   };
+}
+
+// Onboarding: fetches ALL tabs dynamically
+async function fetchAllOnboardingTabs(sheetId){
+  // First get sheet metadata to find all tab names
+  const url = "https://sheets.googleapis.com/v4/spreadsheets/"+sheetId+"?key="+API_KEY;
+  const r = await fetch(url);
+  if(!r.ok) throw new Error("Could not load onboarding spreadsheet metadata.");
+  const meta = await r.json();
+  const sheets = (meta.sheets||[]).map(s=>s.properties?.title).filter(Boolean);
+  return sheets;
+}
+
+function analyzeOnboarding(tabName, {headers,rows}, cfg){
+  // Use first col as name, scan all cols for status-like values
+  const nameKey = headers[0];
+  let pending=0,complete=0,issues=0,total=rows.length;
+  const callouts=[],tableRows=[];
+  const ISSUE_WORDS  =["fail","error","issue","problem","reject","missing","incomplete","overdue","n/a","tbd","not ","pending","hold","stall"];
+  const DONE_WORDS   =["complete","done","active","approved","pass","yes","set up","validated","ok","signed","received"];
+  rows.forEach(row=>{
+    const name = row[nameKey]||Object.values(row)[0]||"";
+    if(!name.trim()) return;
+    const allVals = Object.values(row).join(" ").toLowerCase();
+    let rowClass="";
+    if(ISSUE_WORDS.some(w=>allVals.includes(w))){
+      issues++;rowClass="row-warning";
+      const flagged = Object.entries(row).filter(([k,v])=>ISSUE_WORDS.some(w=>v.toLowerCase().includes(w))).map(([k,v])=>k+": "+v).join("; ");
+      callouts.push({level:"warning",title:name,detail:flagged||"Needs review"});
+    } else if(DONE_WORDS.some(w=>allVals.includes(w))){
+      complete++;rowClass="row-ok";
+    } else { pending++; }
+    tableRows.push({rowClass,cols:headers.slice(0,6).map(h=>row[h]||"")});
+  });
+  const summary = total===0?"No data found.":total+" properties — "+complete+" complete, "+pending+" pending, "+issues+" flagged.";
+  return{summary,callouts,stats:[
+    {label:"Total",value:total,color:cfg.color},
+    {label:"✅ Complete",value:complete,color:"#16a34a"},
+    {label:"⏳ Pending",value:pending,color:"#64748b"},
+    {label:"⚠️ Flagged",value:issues,color:"#b45309"},
+  ],tableHeaders:headers.slice(0,6),tableRows};
 }
 
 function analyzeVegetation(tabName, {headers, rows}, cfg){
@@ -404,26 +443,59 @@ function renderResults(id, allResults){
       html+='</div>';
     }
 
-    // Callouts
-    if(result.callouts?.length){
-      html+='<div class="callouts-label">Action Callouts</div>';
-      result.callouts.slice(0,20).forEach(c=>{
-        html+=`<div class="callout"><div class="callout-top">${badge(c.level)}<span class="callout-title">${c.title}</span></div><div class="callout-detail">${c.detail}</div></div>`;
-      });
-    } else {
-      html+='<div style="color:#64748b;font-size:13px;font-style:italic;margin-bottom:16px">✅ No critical items found.</div>';
-    }
-
-    // Table
-    if(result.tableRows?.length){
-      html+=`<div class="callouts-label" style="margin-top:20px">Full Data</div><div class="table-wrap"><table><thead><tr>${result.tableHeaders.map(h=>'<th>'+h+'</th>').join('')}</tr></thead><tbody>`;
+    // Callouts + Table: split layout for permitting, standard for others
+    if(result.isPermitting){
+      html+=`<div style="display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start;margin-top:4px">`;
+      // LEFT — callouts panel
+      html+=`<div>`;
+      if(result.callouts?.length){
+        html+=`<div class="callouts-label">Action Callouts</div>`;
+        result.callouts.slice(0,30).forEach(c=>{
+          const borderColor = c.level==="critical"?"#dc2626":"#f59e0b";
+          const bgColor     = c.level==="critical"?"#fff5f5":"#fffbeb";
+          html+=`<div class="callout" style="border-left:4px solid ${borderColor};background:${bgColor};margin-bottom:10px">
+            <div class="callout-top">${badge(c.level)}<span class="callout-title">${c.title}</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:12px">
+              ${c.dateStr?'<span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#475569">📅 '+c.dateStr+'</span>':""}
+              ${c.label?'<span style="background:'+(c.level==="critical"?"#fee2e2":"#fef9c3")+';padding:2px 8px;border-radius:6px;font-weight:700;color:'+(c.level==="critical"?"#dc2626":"#b45309")+'">⏱ '+c.label+'</span>':""}
+              ${c.status?'<span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#475569">'+c.status+'</span>':""}
+            </div>
+            ${c.note?'<div style="margin-top:6px;font-size:12px;color:#64748b;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px">📝 '+c.note+'</div>':""}
+          </div>`;
+        });
+      } else {
+        html+=`<div style="color:#64748b;font-size:13px;font-style:italic;padding:20px;text-align:center;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">✅ No critical or expiring permits found.</div>`;
+      }
+      html+=`</div>`;
+      // RIGHT — full table
+      html+=`<div><div class="callouts-label">All Permits</div><div class="table-wrap"><table><thead><tr>${result.tableHeaders.map(h=>'<th>'+h+'</th>').join('')}</tr></thead><tbody>`;
       result.tableRows.forEach(r=>{
-        html+=`<tr class="${r.rowClass}">${r.cols.map(c=>'<td title="'+c+'">'+c+'</td>').join('')}</tr>`;
+        html+=`<tr class="${r.rowClass}">${r.cols.map((c,i)=>{
+          const style = i===4 ? 'style="max-width:200px;white-space:normal;font-size:12px;color:#475569"' : '';
+          return '<td '+style+' title="'+c+'">'+c+'</td>';
+        }).join('')}</tr>`;
       });
-      html+='</tbody></table></div>';
-    }
+      html+=`</tbody></table></div></div>`;
+      html+=`</div>`;
+    } else {
 
-    html+='<div style="margin-bottom:32px"></div>';
+    } else {
+      if(result.callouts?.length){
+        html+='<div class="callouts-label">Action Callouts</div>';
+        result.callouts.slice(0,20).forEach(c=>{
+          html+=`<div class="callout"><div class="callout-top">${badge(c.level)}<span class="callout-title">${c.title}</span></div><div class="callout-detail">${c.detail}</div></div>`;
+        });
+      } else {
+        html+='<div style="color:#64748b;font-size:13px;font-style:italic;margin-bottom:16px">✅ No critical items found.</div>';
+      }
+      if(result.tableRows?.length){
+        html+=`<div class="callouts-label" style="margin-top:20px">Full Data</div><div class="table-wrap"><table><thead><tr>${result.tableHeaders.map(h=>'<th>'+h+'</th>').join('')}</tr></thead><tbody>`;
+        result.tableRows.forEach(r=>{
+          html+=`<tr class="${r.rowClass}">${r.cols.map(c=>'<td title="'+c+'">'+c+'</td>').join('')}</tr>`;
+        });
+        html+='</tbody></table></div>';
+      }
+    }
   });
 
   return html;
