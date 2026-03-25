@@ -136,22 +136,18 @@ var CFG={
   security:   {sheetId:"1paLwVY6YjcSeGmkE6L0jBYFScxpq0jyxL_bfd4BhyOs",color:"#7c3aed",desc:"Noise Alert Logs — alerts & Hospitable links",sheets:[]},
 };
 
-// ── FETCH ────────────────────────────────────────────────────────────────────
 async function fetchSheet(sheetId,range){
   var url="https://sheets.googleapis.com/v4/spreadsheets/"+sheetId+"/values/"+encodeURIComponent(range)+"?key="+KEY;
   var r=await fetch(url);
   if(!r.ok){var b=await r.json().catch(function(){return{};});throw new Error((b.error&&b.error.message)||"HTTP "+r.status);}
-  var data=await r.json();
-  return data.values||[];
+  return(await r.json()).values||[];
 }
 async function fetchMeta(sheetId){
   var r=await fetch("https://sheets.googleapis.com/v4/spreadsheets/"+sheetId+"?key="+KEY);
   if(!r.ok)throw new Error("Could not load metadata");
-  var data=await r.json();
-  return(data.sheets||[]).filter(function(s){return s.properties&&!s.properties.hidden;}).map(function(s){return{title:s.properties.title};});
+  return((await r.json()).sheets||[]).filter(function(s){return s.properties&&!s.properties.hidden;}).map(function(s){return{title:s.properties.title};});
 }
 
-// ── HELPERS ──────────────────────────────────────────────────────────────────
 function pdate(s){if(!s)return null;var d=new Date(s);return isNaN(d.getTime())?null:d;}
 function ddiff(d){return Math.round((d.getTime()-TODAY.getTime())/86400000);}
 function isToday(d){return d&&d.toDateString()===TODAYDATE;}
@@ -161,7 +157,7 @@ function badge(lv){var m={critical:{bg:"#fee2e2",c:"#dc2626",i:"🔴"},warning:{
 function cv(row,i){return((row&&row[i])||"").trim();}
 function statCards(stats){return'<div class="srow">'+stats.map(function(s){return'<div class="scard" style="border:2px solid '+s.color+'30"><div class="sval" style="color:'+s.color+'">'+s.value+'</div><div class="slbl">'+s.label+'</div></div>';}).join("")+'</div>';}
 
-// ── ANALYSIS ─────────────────────────────────────────────────────────────────
+// ── ANALYSIS ──────────────────────────────────────────────────────────────────
 
 function analyzePermitting(rr){
   if(!rr||rr.length<2)return{mode:"permitting",summary:"No data.",stats:[],callouts:[],tH:["Property Name","Expiration Date","Notes","Last Updated"],tR:[]};
@@ -191,11 +187,9 @@ function analyzeUtilities(rr){
   for(var i=0;i<Math.min(rr.length,12);i++){
     var row=rr[i]||[];
     var b=cv(row,1),c=cv(row,2),d=cv(row,3),e=cv(row,4);
-    if(b&&c&&d&&e&&!isNaN(parseFloat(b))&&!isNaN(parseFloat(c))&&!isNaN(parseFloat(d))&&!isNaN(parseFloat(e))){
-      sv.total=b;sv.validation=c;sv.setup=d;sv.age=e;
-    }
+    if(b&&c&&d&&e&&!isNaN(parseFloat(b))&&!isNaN(parseFloat(c))&&!isNaN(parseFloat(d))&&!isNaN(parseFloat(e))){sv.total=b;sv.validation=c;sv.setup=d;sv.age=e;}
     var first=(cv(row,0)||cv(row,1)).toLowerCase();
-    if(tableHdrIdx===-1&&(first.includes("property")||first.includes("address")||first.includes("name"))){tableHdrIdx=i;}
+    if(tableHdrIdx===-1&&(first.includes("property")||first.includes("address")||first.includes("name")))tableHdrIdx=i;
   }
   if(tableHdrIdx===-1)tableHdrIdx=4;
   var rawHdrs=rr[tableHdrIdx]||[];
@@ -213,48 +207,67 @@ function analyzeUtilities(rr){
     else pending++;
     return{rc:rc,cols:cols};
   });
-  return{mode:"utilities",sv:sv,tH:tH,tR:tR,
-    summary:"SUMMARY — "+tR.length+" properties. "+complete+" OK, "+pending+" pending, "+issues+" flagged."};
+  return{mode:"utilities",sv:sv,tH:tH,tR:tR,summary:"SUMMARY — "+tR.length+" properties. "+complete+" OK, "+pending+" pending, "+issues+" flagged."};
 }
 
 function analyzeOnboarding(rr){
+  // Sheet structure:
+  // Row 0 = headers: A=Category, B=Owner, C=Task, D=Audit Action, E=Done(Yes/No), F=Notes
+  // Col A has MERGED cells for categories — carry forward the last non-blank value
+  // Use col C (Task) as the row identifier — skip rows with no task
   if(!rr||rr.length<2)return{mode:"onboarding",summary:"No data.",stats:[],tH:[],tR:[]};
-  var h=rr[0].map(function(x){return(x||"").trim();});
-  // Find "Done" column — looks for header containing "done"
-  var doneIdx=-1;
-  h.forEach(function(hh,i){if(hh.toLowerCase().includes("done"))doneIdx=i;});
+
+  // Find "Done" column by scanning header row
+  var headers=rr[0].map(function(h){return(h||"").trim();});
+  var doneIdx=4; // default col E
+  headers.forEach(function(h,i){if(h.toLowerCase().includes("done"))doneIdx=i;});
+
   var total=0,complete=0,inprogress=0,flagged=0,tR=[];
+  var lastCat="";
+
   rr.slice(1).forEach(function(row){
-    var name=cv(row,0);
-    if(!name)return;
+    // Carry forward merged category (col A)
+    var catRaw=cv(row,0);
+    if(catRaw)lastCat=catRaw;
+
+    // Skip rows with no task in col C
+    var task=cv(row,2);
+    if(!task)return;
+
     total++;
-    var doneVal=doneIdx>=0?cv(row,doneIdx).toLowerCase():"";
+    var owner=cv(row,1);
+    var auditAction=cv(row,3);
+    var doneRaw=cv(row,doneIdx);
+    var doneLow=doneRaw.toLowerCase();
+    var notes=cv(row,5);
     var rc="";
-    if(doneVal==="yes"||doneVal==="y"){complete++;rc="ro";}
-    else if(doneVal.includes("progress")||doneVal.includes("in-progress")){inprogress++;rc="rw";}
-    else{flagged++;rc="rc";}  // blank or anything else = not started / flagged
-    tR.push({rc:rc,cols:h.slice(0,6).map(function(hh,i){return cv(row,i);})});
+
+    if(doneLow==="yes"||doneLow==="y"){complete++;rc="ro";}
+    else if(doneLow.includes("progress")){inprogress++;rc="rw";}
+    else{flagged++;rc="rc";}
+
+    tR.push({rc:rc,cols:[lastCat,owner,task,auditAction,doneRaw||"—",notes]});
   });
-  return{mode:"onboarding",
+
+  return{
+    mode:"onboarding",
     summary:total===0?"No data.":total+" items — "+complete+" complete, "+inprogress+" in progress, "+flagged+" not started.",
     stats:[
-      {label:"Total Items",  value:total,      color:"#10b981"},
-      {label:"✅ Complete",  value:complete,   color:"#16a34a"},
-      {label:"⏳ In Progress",value:inprogress,color:"#d97706"},
-      {label:"🚩 Not Started",value:flagged,   color:"#dc2626"},
+      {label:"Total Items",   value:total,      color:"#10b981"},
+      {label:"✅ Complete",   value:complete,   color:"#16a34a"},
+      {label:"⏳ In Progress",value:inprogress, color:"#d97706"},
+      {label:"🚩 Not Started",value:flagged,    color:"#dc2626"},
     ],
-    tH:h.slice(0,6),tR:tR};
+    tH:["Category","Owner","Task","Audit Action","Done","Notes"],
+    tR:tR
+  };
 }
 
 function parseRefTimeline(rr){
   if(!rr||rr.length<3)return{colA:"Onboarding Checklist",colB:"SOP Timeframe (Days)",colC:"Stage",items:[]};
   var cols=rr[1]||[];
-  return{
-    colA:(cols[0]||"Onboarding Checklist").trim(),
-    colB:(cols[1]||"SOP Timeframe (Days)").trim(),
-    colC:(cols[2]||"Stage").trim(),
-    items:rr.slice(2).map(function(r){return{a:cv(r,0),b:cv(r,1),c:cv(r,2)};}).filter(function(r){return r.a||r.b||r.c;})
-  };
+  return{colA:(cols[0]||"Onboarding Checklist").trim(),colB:(cols[1]||"SOP Timeframe (Days)").trim(),colC:(cols[2]||"Stage").trim(),
+    items:rr.slice(2).map(function(r){return{a:cv(r,0),b:cv(r,1),c:cv(r,2)};}).filter(function(r){return r.a||r.b||r.c;})};
 }
 
 function analyzeVegetation(sn,rr){
@@ -280,8 +293,7 @@ function analyzeVegetation(sn,rr){
     else if(service==="no"||service==="n"){pass++;rc="ro";}
     tR.push({rc:rc,cols:dispIdxs.map(function(i){return cv(row,i);})});
   });
-  return{mode:"vegetation",
-    summary:dataRows.length===0?"No data.":dataRows.length+" properties — "+pass+" pass, "+fail+" need service. Sorted by most recent.",
+  return{mode:"vegetation",summary:dataRows.length===0?"No data.":dataRows.length+" properties — "+pass+" pass, "+fail+" need service. Sorted by most recent.",
     stats:[{label:"Total",value:dataRows.length,color:"#84cc16"},{label:"✅ Pass",value:pass,color:"#16a34a"},{label:"🔴 Needs Service",value:fail,color:"#dc2626"}],
     callouts:callouts,tH:dispH,tR:tR};
 }
@@ -387,15 +399,14 @@ function renderRefCard(ref){
     +'</table></div></div>';
 }
 
-function renderOnboardingSection(sheetName,result,uid){
+function renderOnboardingTable(sheetName,result,uid){
   var SHOW=15,tR=result.tR,hasMore=tR.length>SHOW;
-  var html='';
-  html+=statCards(result.stats);
+  var html=statCards(result.stats);
   html+='<div class="slabel">Checklist Items ('+tR.length+' total)</div>';
-  html+=renderTable(result.tH,tR.slice(0,SHOW),[result.tH.length-1]);
+  html+=renderTable(result.tH,tR.slice(0,SHOW),[2,5]);
   if(hasMore){
-    html+='<div id="ob-more-'+uid+'" style="display:none">'+renderTable(result.tH,tR.slice(SHOW),[result.tH.length-1])+'</div>';
-    html+='<button class="more-btn" id="ob-btn-'+uid+'" onclick="toggleOb(\''+uid+'\')">Show More ('+( tR.length-SHOW)+' remaining)</button>';
+    html+='<div id="ob-more-'+uid+'" style="display:none">'+renderTable(result.tH,tR.slice(SHOW),[2,5])+'</div>';
+    html+='<button class="more-btn" id="ob-btn-'+uid+'" onclick="toggleOb(\''+uid+'\')">Show More ('+(tR.length-SHOW)+' remaining)</button>';
   }
   return html;
 }
@@ -495,10 +506,9 @@ function renderResults(id,allResults,extra){
       else html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-top:16px;font-size:13px;color:#166534">✅ No alerts today.</div>';
       if(R.recentRows.length>0)html+=renderSecurityTable(R.recentRows,"📆 Last 7 Days Alert Details");
     } else if(R.mode==="onboarding"){
-      var uid="ob"+(idx)+"_"+ar.sheetName.replace(/\W/g,"");
-      html+=renderOnboardingSection(ar.sheetName,R,uid);
+      var uid="ob"+idx+ar.sheetName.replace(/\W/g,"");
+      html+=renderOnboardingTable(ar.sheetName,R,uid);
     } else {
-      // vegetation
       html+=statCards(R.stats);
       if(R.callouts&&R.callouts.length){html+='<div class="slabel">Action Callouts</div>';R.callouts.slice(0,20).forEach(function(c){html+='<div class="cbox"><div class="ctop">'+badge(c.lv)+'<span class="ctitle">'+esc(c.title)+'</span></div><div class="cdet">'+esc(c.detail)+'</div></div>';});}
       else html+='<div style="color:#16a34a;font-size:13px;margin-bottom:16px">✅ No flagged items.</div>';
@@ -522,8 +532,7 @@ function toggleOb(uid){
   if(!el||!btn)return;
   var open=el.style.display!=="none";
   el.style.display=open?"none":"";
-  var rows=el.querySelectorAll("tbody tr").length;
-  btn.textContent=open?"Show More ("+rows+" remaining)":"Show Less";
+  btn.textContent=open?"Show More":"Show Less";
 }
 
 // ── LOAD ──────────────────────────────────────────────────────────────────────
