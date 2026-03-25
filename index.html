@@ -234,35 +234,53 @@ function analyzePermitting(rawRows) {
 }
 
 function analyzeUtilities(rawRows) {
-  if(!rawRows||rawRows.length<5)return{mode:"utilities",summary:"No data.",sv:{total:"—",validation:"—",setup:"—",age:"—"},tableHeaders:[],tableRows:[]};
-  // Sheet structure (0-indexed):
-  // Row 0 (row 1): merged header labels  — Col B=Total Live, C=Validation Issues, D=Setup Issues, E=Validated >2 Days
-  // Row 1 (row 2): empty/merged
-  // Row 2 (row 3): the actual big numbers  — indices 1,2,3,4
-  // Row 3 (row 4): empty
-  // Row 4 (row 5): table column headers   — Property Name, Utility, Notes, Validation Age
-  // Row 5+ (row 6+): data rows
+  if(!rawRows||rawRows.length<2)return{mode:"utilities",summary:"No data.",sv:{total:"—",validation:"—",setup:"—",age:"—"},tableHeaders:[],tableRows:[]};
 
-  var sv = {
-    total:      (rawRows[2]&&rawRows[2][1] ? rawRows[2][1] : "—"),
-    validation: (rawRows[2]&&rawRows[2][2] ? rawRows[2][2] : "—"),
-    setup:      (rawRows[2]&&rawRows[2][3] ? rawRows[2][3] : "—"),
-    age:        (rawRows[2]&&rawRows[2][4] ? rawRows[2][4] : "—"),
-  };
+  // Find the row with the big summary numbers by scanning for a row where cols B-E are all numbers
+  var sv={total:"—",validation:"—",setup:"—",age:"—"};
+  var tableHeaderRowIdx=-1, dataStartIdx=-1;
 
-  // Table headers from row 4 (index 4)
-  var tableHeaders = (rawRows[4]||[]).map(function(h){return(h||"").trim();}).filter(function(h){return h;});
-  var colCount = tableHeaders.length;
+  for(var i=0;i<Math.min(rawRows.length,10);i++){
+    var row=rawRows[i];
+    var b=(row[1]||"").trim(), c=(row[2]||"").trim(), d=(row[3]||"").trim(), e=(row[4]||"").trim();
+    // Stats row: all 4 values are numeric
+    if(b&&c&&d&&e&&!isNaN(parseInt(b))&&!isNaN(parseInt(c))&&!isNaN(parseInt(d))&&!isNaN(parseInt(e))){
+      sv={total:b,validation:c,setup:d,age:e};
+    }
+    // Table header row: first col is "PROPERTY NAME" or similar text header
+    var firstCell=(row[0]||row[1]||"").trim().toLowerCase();
+    if(tableHeaderRowIdx===-1&&(firstCell.includes("property")||firstCell.includes("address")||firstCell.includes("name"))){
+      tableHeaderRowIdx=i;
+      dataStartIdx=i+1;
+    }
+  }
 
-  var ISSUE=["fail","missing","incomplete","overdue","n/a","tbd","pending","hold","not ","reject","setup pending"];
+  // Fallback: if no header row found, use row index 4 (row 5 in sheet)
+  if(tableHeaderRowIdx===-1){tableHeaderRowIdx=4;dataStartIdx=5;}
+
+  // Build headers — use cols B,C,D,E (skip blank col A)
+  var allHeaders=rawRows[tableHeaderRowIdx]||[];
+  var tableHeaders=[];
+  var colIdxMap=[];
+  allHeaders.forEach(function(h,i){
+    var t=(h||"").trim();
+    if(t){tableHeaders.push(t);colIdxMap.push(i);}
+  });
+  if(!tableHeaders.length){
+    // fallback column names from screenshot
+    tableHeaders=["Property Name","Utility","Notes","Validation Age"];
+    colIdxMap=[0,1,2,3];
+  }
+
+  var ISSUE=["fail","missing","incomplete","overdue","n/a","tbd","pending","hold","setup pending","reject","no "];
   var DONE=["complete","done","active","approved","pass","yes","ok","set up","received","signed","validated"];
   var complete=0,pending=0,issues=0;
 
-  var tableRows = rawRows.slice(5).filter(function(row){
+  var tableRows=rawRows.slice(dataStartIdx).filter(function(row){
     return row.some(function(c){return(c||"").trim();});
   }).map(function(row){
-    var cols = tableHeaders.map(function(h,i){return(row[i]||"").trim();});
-    var all = cols.join(" ").toLowerCase();
+    var cols=colIdxMap.map(function(ci){return(row[ci]||"").trim();});
+    var all=cols.join(" ").toLowerCase();
     var rc="";
     if(ISSUE.some(function(w){return all.includes(w);})){issues++;rc="rw";}
     else if(DONE.some(function(w){return all.includes(w);})){complete++;rc="ro";}
@@ -418,10 +436,14 @@ function analyzeSecurity(rawRows) {
     var guest   =(row[2]||"").trim();  // Col C
     var hospi   =(row[3]||"").trim();  // Col D
     var dateStr =(row[4]||"").trim();  // Col E (Date EST)
+    var alert1  =(row[5]||"").trim();  // Col F - First Alert
+    var alert2  =(row[6]||"").trim();  // Col G - Second Alert
+    var actionsDone=(row[7]||"").trim(); // Col H - Actions Done
+    var alert3  =(row[11]||"").trim(); // Col L - Third Alert (based on sheet structure)
     var slack   =(row[17]||"").trim(); // Col R
     if(!prop)return;
     var d2=pdate(dateStr);
-    allRows.push({prop:prop,guest:guest,hospi:hospi,dateStr:dateStr,slack:slack,d:d2});
+    allRows.push({prop:prop,guest:guest,hospi:hospi,dateStr:dateStr,alert1:alert1,alert2:alert2,alert3:alert3,actionsDone:actionsDone,slack:slack,d:d2});
     if(!propMap[prop])propMap[prop]={count:0,guests:[],hospiLink:"",slackLink:"",dates:[],latestDate:null,latestDateStr:""};
     propMap[prop].count++;
     if(guest&&!propMap[prop].guests.includes(guest))propMap[prop].guests.push(guest);
@@ -692,6 +714,15 @@ async function loadTab(id,force){
       +'<div style="font-size:13px;color:#64748b;margin:0 auto 16px;max-width:500px">'+esc(e.message)+'</div>'
       +'<button class="rbtn" style="color:'+cfg.color+';border-color:'+cfg.color+'" onclick="loadTab(\''+id+'\',true)">↺ Try Again</button></div>';
   }
+}
+
+function toggleRefTimeline(){
+  var more=document.getElementById("ref-more");
+  var btn=document.getElementById("ref-toggle-btn");
+  if(!more||!btn)return;
+  var expanded=more.style.display!=="none";
+  more.style.display=expanded?"none":"";
+  btn.textContent=expanded?"Show All":"Show Less";
 }
 
 function renderTabs(){
