@@ -226,22 +226,27 @@ function analyzeUtilities(rr){
 }
 
 function analyzeOnboarding(rr){
-  if(!rr||rr.length<2)return{mode:"onboarding",summary:"No data.",stats:[],callouts:[],tH:[],tR:[]};
+  if(!rr||rr.length<2)return{mode:"onboarding",summary:"No data.",stats:[],tH:[],tR:[]};
   var h=rr[0].map(function(x){return(x||"").trim();});
-  var ISSUE=["fail","missing","incomplete","overdue","hold","stall","not ","pending","tbd","n/a","reject"];
-  var DONE=["complete","done","approved","active","yes","ok","received","signed","passed"];
-  var pending=0,complete=0,issues=0,callouts=[],tR=[];
+  // Find the "Done (Yes/No)" column
+  var doneIdx=-1;
+  h.forEach(function(hh,i){if(hh.toLowerCase().includes("done"))doneIdx=i;});
+  var total=0,complete=0,pending=0,flagged=0,tR=[];
   rr.slice(1).forEach(function(row){
     var name=cv(row,0);if(!name)return;
+    total++;
     var obj={};h.forEach(function(hh,i){obj[hh]=cv(row,i);});
-    var all=Object.values(obj).join(" ").toLowerCase(),rc="";
-    if(ISSUE.some(function(w){return all.includes(w);})){issues++;rc="rw";var fl=Object.entries(obj).filter(function(e){return ISSUE.some(function(w){return e[1].toLowerCase().includes(w);});}).map(function(e){return e[0]+": "+e[1];}).join("; ");callouts.push({lv:"warning",title:name,detail:fl||"Needs attention"});}
-    else if(DONE.some(function(w){return all.includes(w);})){complete++;rc="ro";}else{pending++;}
+    var doneVal=doneIdx>=0?cv(row,doneIdx).toLowerCase():"";
+    var rc="";
+    if(doneVal==="yes"||doneVal==="y"){complete++;rc="ro";}
+    else if(doneVal==="in progress"||doneVal==="in-progress"||doneVal==="progress"){pending++;rc="rw";}
+    else{flagged++;rc="rc";} // blank or anything else = flagged
     tR.push({rc:rc,cols:h.slice(0,6).map(function(hh){return obj[hh]||"";})});
   });
-  return{mode:"onboarding",summary:tR.length===0?"No data.":tR.length+" properties — "+complete+" complete, "+pending+" pending, "+issues+" flagged.",
-    stats:[{label:"Total",value:tR.length,color:"#10b981"},{label:"✅ Complete",value:complete,color:"#16a34a"},{label:"⏳ Pending",value:pending,color:"#64748b"},{label:"⚠️ Flagged",value:issues,color:"#d97706"}],
-    callouts:callouts,tH:h.slice(0,6),tR:tR};
+  return{mode:"onboarding",
+    summary:total===0?"No data.":total+" checklist items — "+complete+" complete, "+pending+" in progress, "+flagged+" not started.",
+    stats:[{label:"Total Items",value:total,color:"#10b981"},{label:"✅ Complete",value:complete,color:"#16a34a"},{label:"⏳ In Progress",value:pending,color:"#d97706"},{label:"🚩 Not Started",value:flagged,color:"#dc2626"}],
+    tH:h.slice(0,6),tR:tR};
 }
 
 function parseRefTimeline(rr){
@@ -497,17 +502,27 @@ function renderResults(id,allResults,extra){
       if(R.todayRows.length>0)html+=renderSecurityTable(R.todayRows,"📅 Today's Alert Details");
       else html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-top:16px;font-size:13px;color:#166534">✅ No alerts today.</div>';
       if(R.recentRows.length>0)html+=renderSecurityTable(R.recentRows,"📆 Last 7 Days Alert Details");
+    if(R.mode==="onboarding"){
+      html+=statCards(R.stats);
+      if(R.tR&&R.tR.length){
+        var SHOW=15,total=R.tR.length,uid="ob_"+Math.random().toString(36).slice(2);
+        html+='<div class="slabel">Checklist Items ('+total+' total)</div>';
+        // Store full data in a hidden element, show first SHOW rows
+        var visRows=R.tR.slice(0,SHOW),hidRows=R.tR.slice(SHOW);
+        html+=renderTable(R.tH,visRows,[R.tH.length-1]);
+        if(hidRows.length>0){
+          html+='<div id="ob-more-'+uid+'" style="display:none">'+renderTable(R.tH,hidRows,[R.tH.length-1])+'</div>';
+          html+='<button id="ob-btn-'+uid+'" onclick="toggleOb(\''+uid+'\')" style="margin-top:10px;padding:7px 18px;border-radius:8px;border:1px solid #10b981;background:#fff;color:#10b981;cursor:pointer;font-size:12px;font-family:Inter,system-ui,sans-serif;font-weight:600">Show More ('+hidRows.length+' remaining)</button>';
+        }
+      }
     } else {
-      // standard (vegetation, onboarding)
+    } else {
+      // standard (vegetation)
       html+=statCards(R.stats);
       if(R.callouts&&R.callouts.length){html+='<div class="slabel">Action Callouts</div>';R.callouts.slice(0,20).forEach(function(c){html+='<div class="cbox"><div class="ctop">'+badge(c.lv||c.level)+'<span class="ctitle">'+esc(c.title)+'</span></div><div class="cdet">'+esc(c.detail)+'</div></div>';});}
       else{html+='<div style="color:#16a34a;font-size:13px;margin-bottom:16px">✅ No flagged items.</div>';}
       if(R.tR&&R.tR.length)html+='<div class="slabel" style="margin-top:10px">Full Data</div>'+renderTable(R.tH,R.tR,[R.tH.length-1]);
     }
-    html+='</div>';
-  });
-  return html;
-}
 
 // ── TOGGLE REF ──────────────────────────────────────────────────────────────
 function toggleRef(){
