@@ -11,13 +11,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;min-height:100v
 .header-title{color:#fff;font-weight:800;font-size:15px}
 .header-sub{color:#94a3b8;font-size:11px;margin-top:2px}
 .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.last-updated{color:#64748b;font-size:11px}
+.last-updated{color:#94a3b8;font-size:11px}
 .auto-badge{background:#22c55e22;color:#22c55e;border:1px solid #22c55e44;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
 .tabbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 14px;display:flex;overflow-x:auto;position:sticky;top:53px;z-index:99}
 .tabbar button{border:none;background:none;padding:13px 16px;cursor:pointer;font-size:12px;font-weight:500;color:#64748b;border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .15s}
-.tabbar button.active{font-weight:700;border-bottom-color:var(--c);color:var(--c)}
-.content{padding:22px 18px;max-width:920px;margin:0 auto}
-/* Home */
+.tabbar button.active{font-weight:700}
+.content{padding:22px 18px;max-width:960px;margin:0 auto}
 .home-hero{text-align:center;margin-bottom:28px}
 .home-hero h1{font-size:26px;font-weight:800;color:#1e293b;margin:10px 0 8px}
 .home-hero p{color:#64748b;font-size:14px;line-height:1.7;max-width:500px;margin:0 auto}
@@ -27,43 +26,43 @@ body{font-family:'Inter',system-ui,sans-serif;background:#f1f5f9;min-height:100v
 .card ol{padding-left:18px;line-height:2.1}
 .tracker-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tracker-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:13px 14px;display:flex;gap:10px}
-/* Tracker */
 .tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
 .tracker-header h2{font-size:19px;color:#1e293b}
 .tracker-header .sub{color:#64748b;font-size:13px;margin-top:2px}
 .refresh-btn{padding:6px 16px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;font-size:13px}
-.refresh-btn:hover{background:#f8fafc}
-.tab-divider{font-weight:700;font-size:15px;margin-bottom:12px;border-left:3px solid;padding-left:10px}
+.tab-divider{font-weight:700;font-size:15px;margin-bottom:12px;padding-left:10px;border-left:3px solid}
 .tab-section{margin-bottom:32px}
 .summary-box{border-radius:10px;padding:13px 16px;margin-bottom:14px;font-size:14px;color:#334155;line-height:1.65}
 .stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .stat-card{background:#fff;border-radius:12px;padding:12px 18px;min-width:110px;text-align:center;flex:1 1 110px}
 .stat-val{font-size:24px;font-weight:800}
 .stat-lbl{font-size:11px;color:#64748b;margin-top:2px}
-.callouts-label{font-weight:700;font-size:12px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.section-label{font-weight:700;font-size:12px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
 .callout{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:11px 15px;margin-bottom:8px}
 .callout-top{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:4px}
 .callout-title{font-weight:600;color:#1e293b;font-size:14px}
 .callout-detail{color:#64748b;font-size:13px}
 .badge{padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;margin-right:6px}
-/* Table */
-.table-wrap{overflow-x:auto;margin-top:14px}
+.split-layout{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+.table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{background:#f8fafc;color:#64748b;font-weight:600;padding:8px 12px;text-align:left;border-bottom:2px solid #e2e8f0;white-space:nowrap}
-td{padding:8px 12px;border-bottom:1px solid #f1f5f9;color:#334155;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid #f1f5f9;color:#334155;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.wrap{white-space:normal;font-size:12px;color:#475569}
 tr:hover td{background:#f8fafc}
 .row-critical td:first-child{border-left:3px solid #dc2626}
 .row-warning td:first-child{border-left:3px solid #f59e0b}
 .row-ok td:first-child{border-left:3px solid #22c55e}
-/* State */
 .state-box{text-align:center;padding:70px 20px}
 .spinner{display:inline-block;width:28px;height:28px;border:3px solid #e2e8f0;border-top-color:#6366f1;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.err-msg{font-size:13px;color:#64748b;margin:8px auto 16px;max-width:500px}
+.err-title{font-weight:700;color:#dc2626;font-size:15px;margin-bottom:6px}
+.err-msg{font-size:13px;color:#64748b;margin:0 auto 16px;max-width:500px}
 .retry-btn{padding:8px 22px;border-radius:8px;border:1px solid;background:#fff;cursor:pointer;font-weight:600}
-/* Responsive */
-@media(max-width:700px){.perm-split{grid-template-columns:1fr!important}}
-
+.perm-callout{border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:4px solid}
+.chip{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;margin-right:4px;margin-top:4px}
+.note-box{margin-top:8px;font-size:12px;color:#64748b;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px}
+@media(max-width:700px){.split-layout{grid-template-columns:1fr}.tracker-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -76,7 +75,7 @@ tr:hover td{background:#f8fafc}
   </div>
   <div class="header-right">
     <span class="last-updated" id="last-updated"></span>
-    <span class="auto-badge">⟳ Auto-refresh</span>
+    <span class="auto-badge">⟳ Auto-refresh 15m</span>
   </div>
 </div>
 
@@ -84,16 +83,13 @@ tr:hover td{background:#f8fafc}
 <div class="content" id="content"></div>
 
 <script>
-// ─────────────────────────────────────────────
-//  CONFIG
-// ─────────────────────────────────────────────
-const API_KEY       = "AIzaSyC8Pa8tBIl17GMtA68ltcx-AGlrUvmtcn8";
-const REFRESH_MS    = 15 * 60 * 1000; // 15 minutes
-const TODAY         = new Date();
-const TODAY_STR     = TODAY.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
-
+const API_KEY    = "AIzaSyC8Pa8tBIl17GMtA68ltcx-AGlrUvmtcn8";
+const REFRESH_MS = 15 * 60 * 1000;
+const TODAY      = new Date();
+const TODAY_STR  = TODAY.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
 document.getElementById("hdate").textContent = "Live · " + TODAY_STR;
 
+// ── CONFIG ──────────────────────────────────────────────────────────────────
 const TABS = [
   {id:"home",       label:"🏠 Home",               color:"#6366f1"},
   {id:"permitting", label:"📋 Permitting",          color:"#f59e0b"},
@@ -103,312 +99,295 @@ const TABS = [
 ];
 
 const CONFIGS = {
-  permitting:{
-    sheetId:"1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg",
-    color:"#f59e0b",
-    desc:"Expiration tab — permits expiring soon with action notes",
-    sheets:[{name:"Expiration",range:"Expiration"}],
-    // Which columns to use (case-insensitive partial match)
-    dateCol:"expir",      // column containing expiration date
-    nameCol:"permit",     // column for item name/title
-    statusCol:"status",
-    noteCol:"note",
-    analyze: analyzePermitting,
+  permitting: {
+    sheetId: "1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg",
+    color: "#f59e0b",
+    desc: "Expiration tab — permits expiring soon with action notes",
+    mode: "permitting",
+    sheets: [{name:"Expiration", range:"Expiration"}],
   },
-  utilities:{
-    sheetId:"1bPlzWPzarOI03QO1_LqUrhlrxM8AMc2MPrQHiYrPCns",
-    color:"#3b82f6",
-    desc:"Utility Setup Status & Utility Validation Status tabs",
-    sheets:[
+  utilities: {
+    sheetId: "1bPlzWPzarOI03QO1_LqUrhlrxM8AMc2MPrQHiYrPCns",
+    color: "#3b82f6",
+    desc: "Utility Setup Status & Utility Validation Status tabs",
+    mode: "status",
+    sheets: [
       {name:"Utility Setup Status",     range:"Utility Setup Status"},
       {name:"Utility Validation Status",range:"Utility Validation Status"},
     ],
-    nameCol:"address",
-    statusCol:"status",
-    analyze: analyzeStatus,
   },
-  onboarding:{
-    sheetId:"13JffxAKNLUaPm2n1iBWNCL48k-7CCEaf4xwu0xgjZN4",
-    color:"#10b981",
-    desc:"Full property onboarding pipeline — all tabs",
-    sheets:[{name:"Onboarding",range:"Sheet1"}],
-    nameCol:"address",
-    statusCol:"status",
-    analyze: analyzeOnboarding,
+  onboarding: {
+    sheetId: "13JffxAKNLUaPm2n1iBWNCL48k-7CCEaf4xwu0xgjZN4",
+    color: "#10b981",
+    desc: "All property tabs — full onboarding pipeline",
+    mode: "onboarding",
+    sheets: [], // dynamically loaded
   },
-  vegetation:{
-    sheetId:"1omzFAmQLUUk-g9tOd9b3fm9NbnxhXVbnGUQXUb6-6mg",
-    color:"#84cc16",
-    desc:"Lawncare Audit AZ & FL tabs",
-    sheets:[
-      {name:"Lawncare Audit AZ",range:"Lawncare Audit AZ"},
-      {name:"Lawncare Audit FL",range:"Lawncare Audit FL"},
+  vegetation: {
+    sheetId: "1omzFAmQLUUk-g9tOd9b3fm9NbnxhXVbnGUQXUb6-6mg",
+    color: "#84cc16",
+    desc: "Lawncare Audit AZ & FL tabs",
+    mode: "vegetation",
+    sheets: [
+      {name:"Lawncare Audit AZ", range:"Lawncare Audit AZ"},
+      {name:"Lawncare Audit FL", range:"Lawncare Audit FL"},
     ],
-    nameCol:"address",
-    statusCol:"status",
-    analyze: analyzeVegetation,
   },
 };
 
-// ─────────────────────────────────────────────
-//  FETCH SHEET
-// ─────────────────────────────────────────────
-async function fetchSheet(sheetId, range){
-  const url = "https://sheets.googleapis.com/v4/spreadsheets/"+sheetId+"/values/"+encodeURIComponent(range)+"?key="+API_KEY;
+// ── FETCH ───────────────────────────────────────────────────────────────────
+async function fetchSheet(sheetId, range) {
+  const url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId +
+              "/values/" + encodeURIComponent(range) + "?key=" + API_KEY;
   const r = await fetch(url);
-  if(!r.ok){
-    const b = await r.json().catch(()=>({}));
-    const m = (b.error&&b.error.message)||"HTTP "+r.status;
-    if(r.status===403) throw new Error("API key unauthorized. Ensure sheet is public and Sheets API is enabled. ("+m+")");
-    if(r.status===400) throw new Error('Tab "'+range+'" not found. Check exact tab name in spreadsheet.');
-    if(r.status===404) throw new Error("Spreadsheet not found. Ensure it is shared publicly.");
+  if (!r.ok) {
+    const b = await r.json().catch(() => ({}));
+    const m = (b.error && b.error.message) || ("HTTP " + r.status);
+    if (r.status === 403) throw new Error("API key unauthorized. (" + m + ")");
+    if (r.status === 400) throw new Error('Tab "' + range + '" not found. Check exact tab name.');
+    if (r.status === 404) throw new Error("Spreadsheet not found or not public.");
     throw new Error(m);
   }
   const data = await r.json();
-  const rows = data.values||[];
-  if(rows.length<2) return {headers:[],rows:[]};
-  const headers = rows[0].map(h=>(h||"").trim());
-  const dataRows = rows.slice(1).map(row=>{
-    const obj={};
-    headers.forEach((h,i)=>{obj[h]=row[i]||"";});
+  const rows = data.values || [];
+  if (rows.length < 2) return {headers:[], rows:[]};
+  const headers = rows[0].map(h => (h||"").trim());
+  const dataRows = rows.slice(1).map(row => {
+    const obj = {};
+    headers.forEach((h,i) => { obj[h] = (row[i]||"").trim(); });
     return obj;
   });
-  return {headers,rows:dataRows};
+  return {headers, rows: dataRows};
 }
 
-// ─────────────────────────────────────────────
-//  ANALYSIS FUNCTIONS
-// ─────────────────────────────────────────────
-function findCol(headers, keyword){
-  if(!keyword) return null;
-  return headers.find(h=>h.toLowerCase().includes(keyword.toLowerCase()))||null;
-}
-
-function parseDate(str){
-  if(!str) return null;
-  const d = new Date(str);
-  return isNaN(d)?null:d;
-}
-
-function daysDiff(d){
-  return Math.round((d-TODAY)/(1000*60*60*24));
-}
-
-function analyzePermitting(tabName, {headers, rows}, cfg){
-  const dateKey   = findCol(headers, cfg.dateCol||"expir");
-  const nameKey   = findCol(headers, cfg.nameCol||"permit") || findCol(headers,"address") || findCol(headers,"property") || headers[0];
-  const statusKey = findCol(headers, cfg.statusCol||"status");
-  const noteKey   = findCol(headers, cfg.noteCol||"note") || findCol(headers,"comment") || findCol(headers,"action");
-
-  const callouts=[],tableRows=[];
-  let critical=0,warning=0,ok=0,total=rows.length;
-
-  rows.forEach(row=>{
-    const name   = nameKey   ? row[nameKey]   : Object.values(row)[0]||"";
-    const status = statusKey ? row[statusKey] : "";
-    const note   = noteKey   ? row[noteKey]   : "";
-    const dateStr= dateKey   ? row[dateKey]   : "";
-    const d      = parseDate(dateStr);
-    const diff   = d ? daysDiff(d) : null;
-
-    let level="ok", label="", rowClass="row-ok";
-    if(diff!==null){
-      if(diff<0){level="critical";label="EXPIRED";critical++;rowClass="row-critical";}
-      else if(diff<=30){level="critical";label=diff+"d left";critical++;rowClass="row-critical";}
-      else if(diff<=90){level="warning";label=diff+"d left";warning++;rowClass="row-warning";}
-      else{ok++;label=diff+"d left";}
-    } else { ok++; }
-
-    if(level==="critical"||level==="warning"){
-      callouts.push({level,title:name||(dateStr||"Item"),detail:(note||status||"Expires: "+dateStr),note,status,dateStr,label});
-    }
-    tableRows.push({rowClass,cols:[name,dateStr,label,status,note]});
-  });
-
-  callouts.sort((a,b)=>({critical:0,warning:1,info:2}[a.level]??2)-({critical:0,warning:1,info:2}[b.level]??2));
-  const summary = total===0?"No data found.":critical+" expired/critical, "+warning+" expiring within 90 days, "+ok+" items OK out of "+total+" total permits.";
-
-  return{
-    summary,callouts,
-    isPermitting:true,
-    stats:[
-      {label:"Total",value:total,color:cfg.color},
-      {label:"🔴 Critical",value:critical,color:"#dc2626"},
-      {label:"🟡 Warning",value:warning,color:"#b45309"},
-      {label:"✅ OK",value:ok,color:"#16a34a"},
-    ],
-    tableHeaders:["Permit / Property","Expiration Date","Days Left","Status","Notes"],
-    tableRows,
-  };
-}
-
-function analyzeStatus(tabName, {headers, rows}, cfg){
-  const nameKey   = findCol(headers, cfg.nameCol||"address") || headers[0];
-  const statusKey = findCol(headers, cfg.statusCol||"status");
-
-  let pending=0, complete=0, issues=0, total=rows.length;
-  const callouts=[], tableRows=[];
-
-  const ISSUE_WORDS   = ["fail","error","issue","problem","reject","missing","incomplete","overdue","n/a","tbd","pending","not"];
-  const COMPLETE_WORDS= ["complete","done","active","approved","pass","yes","set up","validated","ok"];
-
-  rows.forEach(row=>{
-    const name  = nameKey   ? row[nameKey]   : Object.values(row)[0]||"";
-    const status= statusKey ? (row[statusKey]||"").toLowerCase() : "";
-    const allVals= Object.values(row).join(" ").toLowerCase();
-
-    let level="info", rowClass="";
-    if(ISSUE_WORDS.some(w=>status.includes(w)||allVals.includes(w))){
-      level="warning";issues++;rowClass="row-warning";
-      callouts.push({level:"warning",title:name||"Item",detail:"Status: "+(row[statusKey]||"Review needed")});
-    } else if(COMPLETE_WORDS.some(w=>status.includes(w))){
-      complete++;rowClass="row-ok";
-    } else {
-      pending++;rowClass="";
-    }
-
-    const displayCols = headers.slice(0,5).map(h=>row[h]||"");
-    tableRows.push({rowClass, cols:displayCols});
-  });
-
-  const summary = total===0
-    ? "No data found."
-    : total+" records — "+complete+" complete, "+pending+" pending, "+issues+" flagged for review.";
-
-  return {
-    summary, callouts,
-    stats:[
-      {label:"Total",value:total,color:cfg.color},
-      {label:"✅ Complete",value:complete,color:"#16a34a"},
-      {label:"⏳ Pending",value:pending,color:"#64748b"},
-      {label:"⚠️ Flagged",value:issues,color:"#b45309"},
-    ],
-    tableHeaders: headers.slice(0,5),
-    tableRows,
-  };
-}
-
-// Onboarding: fetches ALL tabs dynamically
-async function fetchAllOnboardingTabs(sheetId){
-  // First get sheet metadata to find all tab names
-  const url = "https://sheets.googleapis.com/v4/spreadsheets/"+sheetId+"?key="+API_KEY;
+async function fetchSheetMeta(sheetId) {
+  const url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "?key=" + API_KEY;
   const r = await fetch(url);
-  if(!r.ok) throw new Error("Could not load onboarding spreadsheet metadata.");
-  const meta = await r.json();
-  const sheets = (meta.sheets||[]).map(s=>s.properties?.title).filter(Boolean);
-  return sheets;
+  if (!r.ok) throw new Error("Could not load spreadsheet metadata.");
+  const data = await r.json();
+  return (data.sheets||[]).map(s => s.properties && s.properties.title).filter(Boolean);
 }
 
-function analyzeOnboarding(tabName, {headers,rows}, cfg){
-  // Use first col as name, scan all cols for status-like values
-  const nameKey = headers[0];
-  let pending=0,complete=0,issues=0,total=rows.length;
-  const callouts=[],tableRows=[];
-  const ISSUE_WORDS  =["fail","error","issue","problem","reject","missing","incomplete","overdue","n/a","tbd","not ","pending","hold","stall"];
-  const DONE_WORDS   =["complete","done","active","approved","pass","yes","set up","validated","ok","signed","received"];
-  rows.forEach(row=>{
-    const name = row[nameKey]||Object.values(row)[0]||"";
-    if(!name.trim()) return;
-    const allVals = Object.values(row).join(" ").toLowerCase();
-    let rowClass="";
-    if(ISSUE_WORDS.some(w=>allVals.includes(w))){
-      issues++;rowClass="row-warning";
-      const flagged = Object.entries(row).filter(([k,v])=>ISSUE_WORDS.some(w=>v.toLowerCase().includes(w))).map(([k,v])=>k+": "+v).join("; ");
-      callouts.push({level:"warning",title:name,detail:flagged||"Needs review"});
-    } else if(DONE_WORDS.some(w=>allVals.includes(w))){
-      complete++;rowClass="row-ok";
-    } else { pending++; }
-    tableRows.push({rowClass,cols:headers.slice(0,6).map(h=>row[h]||"")});
-  });
-  const summary = total===0?"No data found.":total+" properties — "+complete+" complete, "+pending+" pending, "+issues+" flagged.";
-  return{summary,callouts,stats:[
-    {label:"Total",value:total,color:cfg.color},
-    {label:"✅ Complete",value:complete,color:"#16a34a"},
-    {label:"⏳ Pending",value:pending,color:"#64748b"},
-    {label:"⚠️ Flagged",value:issues,color:"#b45309"},
-  ],tableHeaders:headers.slice(0,6),tableRows};
+// ── HELPERS ─────────────────────────────────────────────────────────────────
+function findCol(headers, keyword) {
+  if (!keyword) return null;
+  return headers.find(h => h.toLowerCase().includes(keyword.toLowerCase())) || null;
 }
 
-function analyzeVegetation(tabName, {headers, rows}, cfg){
-  const nameKey   = findCol(headers, "address")||findCol(headers,"property")||headers[0];
-  const statusKey = findCol(headers, "status")||findCol(headers,"result")||findCol(headers,"pass");
+function parseDate(str) {
+  if (!str) return null;
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? null : d;
+}
 
-  let pass=0,fail=0,pending=0,total=rows.length;
-  const callouts=[], tableRows=[];
+function daysDiff(d) {
+  return Math.round((d.getTime() - TODAY.getTime()) / (1000*60*60*24));
+}
 
-  const FAIL_WORDS=["fail","no","issue","overdue","incomplete","missing","needs"];
-  const PASS_WORDS=["pass","yes","ok","complete","done","approved"];
-
-  rows.forEach(row=>{
-    const name  = nameKey   ? row[nameKey]   : Object.values(row)[0]||"";
-    const status= statusKey ? (row[statusKey]||"").toLowerCase() : "";
-
-    let rowClass="";
-    if(FAIL_WORDS.some(w=>status.includes(w))){
-      fail++;rowClass="row-critical";
-      callouts.push({level:"critical",title:name||"Property",detail:"Audit status: "+(row[statusKey]||"Failed — action required")});
-    } else if(PASS_WORDS.some(w=>status.includes(w))){
-      pass++;rowClass="row-ok";
-    } else {
-      pending++;
-    }
-
-    tableRows.push({rowClass, cols: headers.slice(0,5).map(h=>row[h]||"")});
-  });
-
-  callouts.sort((a,b)=>({critical:0,warning:1,info:2}[a.level]??2)-({critical:0,warning:1,info:2}[b.level]??2));
-
-  const summary = total===0
-    ? "No data found."
-    : total+" properties audited — "+pass+" passed, "+fail+" failed, "+pending+" pending.";
-
-  return {
-    summary, callouts,
-    stats:[
-      {label:"Total",value:total,color:cfg.color},
-      {label:"✅ Pass",value:pass,color:"#16a34a"},
-      {label:"🔴 Fail",value:fail,color:"#dc2626"},
-      {label:"⏳ Pending",value:pending,color:"#64748b"},
-    ],
-    tableHeaders: headers.slice(0,5),
-    tableRows,
+function badge(level) {
+  const m = {
+    critical: {bg:"#fee2e2", c:"#dc2626", i:"🔴"},
+    warning:  {bg:"#fef9c3", c:"#b45309", i:"🟡"},
+    info:     {bg:"#eff6ff", c:"#2563eb", i:"🔵"},
   };
-}
-
-// ─────────────────────────────────────────────
-//  RENDER
-// ─────────────────────────────────────────────
-function badge(level){
-  const m={critical:{bg:"#fee2e2",c:"#dc2626",i:"🔴"},warning:{bg:"#fef9c3",c:"#b45309",i:"🟡"},info:{bg:"#eff6ff",c:"#2563eb",i:"🔵"}};
-  const s=m[level]||m.info;
+  const s = m[level] || m.info;
   return '<span class="badge" style="background:'+s.bg+';color:'+s.c+'">'+s.i+' '+level.toUpperCase()+'</span>';
 }
 
-function renderHome(){
+// ── ANALYSIS ─────────────────────────────────────────────────────────────────
+function analyzePermitting(sheetName, {headers, rows}) {
+  const dateKey   = findCol(headers,"expir") || findCol(headers,"date");
+  const nameKey   = findCol(headers,"permit") || findCol(headers,"address") || findCol(headers,"property") || findCol(headers,"name") || headers[0];
+  const statusKey = findCol(headers,"status");
+  const noteKey   = findCol(headers,"note") || findCol(headers,"action") || findCol(headers,"comment");
+
+  let critical=0, warning=0, ok=0;
+  const callouts=[], tableRows=[];
+
+  rows.forEach(row => {
+    const name    = (nameKey   ? row[nameKey]   : "") || "";
+    const status  = (statusKey ? row[statusKey] : "") || "";
+    const note    = (noteKey   ? row[noteKey]   : "") || "";
+    const dateStr = (dateKey   ? row[dateKey]   : "") || "";
+    const d       = parseDate(dateStr);
+    const diff    = d ? daysDiff(d) : null;
+
+    let level="ok", label="", rowClass="row-ok";
+    if (diff !== null) {
+      if (diff < 0)       { level="critical"; label="EXPIRED";       critical++; rowClass="row-critical"; }
+      else if (diff <= 30){ level="critical"; label=diff+"d left";   critical++; rowClass="row-critical"; }
+      else if (diff <= 90){ level="warning";  label=diff+"d left";   warning++;  rowClass="row-warning";  }
+      else                { ok++; label=diff+"d left"; }
+    } else { ok++; }
+
+    if (level==="critical" || level==="warning") {
+      callouts.push({level, name, dateStr, label, status, note});
+    }
+    tableRows.push({rowClass, cols:[name, dateStr, label, status, note]});
+  });
+
+  callouts.sort((a,b) => ({critical:0,warning:1}[a.level]||0) - ({critical:0,warning:1}[b.level]||0));
+
+  return {
+    mode:"permitting",
+    summary: rows.length===0 ? "No data found." : critical+" critical/expired, "+warning+" expiring within 90 days, "+ok+" OK out of "+rows.length+" total.",
+    stats: [
+      {label:"Total",     value:rows.length, color:CONFIGS.permitting.color},
+      {label:"🔴 Critical",value:critical,   color:"#dc2626"},
+      {label:"🟡 Warning", value:warning,    color:"#b45309"},
+      {label:"✅ OK",      value:ok,         color:"#16a34a"},
+    ],
+    callouts,
+    tableHeaders: ["Permit / Property","Expiration Date","Days Left","Status","Notes"],
+    tableRows,
+  };
+}
+
+function analyzeStatus(sheetName, {headers, rows}) {
+  const nameKey   = findCol(headers,"address") || findCol(headers,"property") || findCol(headers,"name") || headers[0];
+  const statusKey = findCol(headers,"status");
+  const ISSUE  = ["fail","error","issue","problem","reject","missing","incomplete","overdue","n/a","tbd","pending","hold","not "];
+  const DONE   = ["complete","done","active","approved","pass","yes","validated","ok","set up","received","signed"];
+  let pending=0, complete=0, issues=0;
+  const callouts=[], tableRows=[];
+
+  rows.forEach(row => {
+    const name   = (nameKey   ? row[nameKey]   : "") || "";
+    const status = ((statusKey ? row[statusKey] : "") || "").toLowerCase();
+    const all    = Object.values(row).join(" ").toLowerCase();
+    let rowClass = "";
+
+    if (ISSUE.some(w => status.includes(w) || all.includes(w))) {
+      issues++; rowClass="row-warning";
+      const flagged = Object.entries(row).filter(([k,v])=>ISSUE.some(w=>v.toLowerCase().includes(w))).map(([k,v])=>k+": "+v).join("; ");
+      callouts.push({level:"warning", title:name||"Item", detail:flagged||"Needs review"});
+    } else if (DONE.some(w => status.includes(w))) {
+      complete++; rowClass="row-ok";
+    } else {
+      pending++;
+    }
+    tableRows.push({rowClass, cols: headers.slice(0,5).map(h=>row[h]||"")});
+  });
+
+  return {
+    mode:"standard",
+    summary: rows.length===0 ? "No data found." : rows.length+" records — "+complete+" complete, "+pending+" pending, "+issues+" flagged.",
+    stats: [
+      {label:"Total",       value:rows.length, color:"#3b82f6"},
+      {label:"✅ Complete", value:complete,    color:"#16a34a"},
+      {label:"⏳ Pending",  value:pending,     color:"#64748b"},
+      {label:"⚠️ Flagged",  value:issues,      color:"#b45309"},
+    ],
+    callouts,
+    tableHeaders: headers.slice(0,5),
+    tableRows,
+  };
+}
+
+function analyzeOnboarding(sheetName, {headers, rows}) {
+  const nameKey = headers[0];
+  const ISSUE = ["fail","missing","incomplete","overdue","hold","stall","not ","pending","tbd","n/a","reject"];
+  const DONE  = ["complete","done","approved","active","yes","ok","received","signed","passed"];
+  let pending=0, complete=0, issues=0;
+  const callouts=[], tableRows=[];
+
+  rows.forEach(row => {
+    const name = (row[nameKey]||"").trim();
+    if (!name) return;
+    const all = Object.values(row).join(" ").toLowerCase();
+    let rowClass="";
+    if (ISSUE.some(w => all.includes(w))) {
+      issues++; rowClass="row-warning";
+      const flagged = Object.entries(row).filter(([k,v])=>ISSUE.some(w=>v.toLowerCase().includes(w))).map(([k,v])=>k+": "+v).join("; ");
+      callouts.push({level:"warning", title:name, detail:flagged||"Needs attention"});
+    } else if (DONE.some(w => all.includes(w))) {
+      complete++; rowClass="row-ok";
+    } else {
+      pending++;
+    }
+    tableRows.push({rowClass, cols: headers.slice(0,6).map(h=>row[h]||"")});
+  });
+
+  return {
+    mode:"standard",
+    summary: rows.length===0 ? "No data found." : rows.length+" properties — "+complete+" complete, "+pending+" pending, "+issues+" flagged.",
+    stats: [
+      {label:"Total",       value:rows.length, color:"#10b981"},
+      {label:"✅ Complete", value:complete,    color:"#16a34a"},
+      {label:"⏳ Pending",  value:pending,     color:"#64748b"},
+      {label:"⚠️ Flagged",  value:issues,      color:"#b45309"},
+    ],
+    callouts,
+    tableHeaders: headers.slice(0,6),
+    tableRows,
+  };
+}
+
+function analyzeVegetation(sheetName, {headers, rows}) {
+  const nameKey   = findCol(headers,"address") || findCol(headers,"property") || headers[0];
+  const statusKey = findCol(headers,"status") || findCol(headers,"result") || findCol(headers,"pass");
+  const FAIL = ["fail","no","issue","overdue","incomplete","missing","needs"];
+  const PASS = ["pass","yes","ok","complete","done","approved"];
+  let pass=0, fail=0, pending=0;
+  const callouts=[], tableRows=[];
+
+  rows.forEach(row => {
+    const name   = (nameKey   ? row[nameKey]   : "") || "";
+    const status = ((statusKey ? row[statusKey] : "") || "").toLowerCase();
+    let rowClass="";
+    if (FAIL.some(w => status.includes(w))) {
+      fail++; rowClass="row-critical";
+      callouts.push({level:"critical", title:name||"Property", detail:"Status: "+(row[statusKey]||"Failed — action required")});
+    } else if (PASS.some(w => status.includes(w))) {
+      pass++; rowClass="row-ok";
+    } else {
+      pending++;
+    }
+    tableRows.push({rowClass, cols: headers.slice(0,5).map(h=>row[h]||"")});
+  });
+
+  return {
+    mode:"standard",
+    summary: rows.length===0 ? "No data found." : rows.length+" properties — "+pass+" passed, "+fail+" failed, "+pending+" pending.",
+    stats: [
+      {label:"Total",     value:rows.length, color:"#84cc16"},
+      {label:"✅ Pass",   value:pass,        color:"#16a34a"},
+      {label:"🔴 Fail",   value:fail,        color:"#dc2626"},
+      {label:"⏳ Pending",value:pending,     color:"#64748b"},
+    ],
+    callouts,
+    tableHeaders: headers.slice(0,5),
+    tableRows,
+  };
+}
+
+function runAnalysis(id, sheetName, data) {
+  if (id==="permitting") return analyzePermitting(sheetName, data);
+  if (id==="utilities")  return analyzeStatus(sheetName, data);
+  if (id==="onboarding") return analyzeOnboarding(sheetName, data);
+  if (id==="vegetation") return analyzeVegetation(sheetName, data);
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function renderHome() {
   const trackers=[
-    {icon:"📋",label:"Permitting Tracker",desc:"Permits expiring soon with action notes",color:"#f59e0b"},
-    {icon:"⚡",label:"Utilities ERM",desc:"Utility set up and validation status",color:"#3b82f6"},
-    {icon:"🏠",label:"Property Onboarding",desc:"Full onboarding pipeline view",color:"#10b981"},
-    {icon:"🌿",label:"Vegetation Audit",desc:"Lawncare audits for AZ and FL",color:"#84cc16"},
+    {icon:"📋",label:"Permitting Tracker",  desc:"Permits expiring soon with action notes",color:"#f59e0b"},
+    {icon:"⚡",label:"Utilities ERM",        desc:"Utility set up and validation status",   color:"#3b82f6"},
+    {icon:"🏠",label:"Property Onboarding", desc:"Full onboarding pipeline view",          color:"#10b981"},
+    {icon:"🌿",label:"Vegetation Audit",     desc:"Lawncare audits for AZ and FL",         color:"#84cc16"},
   ];
-  return `
-  <div class="home-hero">
+  return `<div class="home-hero">
     <div style="font-size:52px;margin-bottom:10px">📊</div>
     <h1>Operations Dashboard</h1>
     <p>Centralized real-time tracking across permitting, utilities, property onboarding, and vegetation audits. Auto-refreshes every 15 minutes.</p>
   </div>
-  <div class="card">
-    <h2>🎯 What is this dashboard?</h2>
-    <p>Pulls live data directly from your Google Sheets trackers and automatically highlights critical items, expiring permits, pending tasks, and failed audits — so your team can act fast without digging through spreadsheets.</p>
+  <div class="card"><h2>🎯 What is this dashboard?</h2>
+    <p>Pulls live data from your Google Sheets trackers and highlights critical items, expiring permits, pending tasks, and failed audits — so your team acts fast without digging through spreadsheets.</p>
   </div>
-  <div class="card">
-    <h2>📁 Trackers</h2>
-    <div class="tracker-grid">
-      ${trackers.map(t=>'<div class="tracker-card"><span style="font-size:20px">'+t.icon+'</span><div><div style="font-weight:700;color:'+t.color+';font-size:13px">'+t.label+'</div><div style="color:#64748b;font-size:12px;margin-top:2px">'+t.desc+'</div></div></div>').join("")}
-    </div>
+  <div class="card"><h2>📁 Trackers</h2>
+    <div class="tracker-grid">${trackers.map(t=>`<div class="tracker-card"><span style="font-size:20px">${t.icon}</span><div><div style="font-weight:700;color:${t.color};font-size:13px">${t.label}</div><div style="color:#64748b;font-size:12px;margin-top:2px">${t.desc}</div></div></div>`).join("")}</div>
   </div>
-  <div class="card">
-    <h2>🚀 How to use</h2>
+  <div class="card"><h2>🚀 How to use</h2>
     <ol>
       <li>Click any tracker tab at the top</li>
       <li>Live data loads automatically from Google Sheets</li>
@@ -419,148 +398,144 @@ function renderHome(){
   </div>`;
 }
 
-function renderResults(id, allResults){
-  const cfg=CONFIGS[id];
-  let html=`<div class="tracker-header">
+function renderPermittingCallouts(callouts) {
+  if (!callouts.length) return '<div style="color:#64748b;font-size:13px;font-style:italic;padding:20px;text-align:center;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">✅ No critical or expiring permits.</div>';
+  return callouts.slice(0,30).map(c => {
+    const borderC = c.level==="critical"?"#dc2626":"#f59e0b";
+    const bgC     = c.level==="critical"?"#fff5f5":"#fffbeb";
+    return `<div class="perm-callout" style="border-left-color:${borderC};background:${bgC}">
+      <div class="callout-top">${badge(c.level)}<span class="callout-title">${c.name||"—"}</span></div>
+      <div style="margin-top:5px">
+        ${c.dateStr?`<span class="chip" style="background:#f1f5f9;color:#475569">📅 ${c.dateStr}</span>`:""}
+        ${c.label?`<span class="chip" style="background:${c.level==="critical"?"#fee2e2":"#fef9c3"};color:${c.level==="critical"?"#dc2626":"#b45309"};font-weight:700">⏱ ${c.label}</span>`:""}
+        ${c.status?`<span class="chip" style="background:#f1f5f9;color:#475569">${c.status}</span>`:""}
+      </div>
+      ${c.note?`<div class="note-box">📝 ${c.note}</div>`:""}
+    </div>`;
+  }).join("");
+}
+
+function renderTable(headers, rows) {
+  if (!rows.length) return '<div style="color:#64748b;font-size:13px;font-style:italic">No data rows found.</div>';
+  return `<div class="table-wrap"><table>
+    <thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(r=>`<tr class="${r.rowClass}">${r.cols.map((c,i)=>`<td class="${i===headers.length-1&&r.cols.length===5?"wrap":""}" title="${c}">${c}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+function renderResults(id, allResults) {
+  const cfg = CONFIGS[id];
+  let html = `<div class="tracker-header">
     <div><h2>${id.charAt(0).toUpperCase()+id.slice(1)} Tracker</h2><div class="sub">${cfg.desc}</div></div>
     <button class="refresh-btn" onclick="loadTab('${id}',true)">↺ Refresh</button>
   </div>`;
 
-  allResults.forEach(({sheetName,result})=>{
-    if(allResults.length>1){
-      html+=`<div class="tab-divider" style="color:${cfg.color};border-color:${cfg.color}">${sheetName} <span style="font-size:12px;color:#94a3b8;font-weight:400">· ${result.stats[0]?.value||0} rows</span></div>`;
+  allResults.forEach(({sheetName, result}) => {
+    html += '<div class="tab-section">';
+    if (allResults.length > 1) {
+      html += `<div class="tab-divider" style="color:${cfg.color};border-color:${cfg.color}">${sheetName} <span style="font-size:12px;color:#94a3b8;font-weight:400">· ${result.tableRows.length} rows</span></div>`;
     }
 
     // Summary
-    html+=`<div class="summary-box" style="background:${cfg.color}12;border:1px solid ${cfg.color}30">📝 ${result.summary}</div>`;
+    html += `<div class="summary-box" style="background:${cfg.color}12;border:1px solid ${cfg.color}30">📝 ${result.summary}</div>`;
 
     // Stats
-    if(result.stats?.length){
-      html+='<div class="stats-row">';
-      result.stats.forEach(s=>{
-        html+=`<div class="stat-card" style="border:2px solid ${s.color}30"><div class="stat-val" style="color:${s.color}">${s.value}</div><div class="stat-lbl">${s.label}</div></div>`;
+    if (result.stats && result.stats.length) {
+      html += '<div class="stats-row">';
+      result.stats.forEach(s => {
+        html += `<div class="stat-card" style="border:2px solid ${s.color}30"><div class="stat-val" style="color:${s.color}">${s.value}</div><div class="stat-lbl">${s.label}</div></div>`;
       });
-      html+='</div>';
+      html += '</div>';
     }
 
-    // Callouts + Table: split layout for permitting, standard for others
-    if(result.isPermitting){
-      html+=`<div style="display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start;margin-top:4px">`;
-      // LEFT — callouts panel
-      html+=`<div>`;
-      if(result.callouts?.length){
-        html+=`<div class="callouts-label">Action Callouts</div>`;
-        result.callouts.slice(0,30).forEach(c=>{
-          const borderColor = c.level==="critical"?"#dc2626":"#f59e0b";
-          const bgColor     = c.level==="critical"?"#fff5f5":"#fffbeb";
-          html+=`<div class="callout" style="border-left:4px solid ${borderColor};background:${bgColor};margin-bottom:10px">
-            <div class="callout-top">${badge(c.level)}<span class="callout-title">${c.title}</span></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:12px">
-              ${c.dateStr?'<span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#475569">📅 '+c.dateStr+'</span>':""}
-              ${c.label?'<span style="background:'+(c.level==="critical"?"#fee2e2":"#fef9c3")+';padding:2px 8px;border-radius:6px;font-weight:700;color:'+(c.level==="critical"?"#dc2626":"#b45309")+'">⏱ '+c.label+'</span>':""}
-              ${c.status?'<span style="background:#f1f5f9;padding:2px 8px;border-radius:6px;color:#475569">'+c.status+'</span>':""}
-            </div>
-            ${c.note?'<div style="margin-top:6px;font-size:12px;color:#64748b;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px">📝 '+c.note+'</div>':""}
-          </div>`;
+    // Permitting: split layout
+    if (result.mode === "permitting") {
+      html += `<div class="split-layout">
+        <div><div class="section-label">Action Callouts</div>${renderPermittingCallouts(result.callouts)}</div>
+        <div><div class="section-label">All Permits</div>${renderTable(result.tableHeaders, result.tableRows)}</div>
+      </div>`;
+    } else {
+      // Standard: callouts then table
+      if (result.callouts && result.callouts.length) {
+        html += '<div class="section-label">Action Callouts</div>';
+        result.callouts.slice(0,20).forEach(c => {
+          html += `<div class="callout"><div class="callout-top">${badge(c.level)}<span class="callout-title">${c.title}</span></div><div class="callout-detail">${c.detail}</div></div>`;
         });
       } else {
-        html+=`<div style="color:#64748b;font-size:13px;font-style:italic;padding:20px;text-align:center;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">✅ No critical or expiring permits found.</div>`;
+        html += '<div style="color:#16a34a;font-size:13px;margin-bottom:16px">✅ No flagged items found.</div>';
       }
-      html+=`</div>`;
-      // RIGHT — full table
-      html+=`<div><div class="callouts-label">All Permits</div><div class="table-wrap"><table><thead><tr>${result.tableHeaders.map(h=>'<th>'+h+'</th>').join('')}</tr></thead><tbody>`;
-      result.tableRows.forEach(r=>{
-        html+=`<tr class="${r.rowClass}">${r.cols.map((c,i)=>{
-          const style = i===4 ? 'style="max-width:200px;white-space:normal;font-size:12px;color:#475569"' : '';
-          return '<td '+style+' title="'+c+'">'+c+'</td>';
-        }).join('')}</tr>`;
-      });
-      html+=`</tbody></table></div></div>`;
-      html+=`</div>`;
-    } else {
-
-    } else {
-      if(result.callouts?.length){
-        html+='<div class="callouts-label">Action Callouts</div>';
-        result.callouts.slice(0,20).forEach(c=>{
-          html+=`<div class="callout"><div class="callout-top">${badge(c.level)}<span class="callout-title">${c.title}</span></div><div class="callout-detail">${c.detail}</div></div>`;
-        });
-      } else {
-        html+='<div style="color:#64748b;font-size:13px;font-style:italic;margin-bottom:16px">✅ No critical items found.</div>';
-      }
-      if(result.tableRows?.length){
-        html+=`<div class="callouts-label" style="margin-top:20px">Full Data</div><div class="table-wrap"><table><thead><tr>${result.tableHeaders.map(h=>'<th>'+h+'</th>').join('')}</tr></thead><tbody>`;
-        result.tableRows.forEach(r=>{
-          html+=`<tr class="${r.rowClass}">${r.cols.map(c=>'<td title="'+c+'">'+c+'</td>').join('')}</tr>`;
-        });
-        html+='</tbody></table></div>';
+      if (result.tableRows && result.tableRows.length) {
+        html += '<div class="section-label" style="margin-top:20px">Full Data</div>';
+        html += renderTable(result.tableHeaders, result.tableRows);
       }
     }
+    html += '</div>';
   });
-
   return html;
 }
 
-// ─────────────────────────────────────────────
-//  TAB LOADING
-// ─────────────────────────────────────────────
-const cache={};
-let activeTab="home";
+// ── LOAD TAB ─────────────────────────────────────────────────────────────────
+const cache = {};
+let activeTab = "home";
 
-async function loadTab(id, force=false){
-  const el=document.getElementById("content");
-  if(id==="home"){el.innerHTML=renderHome();return;}
-  if(cache[id]&&!force){el.innerHTML=renderResults(id,cache[id]);return;}
+async function loadTab(id, force) {
+  const el = document.getElementById("content");
+  if (id === "home") { el.innerHTML = renderHome(); return; }
+  if (cache[id] && !force) { el.innerHTML = renderResults(id, cache[id]); return; }
 
-  const cfg=CONFIGS[id];
-  el.innerHTML=`<div class="state-box"><div class="spinner"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading ${id} data…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>`;
+  const cfg = CONFIGS[id];
+  el.innerHTML = `<div class="state-box"><div class="spinner"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading ${id} data…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>`;
 
-  try{
-    const allResults=[];
-    for(const sheet of cfg.sheets){
-      const data=await fetchSheet(cfg.sheetId,sheet.range);
-      const result=cfg.analyze(sheet.name,data,cfg);
-      allResults.push({sheetName:sheet.name,result});
+  try {
+    let sheets = cfg.sheets;
+
+    // Onboarding: load tab names dynamically
+    if (id === "onboarding") {
+      const tabNames = await fetchSheetMeta(cfg.sheetId);
+      sheets = tabNames.map(name => ({name, range: name}));
     }
-    cache[id]=allResults;
-    el.innerHTML=renderResults(id,allResults);
-    document.getElementById("last-updated").textContent="Updated "+new Date().toLocaleTimeString();
-  } catch(e){
-    el.innerHTML=`<div class="state-box">
+
+    const allResults = [];
+    for (const sheet of sheets) {
+      el.innerHTML = `<div class="state-box"><div class="spinner"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading "${sheet.name}"…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>`;
+      const data   = await fetchSheet(cfg.sheetId, sheet.range);
+      const result = runAnalysis(id, sheet.name, data);
+      allResults.push({sheetName: sheet.name, result});
+    }
+
+    cache[id] = allResults;
+    el.innerHTML = renderResults(id, allResults);
+    document.getElementById("last-updated").textContent = "Updated " + new Date().toLocaleTimeString();
+  } catch(e) {
+    el.innerHTML = `<div class="state-box">
       <div style="font-size:36px;margin-bottom:12px">⚠️</div>
-      <div style="font-weight:700;color:#dc2626;font-size:15px">Could not load data</div>
+      <div class="err-title">Could not load data</div>
       <div class="err-msg">${e.message}</div>
       <button class="retry-btn" style="color:${cfg.color};border-color:${cfg.color}" onclick="loadTab('${id}',true)">↺ Try Again</button>
     </div>`;
   }
 }
 
-// ─────────────────────────────────────────────
-//  TAB BAR
-// ─────────────────────────────────────────────
-function renderTabBar(){
-  document.getElementById("tabbar").innerHTML=TABS.map(t=>
-    `<button style="--c:${t.color}" class="${t.id===activeTab?'active':''}" onclick="switchTab('${t.id}')">${t.label}</button>`
+// ── TAB BAR ───────────────────────────────────────────────────────────────────
+function renderTabBar() {
+  document.getElementById("tabbar").innerHTML = TABS.map(t =>
+    `<button style="${t.id===activeTab?"color:"+t.color+";border-bottom-color:"+t.color+";font-weight:700":""}" onclick="switchTab('${t.id}')">${t.label}</button>`
   ).join("");
 }
 
-function switchTab(id){
-  activeTab=id;
+function switchTab(id) {
+  activeTab = id;
   renderTabBar();
   loadTab(id);
 }
 
-// ─────────────────────────────────────────────
-//  AUTO REFRESH
-// ─────────────────────────────────────────────
-setInterval(()=>{
-  Object.keys(cache).forEach(id=>delete cache[id]); // clear cache
-  if(activeTab!=="home") loadTab(activeTab,true);
+// ── AUTO REFRESH ──────────────────────────────────────────────────────────────
+setInterval(() => {
+  Object.keys(cache).forEach(id => delete cache[id]);
+  if (activeTab !== "home") loadTab(activeTab, true);
 }, REFRESH_MS);
 
-// ─────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────────────────
 renderTabBar();
 loadTab("home");
 </script>
