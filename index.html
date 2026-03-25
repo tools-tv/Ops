@@ -14,7 +14,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:100vh;color:var(--text)}
-/* HEADER */
 .hdr{background:var(--navy);padding:0 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;height:58px;border-bottom:1px solid rgba(255,255,255,.07)}
 .hdr img{height:26px;object-fit:contain}
 .hdr-div{width:1px;height:22px;background:rgba(255,255,255,.15)}
@@ -23,11 +22,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
 .upd{color:rgba(255,255,255,.35);font-size:11px}
 .abadge{background:rgba(0,201,167,.15);color:var(--accent);border:1px solid rgba(0,201,167,.3);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-/* TABS */
 .tabs{background:#fff;border-bottom:1px solid var(--border);padding:0 20px;display:flex;overflow-x:auto;position:sticky;top:58px;z-index:99}
 .tabs button{border:none;background:none;padding:13px 15px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .15s;font-family:'Inter',system-ui,sans-serif}
 .tabs button:hover{color:var(--text)}
-/* CONTENT */
 .wrap{padding:22px 18px;max-width:980px;margin:0 auto}
 /* HOME */
 .hero{text-align:center;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);border-radius:16px;padding:40px 24px;margin-bottom:20px;position:relative;overflow:hidden}
@@ -47,30 +44,26 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .trk-hdr h2{font-size:18px;font-weight:700;color:var(--text)}
 .trk-hdr .sub{color:var(--muted);font-size:13px;margin-top:2px}
 .rbtn{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;font-size:12px;font-family:'Inter',system-ui,sans-serif}
-.rbtn:hover{background:var(--bg)}
 .tdiv{font-weight:700;font-size:14px;margin-bottom:12px;padding-left:10px;border-left:3px solid}
 .tsec{margin-bottom:28px}
 .sumbox{border-radius:10px;padding:13px 16px;margin-bottom:14px;font-size:14px;color:#334155;line-height:1.65}
-/* STATS */
 .srow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
 .scard{background:#fff;border-radius:12px;padding:14px 18px;min-width:110px;text-align:center;flex:1 1 110px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .sval{font-size:26px;font-weight:800;line-height:1}
 .slbl{font-size:11px;color:var(--muted);margin-top:4px;font-weight:500}
-/* LABELS & CALLOUTS */
 .slabel{font-weight:700;font-size:11px;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px}
 .cbox{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 .ctop{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:4px}
 .ctitle{font-weight:600;color:var(--text);font-size:14px}
 .cdet{color:var(--muted);font-size:13px}
 .badge{padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;margin-right:6px}
-/* SPLIT */
 .split{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
 /* TABLE */
 .twrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{background:#f8fafc;color:var(--muted);font-weight:600;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;font-size:12px}
 td{padding:9px 12px;border-bottom:1px solid #f8fafc;color:#334155;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-td.wr{white-space:normal;font-size:12px;color:#475569;max-width:220px}
+td.wr{white-space:normal;font-size:12px;color:#475569;max-width:240px}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafbfc}
 .rc td:first-child{border-left:3px solid var(--critical)}
@@ -80,6 +73,10 @@ tr:hover td{background:#fafbfc}
 .pc{border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:4px solid;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .chip{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;margin-right:4px;margin-top:4px;font-weight:500}
 .nbox{margin-top:8px;font-size:12px;color:#475569;background:#fff;border:1px solid var(--border);border-radius:6px;padding:6px 10px}
+/* TOOLTIP */
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;font-size:11px;padding:5px 10px;border-radius:6px;white-space:nowrap;z-index:999;font-weight:400;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+[data-tip]:hover::before{content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e293b;z-index:999;pointer-events:none}
 /* COMPLAINTS */
 .today-banner{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.1)}
 .cc{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
@@ -91,6 +88,12 @@ tr:hover td{background:#fafbfc}
 .cc .cs{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
 /* SECURITY */
 .sec-card{border-radius:10px;padding:14px 16px;margin-bottom:10px;border-left:4px solid;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+/* ONBOARDING TIMELINE CARDS */
+.timeline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+.tl-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.tl-step{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.tl-name{font-weight:700;color:var(--text);font-size:14px;margin-bottom:4px}
+.tl-desc{font-size:12px;color:var(--muted);line-height:1.5}
 /* STATE */
 .stbox{text-align:center;padding:80px 20px}
 .spin{display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
@@ -115,14 +118,14 @@ tr:hover td{background:#fafbfc}
 <div class="wrap" id="content"></div>
 
 <script>
-const KEY = "AIzaSyC8Pa8tBIl17GMtA68ltcx-AGlrUvmtcn8";
-const REFRESH = 15 * 60 * 1000;
-const TODAY = new Date();
-const TODAYSTR = TODAY.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
-const TODAYDATE = TODAY.toDateString();
+var KEY = "AIzaSyC8Pa8tBIl17GMtA68ltcx-AGlrUvmtcn8";
+var REFRESH = 15 * 60 * 1000;
+var TODAY = new Date();
+var TODAYSTR = TODAY.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+var TODAYDATE = TODAY.toDateString();
 document.getElementById("hdate").textContent = "Live · " + TODAYSTR;
 
-const TABS = [
+var TABS = [
   {id:"home",       label:"🏠 Home",                  color:"#6366f1"},
   {id:"permitting", label:"📋 Permitting",             color:"#f59e0b"},
   {id:"utilities",  label:"⚡ Utilities ERM",          color:"#3b82f6"},
@@ -132,7 +135,7 @@ const TABS = [
   {id:"security",   label:"🔒 Security Monitoring",    color:"#7c3aed"},
 ];
 
-const CFG = {
+var CFG = {
   permitting:{
     sheetId:"1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg",
     color:"#f59e0b", desc:"Expiration tab — permits expiring soon with notes",
@@ -140,21 +143,17 @@ const CFG = {
   },
   utilities:{
     sheetId:"1bPlzWPzarOI03QO1_LqUrhlrxM8AMc2MPrQHiYrPCns",
-    color:"#3b82f6", desc:"Utility Set Up Status & Utility Validation Status",
-    mode:"status",
-    sheets:[
-      {name:"Utility Set Up Status",     range:"Utility Set Up Status"},
-      {name:"Utility Validation Status", range:"Utility Validation Status"},
-    ],
+    color:"#3b82f6", desc:"SUMMARY tab — utility status overview",
+    mode:"utilities", sheets:[{name:"SUMMARY",range:"SUMMARY"}],
   },
   onboarding:{
     sheetId:"13JffxAKNLUaPm2n1iBWNCL48k-7CCEaf4xwu0xgjZN4",
-    color:"#10b981", desc:"All property tabs — full onboarding pipeline",
-    mode:"onboarding", sheets:[],
+    color:"#10b981", desc:"All property tabs + Ref Timeline reference cards",
+    mode:"onboarding", sheets:[], refSheet:"Ref Timeline",
   },
   vegetation:{
     sheetId:"1omzFAmQLUUk-g9tOd9b3fm9NbnxhXVbnGUQXUb6-6mg",
-    color:"#84cc16", desc:"Lawncare Audit AZ & FL tabs",
+    color:"#84cc16", desc:"Lawncare Audit AZ & FL — with notes, date captured & timestamp",
     mode:"vegetation",
     sheets:[
       {name:"Lawncare Audit AZ",range:"Lawncare Audit AZ"},
@@ -177,101 +176,94 @@ const CFG = {
 
 // ── FETCH ────────────────────────────────────────────────────────────────────
 async function fetchSheet(sheetId, range) {
-  const url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId +
-    "/values/" + encodeURIComponent(range) + "?key=" + KEY;
-  const r = await fetch(url);
+  var url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "/values/" + encodeURIComponent(range) + "?key=" + KEY;
+  var r = await fetch(url);
   if (!r.ok) {
-    const b = await r.json().catch(function(){return {};});
-    const m = (b.error && b.error.message) || ("HTTP " + r.status);
-    if (r.status === 403) throw new Error("API key unauthorized: " + m);
-    if (r.status === 400) throw new Error('Tab "' + range + '" not found. Check exact tab name.');
-    if (r.status === 404) throw new Error("Spreadsheet not found or not public.");
+    var b = await r.json().catch(function(){return{};});
+    var m = (b.error && b.error.message) || ("HTTP " + r.status);
+    if (r.status===403) throw new Error("API key unauthorized: " + m);
+    if (r.status===400) throw new Error('Tab "' + range + '" not found. Check exact tab name.');
+    if (r.status===404) throw new Error("Spreadsheet not found or not public.");
     throw new Error(m);
   }
-  const data = await r.json();
-  const rows = data.values || [];
-  if (rows.length < 2) return {headers:[], rows:[]};
-  const headers = rows[0].map(function(h){ return (h||"").trim(); });
-  const dataRows = rows.slice(1).map(function(row) {
-    var obj = {};
-    headers.forEach(function(h,i){ obj[h] = (row[i]||"").trim(); });
+  var data = await r.json();
+  var rows = data.values || [];
+  if (rows.length < 2) return {headers:[], rows:[], rawRows:[]};
+  var headers = rows[0].map(function(h){return(h||"").trim();});
+  var dataRows = rows.slice(1).map(function(row){
+    var obj={};
+    headers.forEach(function(h,i){obj[h]=(row[i]||"").trim();});
     return obj;
   });
-  return {headers:headers, rows:dataRows};
+  return {headers:headers, rows:dataRows, rawRows:rows};
 }
 
 async function fetchMeta(sheetId) {
-  const url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "?key=" + KEY;
-  const r = await fetch(url);
+  var url = "https://sheets.googleapis.com/v4/spreadsheets/" + sheetId + "?key=" + KEY;
+  var r = await fetch(url);
   if (!r.ok) throw new Error("Could not load spreadsheet metadata.");
-  const data = await r.json();
+  var data = await r.json();
   return (data.sheets||[])
-    .filter(function(s){ return s.properties && !s.properties.hidden; })
-    .map(function(s){ return s.properties.title; })
+    .filter(function(s){return s.properties && !s.properties.hidden;})
+    .map(function(s){return s.properties.title;})
     .filter(Boolean);
 }
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 function fcol(headers, kw) {
   if (!kw) return null;
-  return headers.find(function(h){ return h.toLowerCase().includes(kw.toLowerCase()); }) || null;
+  return headers.find(function(h){return h.toLowerCase().includes(kw.toLowerCase());}) || null;
 }
 function pdate(str) {
   if (!str) return null;
   var d = new Date(str);
   return isNaN(d.getTime()) ? null : d;
 }
-function ddiff(d) { return Math.round((d.getTime() - TODAY.getTime()) / 86400000); }
-function isToday(d) { return d && d.toDateString() === TODAYDATE; }
-
+function ddiff(d) { return Math.round((d.getTime()-TODAY.getTime())/86400000); }
+function isToday(d) { return d && d.toDateString()===TODAYDATE; }
 function badge(level) {
-  var m = {
-    critical:{bg:"#fee2e2",c:"#dc2626",i:"🔴"},
-    warning: {bg:"#fef9c3",c:"#d97706",i:"🟡"},
-    info:    {bg:"#eff6ff",c:"#2563eb",i:"🔵"}
-  };
-  var s = m[level] || m.info;
+  var m={critical:{bg:"#fee2e2",c:"#dc2626",i:"🔴"},warning:{bg:"#fef9c3",c:"#d97706",i:"🟡"},info:{bg:"#eff6ff",c:"#2563eb",i:"🔵"}};
+  var s=m[level]||m.info;
   return '<span class="badge" style="background:'+s.bg+';color:'+s.c+'">'+s.i+' '+level.toUpperCase()+'</span>';
 }
 
 // ── ANALYSIS ─────────────────────────────────────────────────────────────────
 function analyzePermitting(sheetName, d) {
-  var headers = d.headers, rows = d.rows;
-  var dateKey    = fcol(headers,"expir") || fcol(headers,"date");
-  var nameKey    = fcol(headers,"permit") || fcol(headers,"address") || fcol(headers,"property") || fcol(headers,"name") || headers[0];
-  var statusKey  = fcol(headers,"status");
-  var noteKey    = fcol(headers,"note") || fcol(headers,"action") || fcol(headers,"comment");
-  var updKey     = fcol(headers,"updated") || fcol(headers,"last update") || fcol(headers,"modified");
-
-  var critical=0, warning=0, ok=0, callouts=[], tableRows=[];
-  rows.forEach(function(row) {
-    var name    = (nameKey   ? row[nameKey]   : "") || "";
-    var status  = (statusKey ? row[statusKey] : "") || "";
-    var note    = (noteKey   ? row[noteKey]   : "") || "";
-    var updated = (updKey    ? row[updKey]    : "") || "";
-    var dateStr = (dateKey   ? row[dateKey]   : "") || "";
-    var d2 = pdate(dateStr), diff = d2 ? ddiff(d2) : null;
-    var level="ok", label="", rowClass="ro";
-    if (diff !== null) {
-      if (diff < 0)       { level="critical"; label="EXPIRED";       critical++; rowClass="rc"; }
-      else if (diff <= 30){ level="critical"; label=diff+"d left";   critical++; rowClass="rc"; }
-      else if (diff <= 90){ level="warning";  label=diff+"d left";   warning++;  rowClass="rw"; }
-      else                { ok++; label=diff+"d left"; }
-    } else { ok++; }
-    if (level==="critical" || level==="warning") {
-      callouts.push({level:level, name:name, dateStr:dateStr, label:label, status:status, note:note, updated:updated});
+  var headers=d.headers, rows=d.rows;
+  var dateKey   = fcol(headers,"expir")||fcol(headers,"date");
+  var nameKey   = fcol(headers,"permit")||fcol(headers,"address")||fcol(headers,"property")||fcol(headers,"name")||headers[0];
+  var statusKey = fcol(headers,"status");
+  var noteKey   = fcol(headers,"note")||fcol(headers,"action")||fcol(headers,"comment");
+  var updKey    = fcol(headers,"updated")||fcol(headers,"last update")||fcol(headers,"modified");
+  var critical=0,warning=0,ok=0,callouts=[],tableRows=[];
+  rows.forEach(function(row){
+    var name    =(nameKey   ?row[nameKey]   :"")||"";
+    var status  =(statusKey ?row[statusKey] :"")||"";
+    var note    =(noteKey   ?row[noteKey]   :"")||"";
+    var updated =(updKey    ?row[updKey]    :"")||"";
+    var dateStr =(dateKey   ?row[dateKey]   :"")||"";
+    var d2=pdate(dateStr), diff=d2?ddiff(d2):null;
+    var level="ok",label="",rowClass="ro";
+    if(diff!==null){
+      if(diff<0)       {level="critical";label="EXPIRED";      critical++;rowClass="rc";}
+      else if(diff<=30){level="critical";label=diff+"d left";  critical++;rowClass="rc";}
+      else if(diff<=90){level="warning"; label=diff+"d left";  warning++; rowClass="rw";}
+      else             {ok++;label=diff+"d left";}
+    } else {ok++;}
+    if(level==="critical"||level==="warning"){
+      callouts.push({level:level,name:name,dateStr:dateStr,label:label,status:status,note:note,updated:updated});
     }
-    tableRows.push({rowClass:rowClass, cols:[name, dateStr, label, status, note, updated]});
+    tableRows.push({rowClass:rowClass,cols:[name,dateStr,label,status,note,updated]});
   });
-  callouts.sort(function(a,b){ return ({critical:0,warning:1}[a.level]||0) - ({critical:0,warning:1}[b.level]||0); });
+  callouts.sort(function(a,b){return({critical:0,warning:1}[a.level]||0)-({critical:0,warning:1}[b.level]||0);});
   return {
     mode:"permitting",
-    summary: rows.length===0 ? "No data found." : critical+" critical/expired, "+warning+" expiring within 90 days, "+ok+" OK of "+rows.length+" total.",
+    summary:rows.length===0?"No data found.":critical+" critical/expired, "+warning+" expiring within 90 days, "+ok+" OK of "+rows.length+" total.",
     stats:[
-      {label:"Total",       value:rows.length, color:"#f59e0b"},
-      {label:"🔴 Critical", value:critical,    color:"#dc2626"},
-      {label:"🟡 Warning",  value:warning,     color:"#d97706"},
-      {label:"✅ OK",       value:ok,          color:"#16a34a"},
+      {label:"Total",      value:rows.length,color:"#f59e0b"},
+      {label:"🔴 Critical",value:critical,   color:"#dc2626"},
+      {label:"🟡 Warning", value:warning,    color:"#d97706"},
+      {label:"✅ OK",      value:ok,         color:"#16a34a"},
     ],
     callouts:callouts,
     tableHeaders:["Permit / Property","Expiration Date","Days Left","Status","Notes","Last Updated"],
@@ -279,388 +271,476 @@ function analyzePermitting(sheetName, d) {
   };
 }
 
-function analyzeStatus(sheetName, d) {
-  var headers = d.headers, rows = d.rows;
-  var nameKey   = fcol(headers,"address") || fcol(headers,"property") || fcol(headers,"name") || headers[0];
-  var statusKey = fcol(headers,"status");
-  var ISSUE = ["fail","error","issue","problem","reject","missing","incomplete","overdue","n/a","tbd","pending","hold","not "];
-  var DONE  = ["complete","done","active","approved","pass","yes","validated","ok","set up","received","signed"];
-  var pending=0, complete=0, issues=0, callouts=[], tableRows=[];
-  rows.forEach(function(row) {
-    var name   = (nameKey   ? row[nameKey]   : "") || "";
-    var status = ((statusKey ? row[statusKey] : "") || "").toLowerCase();
-    var all    = Object.values(row).join(" ").toLowerCase();
+function analyzeUtilities(sheetName, d) {
+  // Replicate the SUMMARY tab exactly — show all rows/columns as-is in a clean table
+  var headers=d.headers, rows=d.rows;
+  var tableRows = rows.map(function(row){
+    // Color-code based on status-like values
+    var allVals = Object.values(row).join(" ").toLowerCase();
     var rowClass = "";
-    if (ISSUE.some(function(w){ return status.includes(w) || all.includes(w); })) {
-      issues++; rowClass="rw";
-      var flagged = Object.entries(row).filter(function(e){ return ISSUE.some(function(w){ return e[1].toLowerCase().includes(w); }); }).map(function(e){ return e[0]+": "+e[1]; }).join("; ");
-      callouts.push({level:"warning", title:name||"Item", detail:flagged||"Needs review"});
-    } else if (DONE.some(function(w){ return status.includes(w); })) {
-      complete++; rowClass="ro";
-    } else { pending++; }
-    tableRows.push({rowClass:rowClass, cols:headers.slice(0,5).map(function(h){ return row[h]||""; })});
+    var ISSUE=["fail","missing","incomplete","overdue","n/a","tbd","pending","hold","not ","reject","no"];
+    var DONE =["complete","done","active","approved","pass","yes","ok","set up","received","signed","validated"];
+    if(ISSUE.some(function(w){return allVals.includes(w);})) rowClass="rw";
+    else if(DONE.some(function(w){return allVals.includes(w);})) rowClass="ro";
+    return {rowClass:rowClass, cols:headers.map(function(h){return row[h]||"";})};
+  });
+  // Count by status
+  var complete=0,pending=0,issues=0;
+  tableRows.forEach(function(r){
+    if(r.rowClass==="ro") complete++;
+    else if(r.rowClass==="rw") issues++;
+    else pending++;
   });
   return {
-    mode:"standard",
-    summary: rows.length===0 ? "No data found." : rows.length+" records — "+complete+" complete, "+pending+" pending, "+issues+" flagged.",
+    mode:"utilities",
+    summary:"SUMMARY tab — "+rows.length+" records. "+complete+" complete, "+pending+" pending, "+issues+" flagged.",
     stats:[
-      {label:"Total",       value:rows.length, color:"#3b82f6"},
-      {label:"✅ Complete", value:complete,    color:"#16a34a"},
-      {label:"⏳ Pending",  value:pending,     color:"#64748b"},
-      {label:"⚠️ Flagged",  value:issues,      color:"#d97706"},
+      {label:"Total",      value:rows.length,color:"#3b82f6"},
+      {label:"✅ Complete",value:complete,   color:"#16a34a"},
+      {label:"⏳ Pending", value:pending,    color:"#64748b"},
+      {label:"⚠️ Flagged", value:issues,     color:"#d97706"},
     ],
-    callouts:callouts, tableHeaders:headers.slice(0,5), tableRows:tableRows,
+    tableHeaders:headers,
+    tableRows:tableRows,
   };
 }
 
 function analyzeOnboarding(sheetName, d) {
-  var headers = d.headers, rows = d.rows;
-  var nameKey = headers[0];
-  var ISSUE = ["fail","missing","incomplete","overdue","hold","stall","not ","pending","tbd","n/a","reject"];
-  var DONE  = ["complete","done","approved","active","yes","ok","received","signed","passed"];
-  var pending=0, complete=0, issues=0, callouts=[], tableRows=[];
-  rows.forEach(function(row) {
-    var name = (row[nameKey]||"").trim();
-    if (!name) return;
-    var all = Object.values(row).join(" ").toLowerCase();
-    var rowClass = "";
-    if (ISSUE.some(function(w){ return all.includes(w); })) {
-      issues++; rowClass="rw";
-      var flagged = Object.entries(row).filter(function(e){ return ISSUE.some(function(w){ return e[1].toLowerCase().includes(w); }); }).map(function(e){ return e[0]+": "+e[1]; }).join("; ");
-      callouts.push({level:"warning", title:name, detail:flagged||"Needs attention"});
-    } else if (DONE.some(function(w){ return all.includes(w); })) {
-      complete++; rowClass="ro";
-    } else { pending++; }
-    tableRows.push({rowClass:rowClass, cols:headers.slice(0,6).map(function(h){ return row[h]||""; })});
+  var headers=d.headers, rows=d.rows;
+  var nameKey=headers[0];
+  var ISSUE=["fail","missing","incomplete","overdue","hold","stall","not ","pending","tbd","n/a","reject"];
+  var DONE =["complete","done","approved","active","yes","ok","received","signed","passed"];
+  var pending=0,complete=0,issues=0,callouts=[],tableRows=[];
+  rows.forEach(function(row){
+    var name=(row[nameKey]||"").trim();
+    if(!name) return;
+    var all=Object.values(row).join(" ").toLowerCase();
+    var rowClass="";
+    if(ISSUE.some(function(w){return all.includes(w);})){
+      issues++;rowClass="rw";
+      var flagged=Object.entries(row).filter(function(e){return ISSUE.some(function(w){return e[1].toLowerCase().includes(w);});}).map(function(e){return e[0]+": "+e[1];}).join("; ");
+      callouts.push({level:"warning",title:name,detail:flagged||"Needs attention"});
+    } else if(DONE.some(function(w){return all.includes(w);})){complete++;rowClass="ro";}
+    else{pending++;}
+    tableRows.push({rowClass:rowClass,cols:headers.slice(0,6).map(function(h){return row[h]||"";})});
   });
   return {
-    mode:"standard",
-    summary: rows.length===0 ? "No data." : rows.length+" properties — "+complete+" complete, "+pending+" pending, "+issues+" flagged.",
+    mode:"onboarding",
+    summary:rows.length===0?"No data.":rows.length+" properties — "+complete+" complete, "+pending+" pending, "+issues+" flagged.",
     stats:[
-      {label:"Total",       value:rows.length, color:"#10b981"},
-      {label:"✅ Complete", value:complete,    color:"#16a34a"},
-      {label:"⏳ Pending",  value:pending,     color:"#64748b"},
-      {label:"⚠️ Flagged",  value:issues,      color:"#d97706"},
+      {label:"Total",      value:rows.length,color:"#10b981"},
+      {label:"✅ Complete",value:complete,   color:"#16a34a"},
+      {label:"⏳ Pending", value:pending,    color:"#64748b"},
+      {label:"⚠️ Flagged", value:issues,     color:"#d97706"},
     ],
-    callouts:callouts, tableHeaders:headers.slice(0,6), tableRows:tableRows,
+    callouts:callouts,tableHeaders:headers.slice(0,6),tableRows:tableRows,
   };
 }
 
+function analyzeRefTimeline(d) {
+  // Row 2 (index 1 in rawRows) contains actual column names; rows after that are data
+  var rawRows = d.rawRows || [];
+  if (rawRows.length < 3) return [];
+  var colNames = rawRows[1].map(function(c){return(c||"").trim();}); // row 2 = actual headers
+  var dataRows = rawRows.slice(2); // data starts row 3
+  // Columns A, B, C = indices 0, 1, 2
+  return dataRows.map(function(row){
+    return {
+      a: (row[0]||"").trim(),
+      b: (row[1]||"").trim(),
+      c: (row[2]||"").trim(),
+      colA: colNames[0]||"Step",
+      colB: colNames[1]||"Name",
+      colC: colNames[2]||"Description",
+    };
+  }).filter(function(r){return r.a||r.b||r.c;});
+}
+
 function analyzeVegetation(sheetName, d) {
-  var headers = d.headers, rows = d.rows;
-  var nameKey   = fcol(headers,"address") || fcol(headers,"property") || headers[0];
-  var statusKey = fcol(headers,"status") || fcol(headers,"result") || fcol(headers,"pass");
-  var FAIL = ["fail","no","issue","overdue","incomplete","missing","needs"];
-  var PASS = ["pass","yes","ok","complete","done","approved"];
-  var pass=0, fail=0, pending=0, callouts=[], tableRows=[];
-  rows.forEach(function(row) {
-    var name   = (nameKey   ? row[nameKey]   : "") || "";
-    var status = ((statusKey ? row[statusKey] : "") || "").toLowerCase();
-    var rowClass = "";
-    if (FAIL.some(function(w){ return status.includes(w); })) {
-      fail++; rowClass="rc";
-      callouts.push({level:"critical", title:name||"Property", detail:"Status: "+(row[statusKey]||"Failed")});
-    } else if (PASS.some(function(w){ return status.includes(w); })) {
-      pass++; rowClass="ro";
-    } else { pending++; }
-    tableRows.push({rowClass:rowClass, cols:headers.slice(0,5).map(function(h){ return row[h]||""; })});
+  var headers=d.headers, rows=d.rows;
+  var nameKey    = fcol(headers,"address")||fcol(headers,"property")||headers[0];
+  var statusKey  = fcol(headers,"status")||fcol(headers,"result")||fcol(headers,"pass");
+  var noteKey    = fcol(headers,"note")||fcol(headers,"comment")||fcol(headers,"remark");
+  var dateCapKey = fcol(headers,"date captured")||fcol(headers,"date cap")||fcol(headers,"capture");
+  var tsKey      = fcol(headers,"timestamp")||fcol(headers,"time stamp")||fcol(headers,"ts");
+  var FAIL=["fail","no","issue","overdue","incomplete","missing","needs"];
+  var PASS=["pass","yes","ok","complete","done","approved"];
+  var pass=0,fail=0,pending=0,callouts=[],tableRows=[];
+  // Build display headers — always include name, status, date captured, timestamp, notes
+  var dispHeaders = [];
+  if(nameKey)    dispHeaders.push(nameKey);
+  if(statusKey)  dispHeaders.push(statusKey);
+  if(dateCapKey) dispHeaders.push(dateCapKey);
+  if(tsKey)      dispHeaders.push(tsKey);
+  if(noteKey)    dispHeaders.push(noteKey);
+  // Fill with remaining cols up to 6 total
+  headers.forEach(function(h){
+    if(dispHeaders.length<6 && !dispHeaders.includes(h)) dispHeaders.push(h);
+  });
+  rows.forEach(function(row){
+    var name   =(nameKey  ?row[nameKey]  :"")||"";
+    var status =((statusKey?row[statusKey]:"")||"").toLowerCase();
+    var rowClass="";
+    if(FAIL.some(function(w){return status.includes(w);})){
+      fail++;rowClass="rc";
+      callouts.push({level:"critical",title:name||"Property",detail:"Status: "+(row[statusKey]||"Failed")});
+    } else if(PASS.some(function(w){return status.includes(w);})){pass++;rowClass="ro";}
+    else{pending++;}
+    tableRows.push({rowClass:rowClass,cols:dispHeaders.map(function(h){return row[h]||"";})});
   });
   return {
     mode:"standard",
-    summary: rows.length===0 ? "No data." : rows.length+" properties — "+pass+" passed, "+fail+" failed, "+pending+" pending.",
+    summary:rows.length===0?"No data.":rows.length+" properties — "+pass+" passed, "+fail+" failed, "+pending+" pending.",
     stats:[
-      {label:"Total",     value:rows.length, color:"#84cc16"},
-      {label:"✅ Pass",   value:pass,        color:"#16a34a"},
-      {label:"🔴 Fail",   value:fail,        color:"#dc2626"},
-      {label:"⏳ Pending",value:pending,     color:"#64748b"},
+      {label:"Total",     value:rows.length,color:"#84cc16"},
+      {label:"✅ Pass",   value:pass,       color:"#16a34a"},
+      {label:"🔴 Fail",   value:fail,       color:"#dc2626"},
+      {label:"⏳ Pending",value:pending,    color:"#64748b"},
     ],
-    callouts:callouts, tableHeaders:headers.slice(0,5), tableRows:tableRows,
+    callouts:callouts,tableHeaders:dispHeaders,tableRows:tableRows,
   };
 }
 
 function analyzeComplaints(sheetName, d) {
-  var headers = d.headers, rows = d.rows;
-  var dateKey     = fcol(headers,"date") || fcol(headers,"reported") || fcol(headers,"time") || headers[0];
-  var addrKey     = fcol(headers,"address") || fcol(headers,"property") || fcol(headers,"location");
-  var typeKey     = fcol(headers,"type") || fcol(headers,"complaint") || fcol(headers,"incident") || fcol(headers,"category");
-  var descKey     = fcol(headers,"description") || fcol(headers,"detail") || fcol(headers,"note") || fcol(headers,"comment");
-  var statusKey   = fcol(headers,"status") || fcol(headers,"resolved") || fcol(headers,"action");
-  var reporterKey = fcol(headers,"reporter") || fcol(headers,"reported by") || fcol(headers,"guest") || fcol(headers,"neighbor");
-  var todayItems=[], recentItems=[], olderItems=[];
-  rows.forEach(function(row) {
-    var dateStr  = (dateKey     ? row[dateKey]     : "") || "";
-    var addr     = (addrKey     ? row[addrKey]     : "") || "";
-    var type     = (typeKey     ? row[typeKey]     : "") || "";
-    var desc     = (descKey     ? row[descKey]     : "") || "";
-    var status   = (statusKey   ? row[statusKey]   : "") || "";
-    var reporter = (reporterKey ? row[reporterKey] : "") || "";
-    var d2 = pdate(dateStr);
-    var item = {dateStr:dateStr, addr:addr, type:type, desc:desc, status:status, reporter:reporter, d:d2};
-    if (d2 && isToday(d2)) todayItems.push(item);
-    else if (d2 && ddiff(d2) >= -7) recentItems.push(item);
+  var headers=d.headers, rows=d.rows;
+  var dateKey    =fcol(headers,"date")||fcol(headers,"reported")||fcol(headers,"time")||headers[0];
+  var addrKey    =fcol(headers,"address")||fcol(headers,"property")||fcol(headers,"location");
+  var typeKey    =fcol(headers,"type")||fcol(headers,"complaint")||fcol(headers,"incident")||fcol(headers,"category");
+  var descKey    =fcol(headers,"description")||fcol(headers,"detail")||fcol(headers,"note")||fcol(headers,"comment");
+  var statusKey  =fcol(headers,"status")||fcol(headers,"resolved")||fcol(headers,"action");
+  var reporterKey=fcol(headers,"reporter")||fcol(headers,"reported by")||fcol(headers,"guest")||fcol(headers,"neighbor");
+  var todayItems=[],recentItems=[],olderItems=[];
+  rows.forEach(function(row){
+    var dateStr  =(dateKey    ?row[dateKey]    :"")||"";
+    var addr     =(addrKey    ?row[addrKey]    :"")||"";
+    var type     =(typeKey    ?row[typeKey]    :"")||"";
+    var desc     =(descKey    ?row[descKey]    :"")||"";
+    var status   =(statusKey  ?row[statusKey]  :"")||"";
+    var reporter =(reporterKey?row[reporterKey]:"")||"";
+    var d2=pdate(dateStr);
+    var item={dateStr:dateStr,addr:addr,type:type,desc:desc,status:status,reporter:reporter,d:d2};
+    if(d2&&isToday(d2)) todayItems.push(item);
+    else if(d2&&ddiff(d2)>=-7) recentItems.push(item);
     else olderItems.push(item);
   });
-  var sd = function(a,b){ return (b.d||0)-(a.d||0); };
-  todayItems.sort(sd); recentItems.sort(sd); olderItems.sort(sd);
+  var sd=function(a,b){return(b.d||0)-(a.d||0);};
+  todayItems.sort(sd);recentItems.sort(sd);olderItems.sort(sd);
   return {
     mode:"complaints",
-    todayItems:todayItems, recentItems:recentItems, olderItems:olderItems,
+    todayItems:todayItems,recentItems:recentItems,olderItems:olderItems,
     total:rows.length,
-    summary: rows.length===0 ? "No complaints found." : rows.length+" total — "+todayItems.length+" today, "+recentItems.length+" in past 7 days.",
+    summary:rows.length===0?"No complaints found.":rows.length+" total — "+todayItems.length+" today, "+recentItems.length+" past 7 days.",
     stats:[
-      {label:"Total",          value:rows.length,         color:"#6366f1"},
-      {label:"📅 Today",       value:todayItems.length,   color:"#dc2626"},
-      {label:"📆 Last 7 Days", value:recentItems.length,  color:"#d97706"},
-      {label:"📁 Older",       value:olderItems.length,   color:"#64748b"},
+      {label:"Total",          value:rows.length,        color:"#6366f1"},
+      {label:"📅 Today",       value:todayItems.length,  color:"#dc2626"},
+      {label:"📆 Last 7 Days", value:recentItems.length, color:"#d97706"},
+      {label:"📁 Older",       value:olderItems.length,  color:"#64748b"},
     ],
   };
 }
 
 function analyzeSecurity(sheetName, d) {
-  var headers = d.headers, rows = d.rows;
-  var propKey   = fcol(headers,"property") || fcol(headers,"address") || fcol(headers,"name") || headers[0];
-  var actionKey = fcol(headers,"action") || fcol(headers,"response") || fcol(headers,"note") || fcol(headers,"comment");
-  var hospiKey  = fcol(headers,"hospi") || fcol(headers,"link") || fcol(headers,"url") || fcol(headers,"hospitable");
-  var dateKey   = fcol(headers,"date") || fcol(headers,"time") || fcol(headers,"timestamp");
-  var propMap = {};
-  rows.forEach(function(row) {
-    var prop   = (propKey   ? row[propKey]   : "") || "Unknown Property";
-    var action = (actionKey ? row[actionKey] : "") || "";
-    var hospi  = (hospiKey  ? row[hospiKey]  : "") || "";
-    var date   = (dateKey   ? row[dateKey]   : "") || "";
-    if (!propMap[prop]) propMap[prop] = {count:0, actions:[], hospiLink:"", dates:[]};
+  var headers=d.headers, rows=d.rows;
+  var propKey   =fcol(headers,"property")||fcol(headers,"address")||fcol(headers,"name")||headers[0];
+  var actionKey =fcol(headers,"action")||fcol(headers,"response")||fcol(headers,"note")||fcol(headers,"comment");
+  var hospiKey  =fcol(headers,"hospi")||fcol(headers,"link")||fcol(headers,"url")||fcol(headers,"hospitable");
+  var dateKey   =fcol(headers,"date")||fcol(headers,"time")||fcol(headers,"timestamp");
+  var propMap={};
+  rows.forEach(function(row){
+    var prop  =(propKey  ?row[propKey]  :"")||"Unknown Property";
+    var action=(actionKey?row[actionKey]:"")||"";
+    var hospi =(hospiKey ?row[hospiKey] :"")||"";
+    var date  =(dateKey  ?row[dateKey]  :"")||"";
+    if(!propMap[prop]) propMap[prop]={count:0,actions:[],hospiLink:"",dates:[]};
     propMap[prop].count++;
-    if (action && !propMap[prop].actions.includes(action)) propMap[prop].actions.push(action);
-    if (hospi) propMap[prop].hospiLink = hospi;
-    if (date)  propMap[prop].dates.push(date);
+    if(action&&!propMap[prop].actions.includes(action)) propMap[prop].actions.push(action);
+    if(hospi) propMap[prop].hospiLink=hospi;
+    if(date)  propMap[prop].dates.push(date);
   });
-  var properties = Object.entries(propMap).map(function(e){
-    return Object.assign({name:e[0]}, e[1]);
-  }).sort(function(a,b){ return b.count - a.count; });
-  var total = rows.length;
-  var highAlert = properties.filter(function(p){ return p.count >= 3; }).length;
+  var properties=Object.entries(propMap).map(function(e){
+    return Object.assign({name:e[0]},e[1]);
+  }).sort(function(a,b){return b.count-a.count;});
+  var highAlert=properties.filter(function(p){return p.count>=3;}).length;
   return {
-    mode:"security",
-    properties:properties,
-    summary: total===0 ? "No noise alert data found." : total+" total alerts across "+properties.length+" properties. "+highAlert+" with 3+ alerts.",
+    mode:"security",properties:properties,
+    summary:rows.length===0?"No noise alert data.":rows.length+" total alerts across "+properties.length+" properties. "+highAlert+" with 3+ alerts.",
     stats:[
-      {label:"Total Alerts",     value:total,              color:"#7c3aed"},
-      {label:"Properties",       value:properties.length,  color:"#6366f1"},
-      {label:"⚠️ High Alert (3+)",value:highAlert,         color:"#dc2626"},
+      {label:"Total Alerts",     value:rows.length,       color:"#7c3aed"},
+      {label:"Properties",       value:properties.length, color:"#6366f1"},
+      {label:"⚠️ High Alert (3+)",value:highAlert,        color:"#dc2626"},
     ],
   };
 }
 
 function runAnalysis(id, sheetName, data) {
-  if (id==="permitting") return analyzePermitting(sheetName, data);
-  if (id==="utilities")  return analyzeStatus(sheetName, data);
-  if (id==="onboarding") return analyzeOnboarding(sheetName, data);
-  if (id==="vegetation") return analyzeVegetation(sheetName, data);
-  if (id==="complaints") return analyzeComplaints(sheetName, data);
-  if (id==="security")   return analyzeSecurity(sheetName, data);
+  if(id==="permitting") return analyzePermitting(sheetName,data);
+  if(id==="utilities")  return analyzeUtilities(sheetName,data);
+  if(id==="onboarding") return analyzeOnboarding(sheetName,data);
+  if(id==="vegetation") return analyzeVegetation(sheetName,data);
+  if(id==="complaints") return analyzeComplaints(sheetName,data);
+  if(id==="security")   return analyzeSecurity(sheetName,data);
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function renderHome() {
-  var trackers = [
-    {icon:"📋",label:"Permitting Tracker",      desc:"Permits expiring soon with action notes",        color:"#f59e0b"},
-    {icon:"⚡",label:"Utilities ERM",            desc:"Utility set up and validation status",           color:"#3b82f6"},
-    {icon:"🏠",label:"Property Onboarding",     desc:"Full onboarding pipeline view",                  color:"#10b981"},
-    {icon:"🌿",label:"Vegetation Audit",         desc:"Lawncare audits for AZ and FL",                 color:"#84cc16"},
-    {icon:"📣",label:"Complaints & Incidents",  desc:"Neighbor complaints & guest incident log",       color:"#6366f1"},
-    {icon:"🔒",label:"Security Monitoring",     desc:"Noise alert logs with actions & Hospitable",     color:"#7c3aed"},
+  var trackers=[
+    {icon:"📋",label:"Permitting Tracker",     desc:"Permits expiring soon with action notes",       color:"#f59e0b"},
+    {icon:"⚡",label:"Utilities ERM",           desc:"SUMMARY tab — utility status overview",         color:"#3b82f6"},
+    {icon:"🏠",label:"Property Onboarding",    desc:"All property tabs + Ref Timeline cards",        color:"#10b981"},
+    {icon:"🌿",label:"Vegetation Audit",        desc:"Audits with notes, date captured & timestamp",  color:"#84cc16"},
+    {icon:"📣",label:"Complaints & Incidents", desc:"Neighbor complaints & guest incident log",      color:"#6366f1"},
+    {icon:"🔒",label:"Security Monitoring",    desc:"Noise alert logs with actions & Hospitable",    color:"#7c3aed"},
   ];
   return '<div class="hero">'
-    + '<img src="https://cdn.prod.website-files.com/67a629b102d54dc82c9044c0/67a62bfeeec34081b307ec39_techvestor-logo-2.png" alt="Techvestor"/>'
-    + '<div class="hero-badge">Internal Operations Tool</div>'
-    + '<h1>Operations Dashboard</h1>'
-    + '<p>Centralized real-time tracking across permitting, utilities, property onboarding, vegetation audits, complaints, and security. Auto-refreshes every 15 minutes.</p>'
-    + '</div>'
-    + '<div class="card"><h2>🎯 What is this dashboard?</h2><p>Pulls live data from our Google Sheets trackers and highlights critical items, expiring permits, pending tasks, failed audits, and recent incidents — so the team acts fast without digging through spreadsheets.</p></div>'
-    + '<div class="card"><h2>📁 Trackers</h2><div class="tgrid">'
-    + trackers.map(function(t){ return '<div class="tcard"><span style="font-size:20px">'+t.icon+'</span><div><div style="font-weight:700;color:'+t.color+';font-size:13px">'+t.label+'</div><div style="color:#64748b;font-size:12px;margin-top:2px">'+t.desc+'</div></div></div>'; }).join("")
-    + '</div></div>'
-    + '<div class="card"><h2>🚀 How to use</h2><ol><li>Click any tracker tab at the top</li><li>Live data loads automatically from Google Sheets</li><li>Review callouts: <strong style="color:#dc2626">Critical</strong> → <strong style="color:#d97706">Warning</strong> → <strong style="color:#2563eb">Info</strong></li><li>Complaints tab shows today\'s incidents first</li><li>Security tab groups properties by noise alert count</li><li>Dashboard auto-refreshes every 15 minutes</li></ol></div>';
+    +'<img src="https://cdn.prod.website-files.com/67a629b102d54dc82c9044c0/67a62bfeeec34081b307ec39_techvestor-logo-2.png" alt="Techvestor"/>'
+    +'<div class="hero-badge">Internal Operations Tool</div>'
+    +'<h1>Operations Dashboard</h1>'
+    +'<p>Centralized real-time tracking across permitting, utilities, property onboarding, vegetation audits, complaints, and security. Auto-refreshes every 15 minutes.</p>'
+    +'</div>'
+    +'<div class="card"><h2>🎯 What is this dashboard?</h2><p>Pulls live data from our Google Sheets trackers and highlights critical items, expiring permits, pending tasks, failed audits, and recent incidents — so the team acts fast without digging through spreadsheets.</p></div>'
+    +'<div class="card"><h2>📁 Trackers</h2><div class="tgrid">'
+    +trackers.map(function(t){return '<div class="tcard"><span style="font-size:20px">'+t.icon+'</span><div><div style="font-weight:700;color:'+t.color+';font-size:13px">'+t.label+'</div><div style="color:#64748b;font-size:12px;margin-top:2px">'+t.desc+'</div></div></div>';}).join("")
+    +'</div></div>'
+    +'<div class="card"><h2>🚀 How to use</h2><ol>'
+    +'<li>Click any tracker tab at the top</li>'
+    +'<li>Live data loads automatically from Google Sheets</li>'
+    +'<li>Hover over dates in Permitting for descriptions</li>'
+    +'<li>Complaints tab shows today\'s incidents first</li>'
+    +'<li>Security tab groups properties by noise alert count</li>'
+    +'<li>Dashboard auto-refreshes every 15 minutes</li>'
+    +'</ol></div>';
 }
 
 function renderPermCallouts(callouts) {
-  if (!callouts.length) return '<div style="color:#64748b;font-size:13px;font-style:italic;padding:20px;text-align:center;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">✅ No critical or expiring permits.</div>';
-  return callouts.slice(0,30).map(function(c) {
-    var bc = c.level==="critical" ? "#dc2626" : "#d97706";
-    var bg = c.level==="critical" ? "#fff5f5" : "#fffbeb";
+  if(!callouts.length) return '<div style="color:#64748b;font-size:13px;font-style:italic;padding:20px;text-align:center;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">✅ No critical or expiring permits.</div>';
+  return callouts.slice(0,30).map(function(c){
+    var bc=c.level==="critical"?"#dc2626":"#d97706";
+    var bg=c.level==="critical"?"#fff5f5":"#fffbeb";
     return '<div class="pc" style="border-left-color:'+bc+';background:'+bg+'">'
-      + '<div class="ctop">'+badge(c.level)+'<span class="ctitle">'+(c.name||"—")+'</span></div>'
-      + '<div style="margin-top:5px">'
-      + (c.dateStr ? '<span class="chip" style="background:#f1f5f9;color:#475569">📅 '+c.dateStr+'</span>' : "")
-      + (c.label   ? '<span class="chip" style="background:'+(c.level==="critical"?"#fee2e2":"#fef9c3")+';color:'+bc+';font-weight:700">⏱ '+c.label+'</span>' : "")
-      + (c.status  ? '<span class="chip" style="background:#f1f5f9;color:#475569">'+c.status+'</span>' : "")
-      + (c.updated ? '<span class="chip" style="background:#f1f5f9;color:#475569">🕐 '+c.updated+'</span>' : "")
-      + '</div>'
-      + (c.note ? '<div class="nbox">📝 '+c.note+'</div>' : "")
-      + '</div>';
+      +'<div class="ctop">'+badge(c.level)+'<span class="ctitle">'+(c.name||"—")+'</span></div>'
+      +'<div style="margin-top:5px">'
+      +(c.dateStr?'<span class="chip" style="background:#f1f5f9;color:#475569" data-tip="Permit expiration date">📅 '+c.dateStr+'</span>':"")
+      +(c.label?'<span class="chip" style="background:'+(c.level==="critical"?"#fee2e2":"#fef9c3")+';color:'+bc+';font-weight:700" data-tip="Days remaining until expiration">⏱ '+c.label+'</span>':"")
+      +(c.status?'<span class="chip" style="background:#f1f5f9;color:#475569" data-tip="Current permit status">'+c.status+'</span>':"")
+      +(c.updated?'<span class="chip" style="background:#f1f5f9;color:#475569" data-tip="Date this record was last updated">🕐 Last updated: '+c.updated+'</span>':"")
+      +'</div>'
+      +(c.note?'<div class="nbox">📝 '+c.note+'</div>':"")
+      +'</div>';
   }).join("");
 }
 
-function renderTable(headers, rows) {
-  if (!rows.length) return '<div style="color:#64748b;font-size:13px;font-style:italic">No data rows found.</div>';
+function renderPermTable(headers, rows) {
+  // Add tooltips to column headers
+  var tips = {
+    "Permit / Property":"Name of the permit or property",
+    "Expiration Date":"Date the permit expires",
+    "Days Left":"Number of days remaining before expiration",
+    "Status":"Current processing status of the permit",
+    "Notes":"Action notes or follow-up required",
+    "Last Updated":"Date this record was last updated in the tracker",
+  };
+  if(!rows.length) return '<div style="color:#64748b;font-size:13px;font-style:italic">No data rows found.</div>';
   return '<div class="twrap"><table><thead><tr>'
-    + headers.map(function(h){ return '<th>'+h+'</th>'; }).join("")
-    + '</tr></thead><tbody>'
-    + rows.map(function(r){
-        return '<tr class="'+r.rowClass+'">'
-          + r.cols.map(function(c,i){ return '<td class="'+(i>=4?"wr":"")+'" title="'+c+'">'+c+'</td>'; }).join("")
-          + '</tr>';
-      }).join("")
-    + '</tbody></table></div>';
+    +headers.map(function(h){return '<th data-tip="'+(tips[h]||h)+'" style="cursor:help">'+h+'</th>';}).join("")
+    +'</tr></thead><tbody>'
+    +rows.map(function(r){
+      return '<tr class="'+r.rowClass+'">'
+        +r.cols.map(function(c,i){return '<td class="'+(i>=4?"wr":"")+'" title="'+c+'">'+c+'</td>';}).join("")
+        +'</tr>';
+    }).join("")
+    +'</tbody></table></div>';
+}
+
+function renderTable(headers, rows) {
+  if(!rows.length) return '<div style="color:#64748b;font-size:13px;font-style:italic">No data rows found.</div>';
+  return '<div class="twrap"><table><thead><tr>'
+    +headers.map(function(h){return '<th>'+h+'</th>';}).join("")
+    +'</tr></thead><tbody>'
+    +rows.map(function(r){
+      return '<tr class="'+r.rowClass+'">'
+        +r.cols.map(function(c,i){return '<td class="'+(i>=4?"wr":"")+'" title="'+c+'">'+c+'</td>';}).join("")
+        +'</tr>';
+    }).join("")
+    +'</tbody></table></div>';
+}
+
+function renderRefTimeline(items) {
+  if(!items||!items.length) return "";
+  return '<div class="slabel" style="margin-bottom:10px">📌 Reference Timeline</div>'
+    +'<div class="timeline-grid">'
+    +items.map(function(item,i){
+      return '<div class="tl-card">'
+        +'<div class="tl-step">'+(item.colA||"Step")+' '+(item.a||(i+1))+'</div>'
+        +'<div class="tl-name">'+(item.b||"")+'</div>'
+        +(item.c?'<div class="tl-desc">'+(item.c)+'</div>':"")
+        +'</div>';
+    }).join("")
+    +'</div>';
 }
 
 function renderComplaintCard(item, hl) {
-  var sc = (item.status.toLowerCase().includes("resol")||item.status.toLowerCase().includes("done")) ? "#16a34a" : "#dc2626";
-  var sb = (item.status.toLowerCase().includes("resol")||item.status.toLowerCase().includes("done")) ? "#f0fdf4" : "#fef2f2";
+  var sc=(item.status.toLowerCase().includes("resol")||item.status.toLowerCase().includes("done"))?"#16a34a":"#dc2626";
+  var sb=(item.status.toLowerCase().includes("resol")||item.status.toLowerCase().includes("done"))?"#f0fdf4":"#fef2f2";
   return '<div class="cc'+(hl?" today":"")+'"><div class="cd">'+(hl?"🔴 TODAY — ":"")+item.dateStr+(item.reporter?" · Reported by: "+item.reporter:"")+'</div>'
-    + '<div class="ca">'+(item.addr||"Address not specified")+'</div>'
-    + (item.type ? '<div class="ct">'+item.type+'</div>' : "")
-    + (item.desc ? '<div class="cx">'+item.desc+'</div>' : "")
-    + (item.status ? '<span class="cs" style="color:'+sc+';background:'+sb+'">'+item.status+'</span>' : "")
-    + '</div>';
+    +'<div class="ca">'+(item.addr||"Address not specified")+'</div>'
+    +(item.type?'<div class="ct">'+item.type+'</div>':"")
+    +(item.desc?'<div class="cx">'+item.desc+'</div>':"")
+    +(item.status?'<span class="cs" style="color:'+sc+';background:'+sb+'">'+item.status+'</span>':"")
+    +'</div>';
 }
 
 function renderComplaints(result) {
-  var html = "";
-  if (result.todayItems.length > 0) {
-    html += '<div class="today-banner"><span style="font-size:24px">🚨</span><div><div style="font-weight:800;font-size:15px">'+result.todayItems.length+' Complaint'+(result.todayItems.length>1?"s":"")+" / Incident"+(result.todayItems.length>1?"s":"")+" Today</div><div style=\"font-size:12px;opacity:.85\">"+TODAYSTR+"</div></div></div>";
-    html += result.todayItems.map(function(i){ return renderComplaintCard(i,true); }).join("");
-    html += '<div style="height:16px"></div>';
+  var html="";
+  if(result.todayItems.length>0){
+    html+='<div class="today-banner"><span style="font-size:24px">🚨</span><div><div style="font-weight:800;font-size:15px">'+result.todayItems.length+' Complaint'+(result.todayItems.length>1?"s":"")+' / Incident'+(result.todayItems.length>1?"s":"")+" Today</div><div style=\"font-size:12px;opacity:.85\">"+TODAYSTR+"</div></div></div>";
+    html+=result.todayItems.map(function(i){return renderComplaintCard(i,true);}).join("");
+    html+='<div style="height:16px"></div>';
   } else {
-    html += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-bottom:16px;font-size:14px;color:#166534">✅ No complaints or incidents today.</div>';
+    html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-bottom:16px;font-size:14px;color:#166534">✅ No complaints or incidents today.</div>';
   }
-  if (result.recentItems.length > 0) {
-    html += '<div class="slabel">Last 7 Days ('+result.recentItems.length+')</div>';
-    html += result.recentItems.map(function(i){ return renderComplaintCard(i,false); }).join("");
-    html += '<div style="height:16px"></div>';
+  if(result.recentItems.length>0){
+    html+='<div class="slabel">Last 7 Days ('+result.recentItems.length+')</div>';
+    html+=result.recentItems.map(function(i){return renderComplaintCard(i,false);}).join("");
+    html+='<div style="height:16px"></div>';
   }
-  if (result.olderItems.length > 0) {
-    html += '<div class="slabel">Older Records ('+result.olderItems.length+')</div>';
-    html += result.olderItems.map(function(i){ return renderComplaintCard(i,false); }).join("");
+  if(result.olderItems.length>0){
+    html+='<div class="slabel">Older Records ('+result.olderItems.length+')</div>';
+    html+=result.olderItems.map(function(i){return renderComplaintCard(i,false);}).join("");
   }
   return html;
 }
 
 function renderSecurity(result) {
-  if (!result.properties || !result.properties.length) return '<div style="color:#64748b;font-size:13px;font-style:italic">No noise alert records found.</div>';
-  return result.properties.map(function(p) {
-    var level = p.count >= 5 ? "critical" : p.count >= 3 ? "warning" : "ok";
-    var bc = level==="critical" ? "#dc2626" : level==="warning" ? "#d97706" : "#16a34a";
-    var bg = level==="critical" ? "#fff5f5" : level==="warning" ? "#fffbeb" : "#f0fdf4";
-    var badgeC  = bc;
-    var badgeBg = level==="critical" ? "#fee2e2" : level==="warning" ? "#fef9c3" : "#dcfce7";
-    var lastDate = p.dates.length ? p.dates[p.dates.length-1] : "";
+  if(!result.properties||!result.properties.length) return '<div style="color:#64748b;font-size:13px;font-style:italic">No noise alert records found.</div>';
+  return result.properties.map(function(p){
+    var level=p.count>=5?"critical":p.count>=3?"warning":"ok";
+    var bc=level==="critical"?"#dc2626":level==="warning"?"#d97706":"#16a34a";
+    var bg=level==="critical"?"#fff5f5":level==="warning"?"#fffbeb":"#f0fdf4";
+    var badgeC=bc;
+    var badgeBg=level==="critical"?"#fee2e2":level==="warning"?"#fef9c3":"#dcfce7";
+    var lastDate=p.dates.length?p.dates[p.dates.length-1]:"";
     return '<div class="sec-card" style="background:'+bg+';border:1px solid '+bc+'30;border-left-color:'+bc+'">'
-      + '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">'
-      + '<div style="font-weight:700;color:#1e293b;font-size:14px">🏠 '+p.name+'</div>'
-      + '<div style="display:flex;align-items:center;gap:8px">'
-      + '<span style="background:'+badgeBg+';color:'+badgeC+';padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700">🔔 '+p.count+' Alert'+(p.count!==1?"s":"")+'</span>'
-      + (p.hospiLink ? '<a href="'+p.hospiLink+'" target="_blank" style="background:#7c3aed;color:#fff;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none">🔗 Hospitable</a>' : "")
-      + '</div></div>'
-      + (lastDate ? '<div style="font-size:11px;color:#94a3b8;margin-bottom:6px">Last alert: '+lastDate+'</div>' : "")
-      + (p.actions.length ? '<div style="font-size:12px;color:#475569"><strong>Actions:</strong> '+p.actions.slice(0,3).join(" · ")+'</div>' : "")
-      + '</div>';
+      +'<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">'
+      +'<div style="font-weight:700;color:#1e293b;font-size:14px">🏠 '+p.name+'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="background:'+badgeBg+';color:'+badgeC+';padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700">🔔 '+p.count+' Alert'+(p.count!==1?"s":"")+'</span>'
+      +(p.hospiLink?'<a href="'+p.hospiLink+'" target="_blank" style="background:#7c3aed;color:#fff;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none">🔗 Hospitable</a>':"")
+      +'</div></div>'
+      +(lastDate?'<div style="font-size:11px;color:#94a3b8;margin-bottom:6px">Last alert: '+lastDate+'</div>':"")
+      +(p.actions.length?'<div style="font-size:12px;color:#475569"><strong>Actions:</strong> '+p.actions.slice(0,3).join(" · ")+'</div>':"")
+      +'</div>';
   }).join("");
 }
 
-function renderResults(id, allResults) {
-  var cfg = CFG[id];
-  var tab = TABS.find(function(t){ return t.id===id; });
-  var html = '<div class="trk-hdr"><div><h2>'+tab.label+'</h2><div class="sub">'+cfg.desc+'</div></div>'
-    + '<button class="rbtn" onclick="loadTab(\''+id+'\',true)">↺ Refresh</button></div>';
+function renderResults(id, allResults, extra) {
+  var cfg=CFG[id];
+  var tab=TABS.find(function(t){return t.id===id;});
+  var html='<div class="trk-hdr"><div><h2>'+tab.label+'</h2><div class="sub">'+cfg.desc+'</div></div>'
+    +'<button class="rbtn" onclick="loadTab(\''+id+'\',true)">↺ Refresh</button></div>';
 
-  allResults.forEach(function(ar) {
-    var result = ar.result;
-    html += '<div class="tsec">';
-    if (allResults.length > 1) {
-      html += '<div class="tdiv" style="color:'+cfg.color+';border-left-color:'+cfg.color+'">'+ar.sheetName+'</div>';
+  // Ref Timeline for onboarding shown at top
+  if(id==="onboarding" && extra && extra.refTimeline && extra.refTimeline.length){
+    html+=renderRefTimeline(extra.refTimeline);
+    html+='<div class="slabel" style="margin-top:8px">Property Onboarding Status</div>';
+  }
+
+  allResults.forEach(function(ar){
+    var result=ar.result;
+    html+='<div class="tsec">';
+    if(allResults.length>1){
+      html+='<div class="tdiv" style="color:'+cfg.color+';border-left-color:'+cfg.color+'">'+ar.sheetName+'</div>';
     }
-    html += '<div class="sumbox" style="background:'+cfg.color+'12;border:1px solid '+cfg.color+'30">📝 '+result.summary+'</div>';
-    if (result.stats && result.stats.length) {
-      html += '<div class="srow">';
-      result.stats.forEach(function(s) {
-        html += '<div class="scard" style="border:2px solid '+s.color+'30"><div class="sval" style="color:'+s.color+'">'+s.value+'</div><div class="slbl">'+s.label+'</div></div>';
+    html+='<div class="sumbox" style="background:'+cfg.color+'12;border:1px solid '+cfg.color+'30">📝 '+result.summary+'</div>';
+    if(result.stats&&result.stats.length){
+      html+='<div class="srow">';
+      result.stats.forEach(function(s){
+        html+='<div class="scard" style="border:2px solid '+s.color+'30"><div class="sval" style="color:'+s.color+'">'+s.value+'</div><div class="slbl">'+s.label+'</div></div>';
       });
-      html += '</div>';
+      html+='</div>';
     }
-    if (result.mode === "permitting") {
-      html += '<div class="split"><div><div class="slabel">Action Callouts</div>'+renderPermCallouts(result.callouts)+'</div>'
-        + '<div><div class="slabel">All Permits</div>'+renderTable(result.tableHeaders, result.tableRows)+'</div></div>';
-    } else if (result.mode === "complaints") {
-      html += renderComplaints(result);
-    } else if (result.mode === "security") {
-      html += '<div class="slabel">Properties by Alert Count (highest first)</div>' + renderSecurity(result);
+    if(result.mode==="permitting"){
+      html+='<div class="split"><div><div class="slabel">Action Callouts</div>'+renderPermCallouts(result.callouts)+'</div>'
+        +'<div><div class="slabel">All Permits</div>'+renderPermTable(result.tableHeaders,result.tableRows)+'</div></div>';
+    } else if(result.mode==="complaints"){
+      html+=renderComplaints(result);
+    } else if(result.mode==="security"){
+      html+='<div class="slabel">Properties by Alert Count (highest first)</div>'+renderSecurity(result);
+    } else if(result.mode==="utilities"){
+      html+='<div class="slabel">SUMMARY — Full View</div>'+renderTable(result.tableHeaders,result.tableRows);
     } else {
-      if (result.callouts && result.callouts.length) {
-        html += '<div class="slabel">Action Callouts</div>';
-        result.callouts.slice(0,20).forEach(function(c) {
-          html += '<div class="cbox"><div class="ctop">'+badge(c.level)+'<span class="ctitle">'+c.title+'</span></div><div class="cdet">'+c.detail+'</div></div>';
+      if(result.callouts&&result.callouts.length){
+        html+='<div class="slabel">Action Callouts</div>';
+        result.callouts.slice(0,20).forEach(function(c){
+          html+='<div class="cbox"><div class="ctop">'+badge(c.level)+'<span class="ctitle">'+c.title+'</span></div><div class="cdet">'+c.detail+'</div></div>';
         });
       } else {
-        html += '<div style="color:#16a34a;font-size:13px;margin-bottom:16px">✅ No flagged items.</div>';
+        html+='<div style="color:#16a34a;font-size:13px;margin-bottom:16px">✅ No flagged items.</div>';
       }
-      if (result.tableRows && result.tableRows.length) {
-        html += '<div class="slabel" style="margin-top:20px">Full Data</div>' + renderTable(result.tableHeaders, result.tableRows);
+      if(result.tableRows&&result.tableRows.length){
+        html+='<div class="slabel" style="margin-top:20px">Full Data</div>'+renderTable(result.tableHeaders,result.tableRows);
       }
     }
-    html += '</div>';
+    html+='</div>';
   });
   return html;
 }
 
 // ── LOAD ──────────────────────────────────────────────────────────────────────
-var cache = {}, activeTab = "home";
+var cache={}, activeTab="home";
 
 async function loadTab(id, force) {
-  var el = document.getElementById("content");
-  if (id === "home") { el.innerHTML = renderHome(); return; }
-  if (cache[id] && !force) { el.innerHTML = renderResults(id, cache[id]); return; }
-  var cfg = CFG[id];
-  el.innerHTML = '<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading data…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>';
+  var el=document.getElementById("content");
+  if(id==="home"){el.innerHTML=renderHome();return;}
+  if(cache[id]&&!force){el.innerHTML=renderResults(id,cache[id].results,cache[id].extra);return;}
+  var cfg=CFG[id];
+  el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading data…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>';
   try {
-    var sheets = cfg.sheets.slice();
-    if (id === "onboarding") {
-      var names = await fetchMeta(cfg.sheetId);
-      sheets = names.map(function(n){ return {name:n, range:n}; });
+    var sheets=cfg.sheets.slice();
+    var extra={};
+
+    if(id==="onboarding"){
+      // Load Ref Timeline first
+      try {
+        var refData=await fetchSheet(cfg.sheetId, cfg.refSheet);
+        extra.refTimeline=analyzeRefTimeline(refData);
+      } catch(e){ extra.refTimeline=[]; }
+      // Then load all visible property sheets
+      var names=await fetchMeta(cfg.sheetId);
+      // Exclude Ref Timeline from property list
+      names=names.filter(function(n){return n!==cfg.refSheet;});
+      sheets=names.map(function(n){return{name:n,range:n};});
     }
-    var allResults = [];
-    for (var i = 0; i < sheets.length; i++) {
-      var sheet = sheets[i];
-      el.innerHTML = '<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading "'+sheet.name+'"…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>';
-      var data = await fetchSheet(cfg.sheetId, sheet.range);
-      var result = runAnalysis(id, sheet.name, data);
-      allResults.push({sheetName:sheet.name, result:result});
+
+    var allResults=[];
+    for(var i=0;i<sheets.length;i++){
+      var sheet=sheets[i];
+      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading "'+sheet.name+'"…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>';
+      var data=await fetchSheet(cfg.sheetId,sheet.range);
+      var result=runAnalysis(id,sheet.name,data);
+      allResults.push({sheetName:sheet.name,result:result});
     }
-    cache[id] = allResults;
-    el.innerHTML = renderResults(id, allResults);
-    document.getElementById("upd").textContent = "Updated " + new Date().toLocaleTimeString();
-  } catch(e) {
-    el.innerHTML = '<div class="stbox"><div style="font-size:36px;margin-bottom:12px">⚠️</div>'
-      + '<div style="font-weight:700;color:#dc2626;font-size:15px;margin-bottom:6px">Could not load data</div>'
-      + '<div style="font-size:13px;color:#64748b;margin:0 auto 16px;max-width:500px">'+e.message+'</div>'
-      + '<button class="rbtn" style="color:'+cfg.color+';border-color:'+cfg.color+'" onclick="loadTab(\''+id+'\',true)">↺ Try Again</button></div>';
+    cache[id]={results:allResults,extra:extra};
+    el.innerHTML=renderResults(id,allResults,extra);
+    document.getElementById("upd").textContent="Updated "+new Date().toLocaleTimeString();
+  } catch(e){
+    el.innerHTML='<div class="stbox"><div style="font-size:36px;margin-bottom:12px">⚠️</div>'
+      +'<div style="font-weight:700;color:#dc2626;font-size:15px;margin-bottom:6px">Could not load data</div>'
+      +'<div style="font-size:13px;color:#64748b;margin:0 auto 16px;max-width:500px">'+e.message+'</div>'
+      +'<button class="rbtn" style="color:'+cfg.color+';border-color:'+cfg.color+'" onclick="loadTab(\''+id+'\',true)">↺ Try Again</button></div>';
   }
 }
 
 function renderTabs() {
-  document.getElementById("tabs").innerHTML = TABS.map(function(t) {
-    var active = t.id === activeTab;
+  document.getElementById("tabs").innerHTML=TABS.map(function(t){
+    var active=t.id===activeTab;
     return '<button style="'+(active?"color:"+t.color+";border-bottom-color:"+t.color+";font-weight:700":"")+'" onclick="switchTab(\''+t.id+'\')">'+t.label+'</button>';
   }).join("");
 }
-
-function switchTab(id) { activeTab = id; renderTabs(); loadTab(id); }
-
-setInterval(function() {
-  Object.keys(cache).forEach(function(id){ delete cache[id]; });
-  if (activeTab !== "home") loadTab(activeTab, true);
-}, REFRESH);
-
+function switchTab(id){activeTab=id;renderTabs();loadTab(id);}
+setInterval(function(){
+  Object.keys(cache).forEach(function(id){delete cache[id];});
+  if(activeTab!=="home") loadTab(activeTab,true);
+},REFRESH);
 renderTabs();
 loadTab("home");
 </script>
