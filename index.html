@@ -245,24 +245,26 @@ function expBadge(dateStr, label) {
 // Col C(2) = OVERALL STATUS — count rows where value is exactly "Active" (case-insensitive)
 // Col V(21) = STATE — count rows where value is "YES" (Yes/yes/YES)
 function analyzeMasterStats(rr) {
-  if (!rr || rr.length < 3) return { total: 0, active: 0, state: 0, marketData: [] };
-  var total = 0, active = 0, state = 0, marketMap = {};
-  // Skip rows 0 and 1 (headers), data starts at index 2
+  if (!rr || rr.length < 3) return { total: 0, active: 0, hoa: 0, city: 0, county: 0, state: 0, marketData: [] };
+  var total = 0, active = 0, hoa = 0, city = 0, county = 0, state = 0, marketMap = {};
+  // Row 0 = "Confluence" merge, Row 1 = column headers, data starts at index 2
   rr.slice(2).forEach(function (row) {
-    var prop    = cv(row, 0);   // Col A — property name (skip empty rows)
-    var market  = cv(row, 1);   // Col B — market e.g. "Memphis"
-    var status  = cv(row, 2);   // Col C — "Active", "In Progress", "Due Soon", "Expired"
-    var stateV  = cv(row, 21);  // Col V — "YES" or "NO"
-    if (!prop && !market) return; // skip blank rows
+    var prop   = cv(row, 0);   // Col A — property name
+    var market = cv(row, 1);   // Col B — market (Memphis, Scottsdale, etc.)
+    var status = cv(row, 2);   // Col C — OVERALL STATUS
+    if (!prop) return;          // skip blank rows (must have a property name)
     total++;
     if (status.toLowerCase() === "active") active++;
-    if (stateV.toLowerCase() === "yes") state++;
+    if (isYes(cv(row, 8)))  hoa++;     // Col I (index 8)  — HOA YES/NO
+    if (isYes(cv(row, 13))) city++;    // Col N (index 13) — City YES/NO
+    if (isYes(cv(row, 17))) county++;  // Col R (index 17) — County YES/NO
+    if (isYes(cv(row, 21))) state++;   // Col V (index 21) — State YES/NO
     if (market) marketMap[market] = (marketMap[market] || 0) + 1;
   });
   var marketData = Object.entries(marketMap)
     .map(function (e) { return { name: e[0], count: e[1] }; })
     .sort(function (a, b) { return b.count - a.count; });
-  return { total: total, active: active, state: state, marketData: marketData };
+  return { total: total, active: active, hoa: hoa, city: city, county: county, state: state, marketData: marketData };
 }
 
 // HOA/Township tab
@@ -1085,11 +1087,14 @@ async function loadTab(id, force) {
 
       var result = {
         mode: "master",
-        summary: statsData.total + " properties tracked. Active: " + statsData.active + ". State permits: " + statsData.state + ".",
+        summary: statsData.total + " properties tracked. Active: " + statsData.active + ". HOA/Township: " + statsData.hoa + ", City: " + statsData.city + ", County: " + statsData.county + ", State: " + statsData.state + ".",
         stats: [
-          { label: "Total",            value: statsData.total,  color: "#0ea5e9" },
-          { label: "✅ Active",        value: statsData.active, color: "#16a34a" },
-          { label: "🏛 State Permits", value: statsData.state,  color: "#3b82f6" },
+          { label: "Total",             value: statsData.total,   color: "#0ea5e9" },
+          { label: "✅ Active",         value: statsData.active,  color: "#16a34a" },
+          { label: "🏘 HOA/Township",   value: statsData.hoa,     color: "#7c3aed" },
+          { label: "🏙 City",           value: statsData.city,    color: "#f59e0b" },
+          { label: "🗺 County",         value: statsData.county,  color: "#10b981" },
+          { label: "🏛 State",          value: statsData.state,   color: "#3b82f6" },
         ],
         marketData:    statsData.marketData,
         hoaRows:       analyzeHOA(hoaRR),
