@@ -125,6 +125,9 @@ tr.hr{display:none}
 .ai-dot:nth-child(2){animation-delay:.2s}
 .ai-dot:nth-child(3){animation-delay:.4s}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+.permit-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.permit-tab-btn{padding:6px 16px;border-radius:20px;border:2px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;font-size:12px;font-weight:600;font-family:'Inter',system-ui,sans-serif;transition:all .15s}
+.permit-tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 .stbox{text-align:center;padding:80px 20px}
 .spin{display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -160,19 +163,11 @@ var TABS=[
   {id:"security",   label:"🔒 Security Monitoring",    color:"#7c3aed"},
 ];
 
+var PERM_SHEETID="1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg";
+
 var CFG={
-  master:{
-    sheetId:"1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg",
-    color:"#0ea5e9",desc:"Master Tracker — permit counts, market breakdown & Dropbox links",
-    sheets:[{name:"MASTER TRACKER 1",range:"MASTER TRACKER 1"}],
-    permitTabs:[
-      {name:"HOA / Township Only",type:"HOA/Township"},
-      {name:"City Only",          type:"City"},
-      {name:"County Only",        type:"County"},
-      {name:"State Only",         type:"State"},
-    ]
-  },
-  permitting:{sheetId:"1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg",color:"#f59e0b",desc:"Expiration tab — permits expiring soon with notes",sheets:[{name:"Expiration",range:"Expiration"}]},
+  master:    {sheetId:PERM_SHEETID,color:"#0ea5e9",desc:"Master Tracker — permit counts, market breakdown & Dropbox links"},
+  permitting:{sheetId:PERM_SHEETID,color:"#f59e0b",desc:"Expiration tab — permits expiring soon with notes",sheets:[{name:"Expiration",range:"Expiration"}]},
   utilities: {sheetId:"1bPlzWPzarOI03QO1_LqUrhlrxM8AMc2MPrQHiYrPCns",color:"#3b82f6",desc:"SUMMARY tab — live utility status overview",sheets:[{name:"SUMMARY",range:"SUMMARY"}]},
   onboarding:{sheetId:"13JffxAKNLUaPm2n1iBWNCL48k-7CCEaf4xwu0xgjZN4",color:"#10b981",desc:"Ref Timeline + all property onboarding tabs",sheets:[],refSheet:"Ref Timeline"},
   vegetation: {sheetId:"1omzFAmQLUUk-g9tOd9b3fm9NbnxhXVbnGUQXUb6-6mg",color:"#84cc16",desc:"Lawncare Audit AZ & FL — sorted by most recent",sheets:[{name:"Lawncare Audit AZ",range:"Lawncare Audit AZ"},{name:"Lawncare Audit FL",range:"Lawncare Audit FL"}]},
@@ -206,79 +201,92 @@ function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace
 function lnk(url,label){if(!url||!url.startsWith("http"))return esc(url||"");return'<a href="'+esc(url)+'" target="_blank">'+esc(label)+'</a>';}
 function badge(lv){var m={critical:{bg:"#fee2e2",c:"#dc2626",i:"🔴"},warning:{bg:"#fef9c3",c:"#d97706",i:"🟡"},info:{bg:"#eff6ff",c:"#2563eb",i:"🔵"}};var s=m[lv]||m.info;return'<span class="badge" style="background:'+s.bg+';color:'+s.c+'">'+s.i+' '+lv.toUpperCase()+'</span>';}
 function cv(row,i){return((row&&row[i])||"").trim();}
+function isYes(v){var l=(v||"").trim().toLowerCase();return l==="yes"||l==="y";}
 function statCards(stats){return'<div class="srow">'+stats.map(function(s){return'<div class="scard" style="border:2px solid '+s.color+'30"><div class="sval" style="color:'+s.color+'">'+s.value+'</div><div class="slbl">'+s.label+'</div></div>';}).join("")+'</div>';}
 
-// ── DROPBOX LOOKUP ────────────────────────────────────────────────────────────
-function buildDropboxLookup(tabResults){
-  var lookup={};
-  tabResults.forEach(function(t){
-    var rr=t.rr,typeName=t.type;
-    if(!rr||rr.length<2)return;
-    var headers=rr[0].map(function(h){return(h||"").trim();});
-    var propIdx=0,dbPermitIdx=-1,dbFolderIdx=-1;
-    headers.forEach(function(h,i){
-      var hl=h.toLowerCase();
-      if(hl.includes("property")||hl.includes("address"))propIdx=i;
-      if(dbPermitIdx===-1&&hl.includes("dropbox")&&!hl.includes("folder")&&!hl.includes("all"))dbPermitIdx=i;
-      if(dbFolderIdx===-1&&hl.includes("dropbox")&&(hl.includes("folder")||hl.includes("all")))dbFolderIdx=i;
-    });
-    // fallback: any dropbox cols
-    if(dbPermitIdx===-1||dbFolderIdx===-1){
-      var dbc=[];headers.forEach(function(h,i){if(h.toLowerCase().includes("dropbox"))dbc.push(i);});
-      if(dbPermitIdx===-1&&dbc.length>0)dbPermitIdx=dbc[0];
-      if(dbFolderIdx===-1&&dbc.length>1)dbFolderIdx=dbc[1];
-    }
-    rr.slice(1).forEach(function(row){
-      var prop=cv(row,propIdx);if(!prop)return;
-      lookup[prop.toLowerCase()]={dropboxPermit:dbPermitIdx>=0?cv(row,dbPermitIdx):"",dropboxFolder:dbFolderIdx>=0?cv(row,dbFolderIdx):"",type:typeName};
-    });
-  });
-  return lookup;
-}
-
-// ── ANALYSIS ──────────────────────────────────────────────────────────────────
-function analyzeMaster(rr,dropboxLookup){
-  if(!rr||rr.length<2)return{mode:"master",summary:"No data.",stats:[],marketData:[],tR:[],tH:[]};
+// ── MASTER TRACKER ANALYSIS ────────────────────────────────────────────────────
+// MASTER TRACKER 1: stats only
+// Col A(0)=Property, B(1)=Status, I(8)=HOA yes, N(13)=City yes, R(17)=County yes, W(22)=State yes
+// Market col: scan for "market" in headers
+function analyzeMasterStats(rr){
+  if(!rr||rr.length<2)return{total:0,active:0,hoa:0,city:0,county:0,state:0,marketData:[]};
   var headers=rr[0].map(function(h){return(h||"").trim();});
   var marketIdx=-1;
   headers.forEach(function(h,i){if(h.toLowerCase().includes("market"))marketIdx=i;});
-  var hoaCount=0,cityCount=0,countyCount=0,stateCount=0,totalActive=0;
-  var marketMap={};
-  var tR=[];
+  var total=0,active=0,hoa=0,city=0,county=0,state=0,marketMap={};
   rr.slice(1).forEach(function(row){
     var prop=cv(row,0);if(!prop)return;
-    var status=cv(row,1),statusL=status.toLowerCase();
-    var expDate=cv(row,9),license=cv(row,10),notes=cv(row,19),autoType=cv(row,20),autoTypeL=autoType.toLowerCase();
+    total++;
+    var status=cv(row,1).toLowerCase();
+    if(status==="active")active++;
+    if(isYes(cv(row,8)))hoa++;
+    if(isYes(cv(row,13)))city++;
+    if(isYes(cv(row,17)))county++;
+    if(isYes(cv(row,22)))state++;
     var market=marketIdx>=0?cv(row,marketIdx):"";
-    if(autoTypeL.includes("township")||autoTypeL.includes("hoa"))hoaCount++;
-    else if(autoTypeL.includes("city"))cityCount++;
-    else if(autoTypeL.includes("county"))countyCount++;
-    else if(autoTypeL.includes("state"))stateCount++;
-    if(statusL==="active")totalActive++;
     if(market)marketMap[market]=(marketMap[market]||0)+1;
-    var db=dropboxLookup&&dropboxLookup[prop.toLowerCase()];
-    var dbPermit=db?db.dropboxPermit:"",dbFolder=db?db.dropboxFolder:"";
-    var resolvedType=db?db.type:(autoType||"—");
-    var rc=statusL==="active"?"ro":(statusL.includes("progress")||statusL.includes("due soon"))?"rw":"";
-    tR.push({rc:rc,prop:prop,cols:[prop,status,market||"—",resolvedType,expDate,license,notes,dbPermit,dbFolder]});
   });
   var marketData=Object.entries(marketMap).map(function(e){return{name:e[0],count:e[1]};}).sort(function(a,b){return b.count-a.count;});
-  var total=tR.length;
-  return{mode:"master",
-    summary:total+" properties tracked. Active: "+totalActive+". HOA/Township: "+hoaCount+", City: "+cityCount+", County: "+countyCount+", State: "+stateCount+".",
-    stats:[
-      {label:"Total",           value:total,       color:"#0ea5e9"},
-      {label:"✅ Active",       value:totalActive, color:"#16a34a"},
-      {label:"🏘 HOA/Township", value:hoaCount,    color:"#7c3aed"},
-      {label:"🏙 City",         value:cityCount,   color:"#f59e0b"},
-      {label:"🗺 County",       value:countyCount, color:"#10b981"},
-      {label:"🏛 State",        value:stateCount,  color:"#3b82f6"},
-    ],
-    marketData:marketData,
-    tH:["Property","Status","Market","Permit Type","Expire Date","License","Notes","Dropbox Permit","Dropbox All Permits"],
-    tR:tR};
+  return{total:total,active:active,hoa:hoa,city:city,county:county,state:state,marketData:marketData};
 }
 
+// HOA/Township tab: A=Property(0), F=HOA(5), G=Township(6), H=State(7), I=Issued(8), J=ExpireDate(9), K=License(10), M=Fund(12), R=DropboxPermit(17), S=DropboxAll(18), T=Notes(19)
+function analyzeHOA(rr){
+  if(!rr||rr.length<2)return[];
+  var rows=[];
+  rr.slice(1).forEach(function(row){
+    var prop=cv(row,0);if(!prop)return;
+    var expDate=cv(row,9),d2=pdate(expDate),diff=d2?ddiff(d2):null;
+    var rc="",label="";
+    if(diff!==null){if(diff<0){rc="rc";label="EXPIRED";}else if(diff<=30){rc="rc";label=diff+"d left";}else if(diff<=90){rc="rw";label=diff+"d left";}}
+    rows.push({rc:rc,prop:prop,cols:[prop,cv(row,5),cv(row,6),cv(row,7),cv(row,8),expDate,label,cv(row,10),cv(row,12),cv(row,17),cv(row,18),cv(row,19)]});
+  });
+  return rows;
+}
+
+// City tab: A=Property(0), G=City(6), H=Issued(7), I=ExpireDate(8), J=License(9), L=Fund(11), S=DropboxPermit(18), T=DropboxAll(19), V=Notes(21)
+function analyzeCity(rr){
+  if(!rr||rr.length<2)return[];
+  var rows=[];
+  rr.slice(1).forEach(function(row){
+    var prop=cv(row,0);if(!prop)return;
+    var expDate=cv(row,8),d2=pdate(expDate),diff=d2?ddiff(d2):null;
+    var rc="",label="";
+    if(diff!==null){if(diff<0){rc="rc";label="EXPIRED";}else if(diff<=30){rc="rc";label=diff+"d left";}else if(diff<=90){rc="rw";label=diff+"d left";}}
+    rows.push({rc:rc,prop:prop,cols:[prop,cv(row,6),cv(row,7),expDate,label,cv(row,9),cv(row,11),cv(row,18),cv(row,19),cv(row,21)]});
+  });
+  return rows;
+}
+
+// County tab: A=Property(0), H=County(7), I=Issued(8), J=ExpireDate(9), K=License(10), F=Fund(5), P=DropboxPermit(15), Q=DropboxAll(16), S=Notes(18)
+function analyzeCounty(rr){
+  if(!rr||rr.length<2)return[];
+  var rows=[];
+  rr.slice(1).forEach(function(row){
+    var prop=cv(row,0);if(!prop)return;
+    var expDate=cv(row,9),d2=pdate(expDate),diff=d2?ddiff(d2):null;
+    var rc="",label="";
+    if(diff!==null){if(diff<0){rc="rc";label="EXPIRED";}else if(diff<=30){rc="rc";label=diff+"d left";}else if(diff<=90){rc="rw";label=diff+"d left";}}
+    rows.push({rc:rc,prop:prop,cols:[prop,cv(row,7),cv(row,8),expDate,label,cv(row,10),cv(row,5),cv(row,15),cv(row,16),cv(row,18)]});
+  });
+  return rows;
+}
+
+// State tab: A=Property(0), G=Issued(6), H=ExpireDate(7), I=License(8), F=Fund(5), N=DropboxPermit(13), O=DropboxAll(14), Q=Notes(16)
+function analyzeState(rr){
+  if(!rr||rr.length<2)return[];
+  var rows=[];
+  rr.slice(1).forEach(function(row){
+    var prop=cv(row,0);if(!prop)return;
+    var expDate=cv(row,7),d2=pdate(expDate),diff=d2?ddiff(d2):null;
+    var rc="",label="";
+    if(diff!==null){if(diff<0){rc="rc";label="EXPIRED";}else if(diff<=30){rc="rc";label=diff+"d left";}else if(diff<=90){rc="rw";label=diff+"d left";}}
+    rows.push({rc:rc,prop:prop,cols:[prop,cv(row,6),expDate,label,cv(row,8),cv(row,5),cv(row,13),cv(row,14),cv(row,16)]});
+  });
+  return rows;
+}
+
+// ── OTHER ANALYZERS ────────────────────────────────────────────────────────────
 function analyzePermitting(rr){
   if(!rr||rr.length<2)return{mode:"permitting",summary:"No data.",stats:[],callouts:[],tH:["Property Name","Expiration Date","Notes","Last Updated"],tR:[]};
   var headers=rr[0].map(function(h){return(h||"").trim();});
@@ -338,12 +346,11 @@ function analyzeOnboarding(rr){
     var catRaw=cv(row,0);if(catRaw)lastCat=catRaw;
     var task=cv(row,2);if(!task)return;
     total++;
-    var owner=cv(row,1),auditAction=cv(row,3),doneRaw=cv(row,doneIdx),doneLow=doneRaw.toLowerCase(),notes=cv(row,5);
-    var rc="";
+    var doneRaw=cv(row,doneIdx),doneLow=doneRaw.toLowerCase(),rc="";
     if(doneLow==="yes"||doneLow==="y"){complete++;rc="ro";}
     else if(doneLow.includes("progress")){inprogress++;rc="rw";}
     else{flagged++;rc="rc";}
-    tR.push({rc:rc,prop:lastCat,cols:[lastCat,owner,task,auditAction,doneRaw||"—",notes]});
+    tR.push({rc:rc,prop:lastCat,cols:[lastCat,cv(row,1),task,cv(row,3),doneRaw||"—",cv(row,5)]});
   });
   return{mode:"onboarding",summary:total===0?"No data.":total+" items — "+complete+" complete, "+inprogress+" in progress, "+flagged+" not started.",
     stats:[{label:"Total Items",value:total,color:"#10b981"},{label:"✅ Complete",value:complete,color:"#16a34a"},{label:"⏳ In Progress",value:inprogress,color:"#d97706"},{label:"🚩 Not Started",value:flagged,color:"#dc2626"}],
@@ -380,7 +387,7 @@ function analyzeVegetation(sn,rr){
     else if(service==="no"||service==="n"){pass++;rc="ro";}
     tR.push({rc:rc,prop:name,cols:dispIdxs.map(function(i){return cv(row,i);})});
   });
-  return{mode:"vegetation",summary:dataRows.length===0?"No data.":dataRows.length+" properties — "+pass+" pass, "+fail+" need service. Sorted by most recent.",
+  return{mode:"vegetation",summary:dataRows.length===0?"No data.":dataRows.length+" properties — "+pass+" pass, "+fail+" need service.",
     stats:[{label:"Total",value:dataRows.length,color:"#84cc16"},{label:"✅ Pass",value:pass,color:"#16a34a"},{label:"🔴 Needs Service",value:fail,color:"#dc2626"}],
     callouts:callouts,tH:dispH,tR:tR};
 }
@@ -418,8 +425,7 @@ function analyzeSecurity(rr){
     if(!propMap[prop])propMap[prop]={count:0,guests:[],hospiLink:"",slackLink:"",latestDate:null,latestDateStr:""};
     propMap[prop].count++;
     if(guest&&!propMap[prop].guests.includes(guest))propMap[prop].guests.push(guest);
-    if(hospi)propMap[prop].hospiLink=hospi;
-    if(slack)propMap[prop].slackLink=slack;
+    if(hospi)propMap[prop].hospiLink=hospi;if(slack)propMap[prop].slackLink=slack;
     if(d2&&(!propMap[prop].latestDate||d2>propMap[prop].latestDate)){propMap[prop].latestDate=d2;propMap[prop].latestDateStr=dateStr;}
   });
   var props=Object.entries(propMap).map(function(e){return Object.assign({name:e[0]},e[1]);})
@@ -445,8 +451,7 @@ function filterTable(tabId){
   var inp=document.getElementById("search-"+tabId);if(!inp)return;
   var q=inp.value.toLowerCase().trim();
   var rows=document.querySelectorAll("#tbl-"+tabId+" tbody tr");
-  var vis=0;
-  rows.forEach(function(row){var show=!q||row.textContent.toLowerCase().includes(q);row.classList.toggle("hr",!show);if(show)vis++;});
+  var vis=0;rows.forEach(function(row){var show=!q||row.textContent.toLowerCase().includes(q);row.classList.toggle("hr",!show);if(show)vis++;});
   var sc=document.getElementById("sc-"+tabId);if(sc)sc.textContent=q?vis+" results":"";
 }
 
@@ -461,9 +466,24 @@ function renderTable(tH,tR,wrapIdxs,tableId){
     }).join("")+'</tr>';}).join("")+'</tbody></table></div>';
 }
 
+function renderPermitTable(type,tH,tR,tableId){
+  if(!tR||!tR.length)return'<div style="color:#64748b;font-size:13px;font-style:italic;padding:12px">No '+type+' permit records found.</div>';
+  var tid=tableId?'id="tbl-'+tableId+'"':"";
+  return'<div class="twrap"><table '+tid+'><thead><tr>'+tH.map(function(h){return'<th>'+esc(h)+'</th>';}).join("")+'</tr></thead><tbody>'
+    +tR.map(function(r){
+      return'<tr class="'+(r.rc||"")+'">'+r.cols.map(function(c,i){
+        var isLink=c&&c.startsWith("http");
+        // Last 3 cols are typically notes, dropbox links — wrap them
+        var wrap=i>=tH.length-3;
+        return'<td class="'+(wrap?"wr":"")+'" title="'+(isLink?"":esc(c))+'">'+((isLink)?lnk(c,"🔗 Link"):esc(c))+'</td>';
+      }).join("")+'</tr>';
+    }).join("")+'</tbody></table></div>';
+}
+
 function renderPieChart(marketData){
   if(!marketData||!marketData.length)return"";
   var top=marketData.slice(0,10),total=top.reduce(function(s,m){return s+m.count;},0);
+  if(!total)return"";
   var colors=["#0ea5e9","#7c3aed","#f59e0b","#10b981","#dc2626","#3b82f6","#84cc16","#6366f1","#d97706","#06b6d4"];
   var size=180,cx=90,cy=90,r=70,slices="",angle=-Math.PI/2;
   top.forEach(function(m,i){
@@ -476,6 +496,59 @@ function renderPieChart(marketData){
   slices+='<circle cx="'+cx+'" cy="'+cy+'" r="32" fill="white"/><text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" font-size="11" fill="#64748b" font-family="Inter,sans-serif">Total</text><text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" font-size="18" font-weight="800" fill="#1e293b" font-family="Inter,sans-serif">'+total+'</text>';
   var legend=top.map(function(m,i){return'<div class="pie-legend-item"><div class="pie-dot" style="background:'+colors[i%colors.length]+'"></div><span style="flex:1">'+esc(m.name)+'</span><strong>'+m.count+'</strong></div>';}).join("");
   return'<div class="chart-wrap"><div class="chart-title">🗺 Top Markets by Property Count</div><div class="pie-wrap"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'+slices+'</svg><div class="pie-legend">'+legend+'</div></div></div>';
+}
+
+function renderMasterTab(masterData){
+  var stats=masterData.stats,activePermitType=masterData.activePermitType||"hoa";
+  var tabs=[
+    {key:"hoa",   label:"🏘 HOA / Township"},
+    {key:"city",  label:"🏙 City"},
+    {key:"county",label:"🗺 County"},
+    {key:"state", label:"🏛 State"},
+  ];
+  var tabBtns=tabs.map(function(t){return'<button class="permit-tab-btn'+(activePermitType===t.key?" active":"")+'" onclick="switchPermitTab(\''+t.key+'\')">'+t.label+'</button>';}).join("");
+
+  var hoaTH=["Property","HOA","Township","State","Issued","Expire Date","Days Left","License","Fund","Dropbox Permit","Dropbox All","Notes"];
+  var cityTH=["Property","City","Issued","Expire Date","Days Left","License","Fund","Dropbox Permit","Dropbox All","Notes"];
+  var countyTH=["Property","County","Issued","Expire Date","Days Left","License","Fund","Dropbox Permit","Dropbox All","Notes"];
+  var stateTH=["Property","Issued","Expire Date","Days Left","License","Fund","Dropbox Permit","Dropbox All","Notes"];
+
+  var html='';
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">';
+  html+='<div><div style="font-size:12px;color:#64748b">Filter by permit type:</div></div></div>';
+  html+='<div class="permit-tabs">'+tabBtns+'</div>';
+  html+=renderSearchBar("master");
+
+  // HOA
+  html+='<div id="ptab-hoa" style="display:'+(activePermitType==="hoa"?"block":"none")+'">';
+  html+='<div class="slabel">HOA / Township Permits ('+masterData.hoaRows.length+')</div>';
+  html+=renderPermitTable("HOA/Township",hoaTH,masterData.hoaRows,"master_hoa");
+  html+='</div>';
+  // City
+  html+='<div id="ptab-city" style="display:'+(activePermitType==="city"?"block":"none")+'">';
+  html+='<div class="slabel">City Permits ('+masterData.cityRows.length+')</div>';
+  html+=renderPermitTable("City",cityTH,masterData.cityRows,"master_city");
+  html+='</div>';
+  // County
+  html+='<div id="ptab-county" style="display:'+(activePermitType==="county"?"block":"none")+'">';
+  html+='<div class="slabel">County Permits ('+masterData.countyRows.length+')</div>';
+  html+=renderPermitTable("County",countyTH,masterData.countyRows,"master_county");
+  html+='</div>';
+  // State
+  html+='<div id="ptab-state" style="display:'+(activePermitType==="state"?"block":"none")+'">';
+  html+='<div class="slabel">State Permits ('+masterData.stateRows.length+')</div>';
+  html+=renderPermitTable("State",stateTH,masterData.stateRows,"master_state");
+  html+='</div>';
+  return html;
+}
+
+function switchPermitTab(key){
+  ["hoa","city","county","state"].forEach(function(k){
+    var el=document.getElementById("ptab-"+k);
+    if(el)el.style.display=k===key?"block":"none";
+    var btn=document.querySelector('.permit-tab-btn[onclick*="\''+k+'\'"]');
+    if(btn)btn.classList.toggle("active",k===key);
+  });
 }
 
 function renderPermCallouts(callouts){
@@ -498,7 +571,7 @@ function renderRefCard(ref){
   var mkRow=function(item){return'<tr><td style="font-weight:500">'+esc(item.a)+'</td><td style="text-align:center;font-weight:700;color:#10b981">'+esc(item.b)+'</td><td><span style="background:#f0fdf4;color:#16a34a;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600">'+esc(item.c)+'</span></td></tr>';};
   return'<div class="ref-card"><div class="ref-hdr"><div class="ref-title">📌 Onboarding Reference Timeline</div>'
     +(hasMore?'<button class="ref-toggle" id="ref-toggle-btn" onclick="toggleRef()">Show All ('+rows.length+')</button>':"")
-    +'</div><div class="twrap"><table><thead><tr><th>Onboarding Checklist</th><th style="text-align:center;width:140px">SOP Timeframe (Days)</th><th>Stage</th></tr></thead>'
+    +'</div><div class="twrap"><table><thead><tr><th>Checklist</th><th style="text-align:center;width:140px">SOP Days</th><th>Stage</th></tr></thead>'
     +'<tbody>'+rows.slice(0,PREVIEW).map(mkRow).join("")+'</tbody>'
     +(hasMore?'<tbody id="ref-extra" style="display:none">'+rows.slice(PREVIEW).map(mkRow).join("")+'</tbody>':"")
     +'</table></div></div>';
@@ -530,9 +603,8 @@ function renderComplaints(R){
   var html="";
   if(R.todayItems.length>0){
     html+='<div class="today-banner"><span style="font-size:24px">🚨</span><div><div style="font-weight:800;font-size:15px">'+R.todayItems.length+' Complaint'+(R.todayItems.length>1?"s":"")+" Today</div><div style=\"font-size:12px;opacity:.85\">"+TODAYSTR+"</div></div></div>";
-    html+=R.todayItems.map(function(i){return renderComplaintCard(i,true);}).join("");
-    html+='<div style="height:16px"></div>';
-  }else{html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-bottom:16px;font-size:14px;color:#166534">✅ No complaints today.</div>';}
+    html+=R.todayItems.map(function(i){return renderComplaintCard(i,true);}).join("");html+='<div style="height:16px"></div>';
+  }else html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-bottom:16px;font-size:14px;color:#166534">✅ No complaints today.</div>';
   if(R.recentItems.length>0){html+='<div class="slabel">Last 7 Days ('+R.recentItems.length+')</div>';html+=R.recentItems.map(function(i){return renderComplaintCard(i,false);}).join("");html+='<div style="height:16px"></div>';}
   if(R.olderItems.length>0){
     html+='<div class="slabel">Older Records ('+R.olderItems.length+')</div>';
@@ -586,6 +658,7 @@ function renderResults(id,allResults,extra){
   var cfg=CFG[id],tab=TABS.find(function(t){return t.id===id;});
   var html='<div class="trk-hdr"><div><h2>'+tab.label+'</h2><div class="sub">'+cfg.desc+'</div></div><button class="rbtn" onclick="loadTab(\''+id+'\',true)">↺ Refresh</button></div>';
   if(id==="onboarding"&&extra&&extra.ref)html+=renderRefCard(extra.ref)+'<div class="slabel" style="margin-top:4px">Property Onboarding Status</div>';
+
   allResults.forEach(function(ar,idx){
     var R=ar.result;
     html+='<div class="tsec">';
@@ -595,19 +668,7 @@ function renderResults(id,allResults,extra){
     if(R.mode==="master"){
       html+=statCards(R.stats);
       html+=renderPieChart(R.marketData);
-      html+=renderSearchBar("master");
-      html+='<div class="slabel">All Properties</div>';
-      html+='<div class="twrap"><table id="tbl-master"><thead><tr>'
-        +R.tH.map(function(h){return'<th>'+esc(h)+'</th>';}).join("")
-        +'</tr></thead><tbody>'
-        +R.tR.map(function(r){
-          return'<tr class="'+(r.rc||"")+'">'+r.cols.map(function(c,i){
-            if((i===7||i===8)&&c&&c.startsWith("http"))return'<td>'+lnk(c,i===7?"📄 Permit":"📁 All Permits")+'</td>';
-            if(i===1){var sc=c.toLowerCase()==="active"?"#16a34a":c.toLowerCase().includes("progress")?"#d97706":"#64748b";var sb=c.toLowerCase()==="active"?"#f0fdf4":c.toLowerCase().includes("progress")?"#fffbeb":"#f1f5f9";return'<td><span style="background:'+sb+';color:'+sc+';padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700">'+esc(c)+'</span></td>';}
-            return'<td class="'+(i===6?"wr":"")+'" title="'+esc(c)+'">'+esc(c)+'</td>';
-          }).join("")+'</tr>';
-        }).join("")
-        +'</tbody></table></div>';
+      html+=renderMasterTab(R);
     } else if(R.mode==="utilities"){
       html+='<div class="util-stats">'
         +'<div class="util-stat"><div class="ul">Total Live Properties</div><div class="uv">'+esc(R.sv.total)+'</div></div>'
@@ -622,12 +683,9 @@ function renderResults(id,allResults,extra){
       html+='<div class="split"><div><div class="slabel">Action Callouts</div>'+renderPermCallouts(R.callouts)+'</div>'
         +'<div>'+renderSearchBar("permitting")+'<div class="slabel">All Permits</div>'+renderTable(R.tH,R.tR,[2,3],"permitting")+'</div></div>';
     } else if(R.mode==="complaints"){
-      html+=statCards(R.stats);
-      html+=renderSearchBar("complaints");
-      html+=renderComplaints(R);
+      html+=statCards(R.stats);html+=renderSearchBar("complaints");html+=renderComplaints(R);
     } else if(R.mode==="security"){
-      html+=statCards(R.stats);
-      html+=renderSecurityChart(R.chartData);
+      html+=statCards(R.stats);html+=renderSecurityChart(R.chartData);
       html+=renderSearchBar("security");
       html+='<div class="slabel">All Properties — Sorted by Most Recent Alert</div>'+renderSecurityCards(R.properties);
       if(R.todayRows.length>0)html+=renderSecurityTable(R.todayRows,"📅 Today's Alert Details");
@@ -663,37 +721,50 @@ function renderHome(){
     +'<h1>Operations Dashboard</h1>'
     +'<p>Centralized real-time tracking across permitting, utilities, property onboarding, vegetation audits, complaints, and security.</p>'
     +'<div class="prop-search-wrap">'
-    +'<div class="prop-search-label">🔍 Property Lookup — Search any property for a full AI status report</div>'
+    +'<div class="prop-search-label">🔍 Property Lookup — AI-powered full status report</div>'
     +'<input type="text" id="prop-search-input" placeholder="Type a property name (e.g. Charter Oak 5420)…" oninput="onPropSearch()" autocomplete="off"/>'
     +'<div class="prop-results" id="prop-suggestions"></div>'
     +'</div></div>'
     +'<div id="prop-profile-result"></div>'
     +'<div class="card"><h2>📁 Trackers</h2><div class="tgrid">'+trackers.map(function(t){return'<div class="tcard"><span style="font-size:20px">'+t.icon+'</span><div><div style="font-weight:700;color:'+t.color+';font-size:13px">'+t.label+'</div><div style="color:#64748b;font-size:12px;margin-top:2px">'+t.desc+'</div></div></div>';}).join("")+'</div></div>'
-    +'<div class="card"><h2>🚀 How to use</h2><ol><li>Use Property Lookup above to get an AI-driven full status snapshot</li><li>Load tracker tabs first for richer AI insights</li><li>Use the search bar in each tab to filter by property name</li><li>Hit ↺ Refresh on any tab to get the latest data immediately</li><li>Dashboard auto-refreshes every 15 minutes</li></ol></div>';
+    +'<div class="card"><h2>🚀 How to use</h2><ol><li>Load tracker tabs first, then use Property Lookup for AI insights</li><li>Use the search bar in each tab to filter by property name</li><li>Hit ↺ Refresh on any tab for the latest data immediately</li><li>Dashboard auto-refreshes every 15 minutes</li></ol></div>';
 }
 
 // ── PROPERTY SEARCH ───────────────────────────────────────────────────────────
 var allPropertyNames=[];
+
 function collectAllProperties(){
   var names={};
   Object.values(globalCache).forEach(function(c){
     if(!c||!c.results)return;
     c.results.forEach(function(ar){
       var R=ar.result;if(!R)return;
-      if(R.tR)R.tR.forEach(function(r){if(r.prop&&r.prop.length>2)names[r.prop]=true;});
-      if(R.properties)R.properties.forEach(function(p){if(p.name&&p.name.length>2)names[p.name]=true;});
-      if(R.todayItems||R.recentItems||R.olderItems)[].concat(R.todayItems||[],R.recentItems||[],R.olderItems||[]).forEach(function(i){if(i.prop&&i.prop.length>2)names[i.prop]=true;});
+      // From tR rows
+      if(R.tR)R.tR.forEach(function(r){if(r.prop&&r.prop.trim().length>2)names[r.prop.trim()]=true;});
+      // From master permit rows
+      if(R.hoaRows)R.hoaRows.forEach(function(r){if(r.prop&&r.prop.trim().length>2)names[r.prop.trim()]=true;});
+      if(R.cityRows)R.cityRows.forEach(function(r){if(r.prop&&r.prop.trim().length>2)names[r.prop.trim()]=true;});
+      if(R.countyRows)R.countyRows.forEach(function(r){if(r.prop&&r.prop.trim().length>2)names[r.prop.trim()]=true;});
+      if(R.stateRows)R.stateRows.forEach(function(r){if(r.prop&&r.prop.trim().length>2)names[r.prop.trim()]=true;});
+      // Security properties
+      if(R.properties)R.properties.forEach(function(p){if(p.name&&p.name.trim().length>2)names[p.name.trim()]=true;});
+      // Complaints
+      [].concat(R.todayItems||[],R.recentItems||[],R.olderItems||[]).forEach(function(i){if(i.prop&&i.prop.trim().length>2)names[i.prop.trim()]=true;});
     });
   });
   allPropertyNames=Object.keys(names).sort();
 }
+
 function onPropSearch(){
   var q=(document.getElementById("prop-search-input").value||"").toLowerCase().trim();
   var sug=document.getElementById("prop-suggestions");
+  if(!sug)return;
   if(!q||q.length<2){sug.innerHTML="";return;}
   var matches=allPropertyNames.filter(function(n){return n.toLowerCase().includes(q);}).slice(0,8);
-  sug.innerHTML=matches.map(function(n){return'<span class="prop-suggestion" onclick="lookupProperty(\''+esc(n)+'\')">'+esc(n)+'</span>';}).join("");
+  if(!matches.length){sug.innerHTML='<span style="color:rgba(255,255,255,.5);font-size:12px">No matches found — try loading more tracker tabs first</span>';return;}
+  sug.innerHTML=matches.map(function(n){return'<span class="prop-suggestion" onclick="lookupProperty(\''+esc(n).replace(/'/g,"&#39;")+'\')">'+esc(n)+'</span>';}).join("");
 }
+
 function lookupProperty(name){
   document.getElementById("prop-search-input").value=name;
   document.getElementById("prop-suggestions").innerHTML="";
@@ -704,37 +775,37 @@ function lookupProperty(name){
 
 async function buildPropertyProfile(name,el){
   var nl=name.toLowerCase();
-  var found={permits:[],utilities:[],onboarding:[],vegetation:[],complaints:[],security:null,securityRows:[]};
+  var found={permits:[],utilities:[],vegetation:[],complaints:[],security:null,securityRows:[]};
+
   Object.entries(globalCache).forEach(function(entry){
     var id=entry[0],c=entry[1];
     if(!c||!c.results)return;
     c.results.forEach(function(ar){
       var R=ar.result;if(!R)return;
-      if(R.tR){R.tR.forEach(function(r){if(!r.prop||!r.prop.toLowerCase().includes(nl))return;
-        if(id==="master"||id==="permitting")found.permits.push(r);
+      if(R.tR)R.tR.forEach(function(r){if(!r.prop||!r.prop.toLowerCase().includes(nl))return;
+        if(id==="permitting")found.permits.push(r);
         else if(id==="utilities")found.utilities.push(r);
-        else if(id==="onboarding")found.onboarding.push(r);
         else if(id==="vegetation")found.vegetation.push(r);
-      });}
+      });
+      // Master tracker permit rows
+      [].concat(R.hoaRows||[],R.cityRows||[],R.countyRows||[],R.stateRows||[]).forEach(function(r){if(r.prop&&r.prop.toLowerCase().includes(nl))found.permits.push(r);});
       if(id==="security"){
         if(R.properties)R.properties.forEach(function(p){if(p.name&&p.name.toLowerCase().includes(nl))found.security=p;});
         [].concat(R.todayRows||[],R.recentRows||[]).forEach(function(r){if(r.prop&&r.prop.toLowerCase().includes(nl))found.securityRows.push(r);});
       }
-      if(id==="complaints"&&(R.todayItems||R.recentItems||R.olderItems)){
-        [].concat(R.todayItems||[],R.recentItems||[],R.olderItems||[]).forEach(function(i){if((i.prop||"").toLowerCase().includes(nl)||(i.listing||"").toLowerCase().includes(nl))found.complaints.push(i);});
-      }
+      if(id==="complaints")[].concat(R.todayItems||[],R.recentItems||[],R.olderItems||[]).forEach(function(i){if((i.prop||"").toLowerCase().includes(nl)||(i.listing||"").toLowerCase().includes(nl))found.complaints.push(i);});
     });
   });
 
   var hasPermitIssue=found.permits.some(function(r){return r.rc==="rc";});
-  var permitStatus=found.permits.length===0?"— Load Master/Permitting tab first":hasPermitIssue?"⚠️ "+found.permits.filter(function(r){return r.rc==="rc";}).length+" critical/expiring":"✅ "+found.permits.length+" permit(s) OK";
+  var permitStatus=found.permits.length===0?"— Load Master/Permitting tab":hasPermitIssue?"⚠️ "+found.permits.filter(function(r){return r.rc==="rc";}).length+" critical/expiring":"✅ "+found.permits.length+" permit(s) OK";
   var vegFail=found.vegetation.some(function(r){return r.rc==="rc";});
-  var vegStatus=found.vegetation.length===0?"— Load Vegetation tab first":vegFail?"🔴 Needs service":"✅ Pass";
+  var vegStatus=found.vegetation.length===0?"— Load Vegetation tab":vegFail?"🔴 Needs service":"✅ Pass";
   var secCount=found.security?found.security.count:0;
   var secStatus=secCount>0?"🔔 "+secCount+" total alerts":"✅ No alerts";
-  var compStatus=found.complaints.length===0?"✅ None on record":"⚠️ "+found.complaints.length+" complaint(s)";
+  var compStatus=found.complaints.length===0?"✅ None":"⚠️ "+found.complaints.length+" complaint(s)";
   var utilIssue=found.utilities.some(function(r){return r.rc==="rw";});
-  var utilStatus=found.utilities.length===0?"— Load Utilities tab first":utilIssue?"⚠️ Issues found":"✅ OK";
+  var utilStatus=found.utilities.length===0?"— Load Utilities tab":utilIssue?"⚠️ Issues found":"✅ OK";
 
   var cards=[
     {icon:"📋",label:"Permitting",  val:permitStatus, color:hasPermitIssue?"#dc2626":"#16a34a"},
@@ -749,13 +820,10 @@ async function buildPropertyProfile(name,el){
   html+='<div class="prop-status-grid">'+cards.map(function(c){return'<div class="prop-status-card"><div class="prop-status-icon">'+c.icon+'</div><div class="prop-status-label">'+c.label+'</div><div class="prop-status-val" style="color:'+c.color+'">'+c.val+'</div></div>';}).join("")+'</div>';
 
   if(found.permits.length){
-    html+='<div class="slabel" style="margin-top:12px">Permit Records</div>';
-    html+='<div class="twrap"><table><thead><tr><th>Property</th><th>Status</th><th>Type</th><th>Expire Date</th><th>Notes</th></tr></thead><tbody>';
-    found.permits.slice(0,5).forEach(function(r){
-      var st=r.cols[1]||"",stc=st.toLowerCase()==="active"?"#16a34a":st.toLowerCase().includes("progress")?"#d97706":"#64748b";
-      html+='<tr class="'+(r.rc||"")+'"><td>'+esc(r.cols[0]||"")+'</td>'
-        +'<td><span style="background:'+(st.toLowerCase()==="active"?"#f0fdf4":"#fffbeb")+';color:'+stc+';padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700">'+esc(st)+'</span></td>'
-        +'<td>'+esc(r.cols[3]||"—")+'</td><td>'+esc(r.cols[4]||r.cols[1]||"")+'</td><td class="wr">'+esc(r.cols[6]||r.cols[2]||"")+'</td></tr>';
+    html+='<div class="slabel" style="margin-top:12px">Permit Records ('+found.permits.length+')</div>';
+    html+='<div class="twrap"><table><thead><tr><th>Property</th><th>Expire Date</th><th>Days Left</th><th>License</th><th>Notes</th></tr></thead><tbody>';
+    found.permits.slice(0,6).forEach(function(r){
+      html+='<tr class="'+(r.rc||"")+'"><td>'+esc(r.cols[0]||"")+'</td><td>'+esc(r.cols[4]||r.cols[3]||r.cols[1]||"—")+'</td><td>'+esc(r.cols[6]||r.cols[4]||"—")+'</td><td>'+esc(r.cols[7]||r.cols[5]||"—")+'</td><td class="wr">'+esc(r.cols[r.cols.length-1]||"")+'</td></tr>';
     });
     html+='</tbody></table></div>';
   }
@@ -764,67 +832,48 @@ async function buildPropertyProfile(name,el){
     var p=found.security;
     html+='<div style="margin-top:10px;padding:12px 16px;background:#f5f3ff;border:1px solid #e9d5ff;border-radius:10px">'
       +'<div style="font-weight:700;color:#7c3aed;margin-bottom:6px">🔒 Security Summary</div>'
-      +'<div style="font-size:13px;color:#475569"><strong>'+p.count+'</strong> total noise alerts'
+      +'<div style="font-size:13px;color:#475569"><strong>'+p.count+'</strong> noise alerts'
       +(p.latestDateStr?' · Last: <strong>'+esc(p.latestDateStr)+'</strong>':"")
       +(p.guests&&p.guests.length?' · Guest(s): '+esc(p.guests.slice(0,2).join(", ")):"")+'</div>'
       +(p.hospiLink?'<div style="margin-top:6px">'+lnk(p.hospiLink,"🔗 Hospitable")+'</div>':"")+'</div>';
   }
   if(found.vegetation.length){
-    var vr=found.vegetation[0];
     html+='<div style="margin-top:10px;padding:12px 16px;background:'+(vegFail?"#fff5f5":"#f0fdf4")+';border:1px solid '+(vegFail?"#fecaca":"#bbf7d0")+';border-radius:10px">'
-      +'<div style="font-weight:700;color:'+(vegFail?"#dc2626":"#16a34a")+';margin-bottom:4px">🌿 Vegetation Audit</div>'
-      +'<div style="font-size:13px;color:#475569">'+vr.cols.filter(Boolean).map(function(c){return esc(c);}).join(' · ')+'</div></div>';
+      +'<div style="font-weight:700;color:'+(vegFail?"#dc2626":"#16a34a")+';margin-bottom:4px">🌿 Vegetation</div>'
+      +'<div style="font-size:13px;color:#475569">'+found.vegetation[0].cols.filter(Boolean).map(function(c){return esc(c);}).join(' · ')+'</div></div>';
   }
 
-  html+='<div class="insights-box" style="margin-top:16px">'
-    +'<div class="insights-title">✨ AI Insights & Recommendations</div>'
-    +'<div class="insights-text" id="ai-insights-text">'
-    +'<div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Analyzing all data for '+esc(name)+'…</span></div>'
-    +'</div></div>';
+  html+='<div class="insights-box" style="margin-top:16px"><div class="insights-title">✨ AI Insights & Recommendations</div>'
+    +'<div class="insights-text" id="ai-insights-text"><div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Analyzing data for '+esc(name)+'…</span></div></div></div>';
   html+='</div>';
   el.innerHTML=html;
 
-  // Build rich context for Claude
   try{
     var ctx="PROPERTY: "+name+"\nDATE: "+TODAYSTR+"\n\n";
     ctx+="=== PERMITS ===\n";
-    if(found.permits.length){found.permits.slice(0,10).forEach(function(r){ctx+="- Property: "+(r.cols[0]||name)+", Status: "+(r.cols[1]||"—")+", Type: "+(r.cols[3]||"—")+", Expires: "+(r.cols[4]||"—")+", Notes: "+(r.cols[6]||r.cols[2]||"none")+"\n";});}
-    else ctx+="No permit data loaded yet.\n";
+    if(found.permits.length){found.permits.slice(0,8).forEach(function(r){ctx+="- "+r.cols.slice(0,8).join(" | ")+"\n";});}else ctx+="No permit data loaded.\n";
     ctx+="\n=== UTILITIES ===\n";
-    if(found.utilities.length){found.utilities.slice(0,5).forEach(function(r){ctx+="- "+r.cols.join(" | ")+"\n";});}
-    else ctx+="No utility data loaded yet.\n";
-    ctx+="\n=== VEGETATION AUDIT ===\n";
-    if(found.vegetation.length){found.vegetation.slice(0,5).forEach(function(r){ctx+="- "+r.cols.join(" | ")+"\n";});}
-    else ctx+="No vegetation data loaded yet.\n";
-    ctx+="\n=== SECURITY / NOISE ALERTS ===\n";
-    if(found.security){
-      ctx+="Total alerts on record: "+found.security.count+"\n";
-      ctx+="Last alert date: "+(found.security.latestDateStr||"unknown")+"\n";
-      if(found.securityRows.length){ctx+="Recent alerts:\n";found.securityRows.slice(0,5).forEach(function(r){ctx+="  - "+r.dateStr+": 1st: "+(r.a1||"—")+" | 2nd: "+(r.a2||"—")+" | 3rd: "+(r.a3||"—")+" | Actions: "+(r.actionsDone||"none")+"\n";});}
-    }else ctx+="No security data loaded yet.\n";
-    ctx+="\n=== COMPLAINTS & INCIDENTS ===\n";
-    if(found.complaints.length){found.complaints.slice(0,5).forEach(function(i){ctx+="- Date: "+i.dateStr+", From: "+(i.neighbor||"—")+", Method: "+(i.method||"—")+"\n  Complaint: "+(i.complaint||"—")+"\n  Action: "+(i.action||"none")+"\n";});}
-    else ctx+="No complaints on record.\n";
+    if(found.utilities.length){found.utilities.slice(0,5).forEach(function(r){ctx+="- "+r.cols.join(" | ")+"\n";});}else ctx+="No utility data loaded.\n";
+    ctx+="\n=== VEGETATION ===\n";
+    if(found.vegetation.length){found.vegetation.slice(0,3).forEach(function(r){ctx+="- "+r.cols.join(" | ")+"\n";});}else ctx+="No vegetation data loaded.\n";
+    ctx+="\n=== SECURITY ===\n";
+    if(found.security){ctx+="Total alerts: "+found.security.count+"\nLast alert: "+(found.security.latestDateStr||"unknown")+"\n";
+      if(found.securityRows.length){ctx+="Recent:\n";found.securityRows.slice(0,3).forEach(function(r){ctx+="  "+r.dateStr+": 1st: "+(r.a1||"—")+" | 2nd: "+(r.a2||"—")+" | Actions: "+(r.actionsDone||"none")+"\n";});}
+    }else ctx+="No security data loaded.\n";
+    ctx+="\n=== COMPLAINTS ===\n";
+    if(found.complaints.length){found.complaints.slice(0,5).forEach(function(i){ctx+="- "+i.dateStr+" | "+i.neighbor+" | "+i.complaint+" | Action: "+(i.action||"none")+"\n";});}else ctx+="No complaints.\n";
 
-    var prompt="You are an expert operations analyst for Techvestor, a short-term rental company. "
-      +"Based on the following real property data, provide a clear, actionable analysis for the operations team.\n\n"
-      +ctx+"\n"
-      +"Please provide:\n"
-      +"1. **Overall Status** — 1-2 sentence summary of the property's operational health\n"
-      +"2. **Key Issues** — bullet points of anything urgent or needing attention (permits expiring, service needed, noise alerts, unresolved complaints)\n"
-      +"3. **Recommendations** — specific next steps with priority order\n"
-      +"4. **Positive Notes** — anything that looks good or is well-managed\n\n"
-      +"Be specific, reference actual dates and numbers. If data is missing for a section, note it briefly and suggest loading that tracker tab. Use • for bullets and **bold** for section headers.";
-
+    var prompt="You are an expert operations analyst for Techvestor, a short-term rental company. Analyze this property data and give a concise, actionable report.\n\n"+ctx
+      +"\nProvide:\n1. **Overall Status** — 1-2 sentences on operational health\n2. **Key Issues** — urgent items needing attention with dates/numbers\n3. **Recommendations** — specific next steps with priority\n4. **Positive Notes** — what's working well\n\nUse • for bullets, **bold** for headers. Reference actual data.";
     var insights=await callClaude(prompt);
     var insightEl=document.getElementById("ai-insights-text");
     if(insightEl){
-      var formatted=insights.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/^• /gm,'<span style="color:#0369a1">•</span> ').replace(/\n\n/g,"</p><p style='margin-top:8px'>").replace(/\n/g,"<br/>");
-      insightEl.innerHTML="<p>"+formatted+"</p>";
+      var fmt=insights.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/^• /gm,'<span style="color:#0369a1">•</span> ').replace(/\n\n/g,"</p><p style='margin-top:8px'>").replace(/\n/g,"<br/>");
+      insightEl.innerHTML="<p>"+fmt+"</p>";
     }
   }catch(e){
     var insightEl=document.getElementById("ai-insights-text");
-    if(insightEl)insightEl.innerHTML='<span style="color:#64748b">Could not generate insights. Make sure tracker tabs are loaded first, then search again.</span>';
+    if(insightEl)insightEl.innerHTML='<span style="color:#64748b">Load tracker tabs first, then search again for AI insights.</span>';
   }
 }
 
@@ -840,6 +889,7 @@ function toggleOb(uid){
 
 // ── LOAD ──────────────────────────────────────────────────────────────────────
 var globalCache={},activeTab="home";
+
 async function loadTab(id,force){
   var el=document.getElementById("content");
   if(id==="home"){el.innerHTML=renderHome();collectAllProperties();return;}
@@ -848,7 +898,43 @@ async function loadTab(id,force){
   el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading data…</div></div>';
   try{
     var allResults=[],extra={};
-    if(id==="onboarding"){
+    if(id==="master"){
+      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading Master Tracker stats…</div></div>';
+      var masterRR=await fetchSheet(PERM_SHEETID,"MASTER TRACKER 1");
+      var statsData=analyzeMasterStats(masterRR);
+
+      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading HOA / Township permits…</div></div>';
+      var hoaRR=[]; try{hoaRR=await fetchSheet(PERM_SHEETID,"HOA / Township Only");}catch(e){console.warn("HOA tab:",e.message);}
+
+      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading City permits…</div></div>';
+      var cityRR=[]; try{cityRR=await fetchSheet(PERM_SHEETID,"City Only");}catch(e){console.warn("City tab:",e.message);}
+
+      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading County permits…</div></div>';
+      var countyRR=[]; try{countyRR=await fetchSheet(PERM_SHEETID,"County Only");}catch(e){console.warn("County tab:",e.message);}
+
+      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading State permits…</div></div>';
+      var stateRR=[]; try{stateRR=await fetchSheet(PERM_SHEETID,"State Only");}catch(e){console.warn("State tab:",e.message);}
+
+      var result={
+        mode:"master",
+        summary:statsData.total+" properties tracked. Active: "+statsData.active+". HOA/Township: "+statsData.hoa+", City: "+statsData.city+", County: "+statsData.county+", State: "+statsData.state+".",
+        stats:[
+          {label:"Total",           value:statsData.total,  color:"#0ea5e9"},
+          {label:"✅ Active",       value:statsData.active, color:"#16a34a"},
+          {label:"🏘 HOA/Township", value:statsData.hoa,    color:"#7c3aed"},
+          {label:"🏙 City",         value:statsData.city,   color:"#f59e0b"},
+          {label:"🗺 County",       value:statsData.county, color:"#10b981"},
+          {label:"🏛 State",        value:statsData.state,  color:"#3b82f6"},
+        ],
+        marketData:statsData.marketData,
+        hoaRows:   analyzeHOA(hoaRR),
+        cityRows:  analyzeCity(cityRR),
+        countyRows:analyzeCounty(countyRR),
+        stateRows: analyzeState(stateRR),
+        activePermitType:"hoa",
+      };
+      allResults.push({sheetName:"Master Tracker",result:result});
+    } else if(id==="onboarding"){
       try{var rd=await fetchSheet(cfg.sheetId,"Ref Timeline");extra.ref=parseRefTimeline(rd);}catch(e){extra.ref=null;}
       var metas=await fetchMeta(cfg.sheetId);
       var propSheets=metas.filter(function(s){return s.title!=="Ref Timeline";});
@@ -867,7 +953,7 @@ async function loadTab(id,force){
     } else if(id==="security"){
       var metas3=await fetchMeta(cfg.sheetId);
       var st=metas3.find(function(s){var t=s.title.toLowerCase();return t.includes("noise")||t.includes("alert");});
-      if(!st)throw new Error("Noise Alert tab not found. Available: "+metas3.map(function(s){return s.title;}).join(", "));
+      if(!st)throw new Error("Noise Alert tab not found.");
       var sd=await fetchSheet(cfg.sheetId,st.title);
       allResults.push({sheetName:st.title,result:analyzeSecurity(sd)});
     } else if(id==="vegetation"){
@@ -877,20 +963,6 @@ async function loadTab(id,force){
         var vd=await fetchSheet(cfg.sheetId,vs.range);
         allResults.push({sheetName:vs.name,result:analyzeVegetation(vs.name,vd)});
       }
-    } else if(id==="master"){
-      // Load main master tracker tab
-      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading Master Tracker…</div></div>';
-      var masterData=await fetchSheet(cfg.sheetId,"MASTER TRACKER 1");
-      // Load each permit-type tab for Dropbox links
-      var dropboxTabResults=[];
-      for(var pi=0;pi<cfg.permitTabs.length;pi++){
-        var pt=cfg.permitTabs[pi];
-        el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading permit details: '+pt.name+'…</div></div>';
-        try{var ptd=await fetchSheet(cfg.sheetId,pt.name);dropboxTabResults.push({rr:ptd,type:pt.type});}
-        catch(e){console.warn("Could not load permit tab: "+pt.name);}
-      }
-      var dropboxLookup=buildDropboxLookup(dropboxTabResults);
-      allResults.push({sheetName:"MASTER TRACKER 1",result:analyzeMaster(masterData,dropboxLookup)});
     } else {
       for(var gi=0;gi<cfg.sheets.length;gi++){
         var gs=cfg.sheets[gi];
@@ -911,6 +983,7 @@ async function loadTab(id,force){
       +'<button class="rbtn" style="color:'+cfg.color+';border-color:'+cfg.color+'" onclick="loadTab(\''+id+'\',true)">↺ Try Again</button></div>';
   }
 }
+
 function renderTabs(){
   document.getElementById("tabs").innerHTML=TABS.map(function(t){
     var a=t.id===activeTab;
