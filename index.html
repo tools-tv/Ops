@@ -727,8 +727,7 @@ function renderHome(){
     {icon:"🌿",label:"Vegetation Audit",       desc:"Audits sorted by most recent",                   color:"#84cc16"},
     {icon:"📣",label:"Complaints & Incidents",desc:"Neighbor complaints & guest incident log",        color:"#6366f1"},
     {icon:"🔒",label:"Security Monitoring",   desc:"Noise alert logs with chart & Hospitable links", color:"#7c3aed"},
-  ];
-  return'<div class="hero">'
+  ];  return'<div class="hero">'
     +'<img src="https://cdn.prod.website-files.com/67a629b102d54dc82c9044c0/67a62bfeeec34081b307ec39_techvestor-logo-2.png" alt="Techvestor"/>'
     +'<h1>Operations Dashboard</h1>'
     +'<p>Centralized real-time tracking across permitting, utilities, property onboarding, vegetation audits, complaints, and security.</p>'
@@ -842,10 +841,34 @@ async function buildPropertyProfile(name,el){
   html+='<div class="prop-status-grid">'+cards.map(function(c){return'<div class="prop-status-card"><div class="prop-status-icon">'+c.icon+'</div><div class="prop-status-label">'+c.label+'</div><div class="prop-status-val" style="color:'+c.color+'">'+c.val+'</div></div>';}).join("")+'</div>';
 
   if(found.permits.length){
-    html+='<div class="slabel" style="margin-top:12px">Permit Records ('+found.permits.length+')</div>';
-    html+='<div class="twrap"><table><thead><tr><th>Property</th><th>Expire Date</th><th>Days Left</th><th>License</th><th>Notes</th></tr></thead><tbody>';
-    found.permits.slice(0,6).forEach(function(r){
-      html+='<tr class="'+(r.rc||"")+'"><td>'+esc(r.cols[0]||"")+'</td><td>'+esc(r.cols[4]||r.cols[3]||r.cols[1]||"—")+'</td><td>'+esc(r.cols[6]||r.cols[4]||"—")+'</td><td>'+esc(r.cols[7]||r.cols[5]||"—")+'</td><td class="wr">'+esc(r.cols[r.cols.length-1]||"")+'</td></tr>';
+    // Deduplicate by property — one row per property, merge permit types and links
+    var permMap={};
+    found.permits.forEach(function(r){
+      var key=(r.prop||"").toLowerCase().trim();
+      if(!permMap[key]){permMap[key]={prop:r.prop,types:[],status:"—",dbLinks:[],rc:""};}
+      // Permit type = col 3 for master rows
+      var pt=r.cols[3]||"";
+      if(pt&&pt!=="—"&&!permMap[key].types.includes(pt))permMap[key].types.push(pt);
+      // Status = col 1
+      var st=r.cols[1]||"";
+      if(st&&st!=="—")permMap[key].status=st;
+      // Collect ALL http links as dropbox links
+      r.cols.forEach(function(c){if(c&&c.startsWith("http")&&!permMap[key].dbLinks.includes(c))permMap[key].dbLinks.push(c);});
+      if(r.rc==="rc")permMap[key].rc="rc";
+      else if(r.rc==="rw"&&permMap[key].rc!=="rc")permMap[key].rc="rw";
+    });
+    var deduped=Object.values(permMap);
+    html+='<div class="slabel" style="margin-top:12px">Permit Records ('+deduped.length+' propert'+(deduped.length===1?"y":"ies")+')</div>';
+    html+='<div class="twrap"><table><thead><tr><th>Property</th><th>Permit Type</th><th>Status</th><th>Dropbox Links</th></tr></thead><tbody>';
+    deduped.forEach(function(p){
+      var st=p.status,stl=st.toLowerCase();
+      var sc=stl==="active"?"#16a34a":stl.includes("progress")?"#d97706":"#64748b";
+      var sb=stl==="active"?"#f0fdf4":stl.includes("progress")?"#fffbeb":"#f1f5f9";
+      html+='<tr class="'+(p.rc||"")+'"><td>'+esc(p.prop)+'</td>'
+        +'<td>'+esc(p.types.length?p.types.join(", "):"—")+'</td>'
+        +'<td><span style="background:'+sb+';color:'+sc+';padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700">'+esc(st||"—")+'</span></td>'
+        +'<td style="white-space:normal">'+(p.dbLinks.length?p.dbLinks.map(function(l,i){return lnk(l,i===0?"📄 Permit":"📁 All Permits");}).join(" &nbsp;"):"—")+'</td>'
+        +'</tr>';
     });
     html+='</tbody></table></div>';
   }
