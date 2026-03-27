@@ -237,19 +237,26 @@ function expBadge(dateStr, label) {
 }
 
 // ── MASTER TRACKER ANALYSIS ────────────────────────────────────────────────────
-// MASTER TRACKER 1: Col B(1)=Market, Col C(2)=Active status, Col V(21)=State yes
-// Rows 0 and 1 are headers — data starts at index 2
+// MASTER TRACKER 1 layout (confirmed from sheet):
+//   Row 1 (idx 0) = "Confluence" / merge header
+//   Row 2 (idx 1) = column headers: Col A=Property, Col B=Market, Col C=OVERALL STATUS, Col V=STATE
+//   Row 3+ (idx 2+) = data
+// Col B(1) = Market name (Memphis, McGaheysville, Scottsdale, etc.)
+// Col C(2) = OVERALL STATUS — count rows where value is exactly "Active" (case-insensitive)
+// Col V(21) = STATE — count rows where value is "YES" (Yes/yes/YES)
 function analyzeMasterStats(rr) {
   if (!rr || rr.length < 3) return { total: 0, active: 0, state: 0, marketData: [] };
   var total = 0, active = 0, state = 0, marketMap = {};
+  // Skip rows 0 and 1 (headers), data starts at index 2
   rr.slice(2).forEach(function (row) {
-    var market = cv(row, 1);      // Col B — market name
-    var statusRaw = cv(row, 2);   // Col C — active status
-    var stateRaw = cv(row, 21);   // Col V — state yes/no
-    if (!market && !statusRaw) return;
+    var prop    = cv(row, 0);   // Col A — property name (skip empty rows)
+    var market  = cv(row, 1);   // Col B — market e.g. "Memphis"
+    var status  = cv(row, 2);   // Col C — "Active", "In Progress", "Due Soon", "Expired"
+    var stateV  = cv(row, 21);  // Col V — "YES" or "NO"
+    if (!prop && !market) return; // skip blank rows
     total++;
-    if (statusRaw.toLowerCase() === "active") active++;
-    if (isYes(stateRaw)) state++;
+    if (status.toLowerCase() === "active") active++;
+    if (stateV.toLowerCase() === "yes") state++;
     if (market) marketMap[market] = (marketMap[market] || 0) + 1;
   });
   var marketData = Object.entries(marketMap)
@@ -838,33 +845,66 @@ function lookupProperty(name) {
 }
 
 // ── PERMIT LOOKUP TABLE ───────────────────────────────────────────────────────
-// Simplified per-type permit table: Property Name | Expire Date | Dropbox All
+// Pulls from each permit tab separately. Shows:
+// Row 1: Property Name (searched)
+// Row 2: HOA/Township — expire date — all dropbox link
+// Row 3: City — expire date — all dropbox link
+// Row 4: County — expire date — all dropbox link
+// Row 5: State — expire date — all dropbox link
 function renderPermitLookup(name, masterData) {
-  if (!masterData) return '<div style="color:#94a3b8;font-size:13px;font-style:italic">Load the Master Tracker tab first for permit details.</div>';
+  if (!masterData) {
+    return '<div style="color:#94a3b8;font-size:13px;font-style:italic;padding:8px 0">Load the Master Tracker tab first for permit details.</div>';
+  }
   var nl = name.toLowerCase();
   var types = [
-    { key: "hoa",    label: "🏘 HOA / Township", rows: masterData.hoaRows },
-    { key: "city",   label: "🏙 City",            rows: masterData.cityRows },
-    { key: "county", label: "🗺 County",           rows: masterData.countyRows },
-    { key: "state",  label: "🏛 State",            rows: masterData.stateRows },
+    { label: "🏘 HOA / Township", rows: masterData.hoaRows },
+    { label: "🏙 City",            rows: masterData.cityRows },
+    { label: "🗺 County",          rows: masterData.countyRows },
+    { label: "🏛 State",           rows: masterData.stateRows },
   ];
-  var html = '<div class="twrap"><table class="permit-lookup-table"><thead><tr>'
-    + '<th>Permit Type</th><th>Expiry Date</th><th>Dropbox</th>'
+
+  var html = '<div class="twrap"><table>'
+    + '<thead><tr>'
+    + '<th style="width:180px">Permit Type</th>'
+    + '<th style="width:180px">Expire Date</th>'
+    + '<th>All Permits (Dropbox)</th>'
     + '</tr></thead><tbody>';
+
+  // Property name header row
+  html += '<tr style="background:#f8fafc">'
+    + '<td colspan="3" style="font-weight:800;color:#1e293b;font-size:14px;padding:10px 12px">🏠 ' + esc(name) + '</td>'
+    + '</tr>';
+
   types.forEach(function (t) {
-    var matches = (t.rows || []).filter(function (r) { return r.prop && r.prop.toLowerCase().includes(nl); });
+    var matches = (t.rows || []).filter(function (r) {
+      return r.prop && r.prop.toLowerCase().includes(nl);
+    });
+
     if (!matches.length) {
-      html += '<tr><td style="font-weight:600">' + t.label + '</td><td><span class="exp-none">No record</span></td><td>—</td></tr>';
+      html += '<tr>'
+        + '<td style="font-weight:600;color:#475569">' + t.label + '</td>'
+        + '<td><span style="color:#94a3b8;font-size:12px">No record found</span></td>'
+        + '<td><span style="color:#94a3b8">—</span></td>'
+        + '</tr>';
       return;
     }
+
+    // If multiple matches (e.g. same property in multiple rows), show each
     matches.forEach(function (r, i) {
+      var expCell = r.expDate
+        ? expBadge(r.expDate, r.label)
+        : '<span style="color:#94a3b8;font-size:12px">No date</span>';
+      var dbCell = (r.dbAll && r.dbAll.startsWith("http"))
+        ? lnk(r.dbAll, "📁 All Permits")
+        : '<span style="color:#94a3b8">—</span>';
       html += '<tr class="' + (r.rc || "") + '">'
-        + (i === 0 ? '<td rowspan="' + matches.length + '" style="font-weight:600;vertical-align:top">' + t.label + '</td>' : '')
-        + '<td>' + expBadge(r.expDate, r.label) + '</td>'
-        + '<td>' + (r.dbAll && r.dbAll.startsWith("http") ? lnk(r.dbAll, "📁 All Permits") : '<span class="exp-none">—</span>') + '</td>'
+        + '<td style="font-weight:600;color:#475569">' + (i === 0 ? t.label : '') + '</td>'
+        + '<td>' + expCell + '</td>'
+        + '<td>' + dbCell + '</td>'
         + '</tr>';
     });
   });
+
   html += '</tbody></table></div>';
   return html;
 }
@@ -878,19 +918,29 @@ async function buildPropertyProfile(name, el) {
     var id = entry[0], c = entry[1]; if (!c || !c.results) return;
     c.results.forEach(function (ar) {
       var R = ar.result; if (!R) return;
+      // Master tracker — grab permit rows + store ref
       if (id === "master") { masterData = R; return; }
+      // Utilities & vegetation from tR
       if (R.tR) R.tR.forEach(function (r) {
         if (!r.prop || !r.prop.toLowerCase().includes(nl)) return;
         if (id === "utilities") found.utilities.push(r);
-        else if (id === "vegetation") found.vegetation.push(r);
+        if (id === "vegetation") found.vegetation.push(r);
       });
-      if (id === "security") {
-        if (R.properties) R.properties.forEach(function (p) { if (p.name && p.name.toLowerCase().includes(nl)) found.security = p; });
-        [].concat(R.todayRows || [], R.recentRows || []).forEach(function (r) { if (r.prop && r.prop.toLowerCase().includes(nl)) found.securityRows.push(r); });
+      // Security — check both property cards and raw rows
+      if (id === "security" && R.mode === "security") {
+        if (R.properties) R.properties.forEach(function (p) {
+          if (p.name && p.name.toLowerCase().includes(nl)) found.security = p;
+        });
+        [].concat(R.todayRows || [], R.recentRows || [], R.properties ? [] : []).forEach(function (r) {
+          if (r && r.prop && r.prop.toLowerCase().includes(nl)) found.securityRows.push(r);
+        });
       }
-      if (id === "complaints") [].concat(R.todayItems || [], R.recentItems || [], R.olderItems || []).forEach(function (i) {
-        if ((i.prop || "").toLowerCase().includes(nl) || (i.listing || "").toLowerCase().includes(nl)) found.complaints.push(i);
-      });
+      // Complaints
+      if (id === "complaints" && R.mode === "complaints") {
+        [].concat(R.todayItems || [], R.recentItems || [], R.olderItems || []).forEach(function (i) {
+          if ((i.prop || "").toLowerCase().includes(nl) || (i.listing || "").toLowerCase().includes(nl)) found.complaints.push(i);
+        });
+      }
     });
   });
 
