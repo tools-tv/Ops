@@ -21,18 +21,30 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);min-height:10
 .tabs button{border:none;background:none;padding:13px 15px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .15s;font-family:'Inter',system-ui,sans-serif}
 .tabs button:hover{color:var(--text)}
 .wrap{padding:22px 18px;max-width:1100px;margin:0 auto}
+.search-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.search-wrap{position:relative;flex:1}
+.search-wrap input{width:100%;padding:9px 14px 9px 36px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:'Inter',system-ui,sans-serif;background:#fff;color:var(--text);outline:none}
+.search-wrap input:focus{border-color:var(--blue)}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search-count{font-size:12px;color:var(--muted);white-space:nowrap}
 .hero{text-align:center;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);border-radius:16px;padding:40px 24px;margin-bottom:20px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,201,167,.15),transparent 70%)}
 .hero img{height:30px;margin-bottom:14px;filter:brightness(0) invert(1)}
 .hero h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:8px}
 .hero p{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7;max-width:480px;margin:0 auto}
+.prop-search-wrap{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:20px;margin-top:20px;position:relative;z-index:1}
+.prop-search-label{color:rgba(255,255,255,.7);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.prop-search-wrap input{width:100%;padding:12px 18px;border:none;border-radius:10px;font-size:15px;font-family:'Inter',system-ui,sans-serif;background:#fff;color:var(--text);outline:none;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.prop-results{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.prop-suggestion{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer}
+.prop-suggestion:hover{background:rgba(255,255,255,.25)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .card h2{font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px}
 .card p,.card ol{color:#475569;font-size:14px;line-height:1.75}
 .card ol{padding-left:18px;line-height:2.1}
 .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tcard{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 14px;display:flex;gap:10px}
-.trk-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+.trk-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .trk-hdr h2{font-size:18px;font-weight:700;color:var(--text)}
 .trk-hdr .sub{color:var(--muted);font-size:13px;margin-top:2px}
 .rbtn{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;font-size:12px;font-family:'Inter',system-ui,sans-serif}
@@ -59,6 +71,7 @@ td a{color:var(--blue);text-decoration:none;font-size:11px}
 td a:hover{text-decoration:underline}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafbfc}
+tr.hr{display:none}
 .rc td:first-child{border-left:3px solid var(--critical)}
 .rw td:first-child{border-left:3px solid var(--warning)}
 .ro td:first-child{border-left:3px solid var(--ok)}
@@ -92,11 +105,30 @@ tr:hover td{background:#fafbfc}
 .bar-track{flex:1;background:#f1f5f9;border-radius:4px;height:20px}
 .bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#7c3aed,#a855f7)}
 .bar-val{font-size:11px;font-weight:700;color:#7c3aed;width:36px;text-align:right;flex-shrink:0}
+.pie-wrap{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.pie-legend{display:flex;flex-direction:column;gap:6px;flex:1;min-width:160px}
+.pie-legend-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.pie-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .more-btn{margin-top:10px;padding:7px 18px;border-radius:8px;border:1px solid #10b981;background:#fff;color:#10b981;cursor:pointer;font-size:12px;font-family:'Inter',system-ui,sans-serif;font-weight:600}
+.prop-profile{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+.prop-name{font-size:20px;font-weight:800;color:var(--text)}
+.prop-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:14px 0}
+.prop-status-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.prop-status-icon{font-size:22px;margin-bottom:4px}
+.prop-status-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.prop-status-val{font-size:13px;font-weight:700;margin-top:2px}
+.insights-box{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:12px;padding:16px;margin-top:14px}
+.insights-title{font-size:12px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.insights-text{font-size:14px;color:#0c4a6e;line-height:1.7}
+.ai-loading{display:flex;align-items:center;gap:8px;color:#64748b;font-size:13px}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:#3b82f6;animation:pulse 1.2s ease-in-out infinite}
+.ai-dot:nth-child(2){animation-delay:.2s}
+.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 .stbox{text-align:center;padding:80px 20px}
 .spin{display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:700px){.split{grid-template-columns:1fr}.tgrid{grid-template-columns:1fr}.util-stats{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.split{grid-template-columns:1fr}.tgrid{grid-template-columns:1fr}.util-stats{grid-template-columns:1fr 1fr}.pie-wrap{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -119,7 +151,8 @@ document.getElementById("hdate").textContent="Live · "+TODAYSTR;
 
 var TABS=[
   {id:"home",       label:"🏠 Home",                  color:"#6366f1"},
-  {id:"permitting", label:"📋 Permitting",             color:"#f59e0b"},
+  {id:"master",     label:"📊 Master Tracker",         color:"#0ea5e9"},
+  {id:"permitting", label:"📋 Permitting Callouts",    color:"#f59e0b"},
   {id:"utilities",  label:"⚡ Utilities ERM",          color:"#3b82f6"},
   {id:"onboarding", label:"🏠 Property Onboarding",    color:"#10b981"},
   {id:"vegetation", label:"🌿 Vegetation Audit",       color:"#84cc16"},
@@ -128,6 +161,17 @@ var TABS=[
 ];
 
 var CFG={
+  master:{
+    sheetId:"1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg",
+    color:"#0ea5e9",desc:"Master Tracker — permit counts, market breakdown & Dropbox links",
+    sheets:[{name:"MASTER TRACKER 1",range:"MASTER TRACKER 1"}],
+    permitTabs:[
+      {name:"HOA / Township Only",type:"HOA/Township"},
+      {name:"City Only",          type:"City"},
+      {name:"County Only",        type:"County"},
+      {name:"State Only",         type:"State"},
+    ]
+  },
   permitting:{sheetId:"1Ex7gyGxpTvbDBQMD2PNfivYbea0YmOEDKO5innwPBZg",color:"#f59e0b",desc:"Expiration tab — permits expiring soon with notes",sheets:[{name:"Expiration",range:"Expiration"}]},
   utilities: {sheetId:"1bPlzWPzarOI03QO1_LqUrhlrxM8AMc2MPrQHiYrPCns",color:"#3b82f6",desc:"SUMMARY tab — live utility status overview",sheets:[{name:"SUMMARY",range:"SUMMARY"}]},
   onboarding:{sheetId:"13JffxAKNLUaPm2n1iBWNCL48k-7CCEaf4xwu0xgjZN4",color:"#10b981",desc:"Ref Timeline + all property onboarding tabs",sheets:[],refSheet:"Ref Timeline"},
@@ -136,6 +180,7 @@ var CFG={
   security:   {sheetId:"1paLwVY6YjcSeGmkE6L0jBYFScxpq0jyxL_bfd4BhyOs",color:"#7c3aed",desc:"Noise Alert Logs — alerts & Hospitable links",sheets:[]},
 };
 
+// ── FETCH ─────────────────────────────────────────────────────────────────────
 async function fetchSheet(sheetId,range){
   var url="https://sheets.googleapis.com/v4/spreadsheets/"+sheetId+"/values/"+encodeURIComponent(range)+"?key="+KEY;
   var r=await fetch(url);
@@ -147,7 +192,13 @@ async function fetchMeta(sheetId){
   if(!r.ok)throw new Error("Could not load metadata");
   return((await r.json()).sheets||[]).filter(function(s){return s.properties&&!s.properties.hidden;}).map(function(s){return{title:s.properties.title};});
 }
+async function callClaude(prompt){
+  var resp=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,messages:[{role:"user",content:prompt}]})});
+  var data=await resp.json();
+  return(data.content||[]).map(function(b){return b.text||"";}).join("");
+}
 
+// ── HELPERS ───────────────────────────────────────────────────────────────────
 function pdate(s){if(!s)return null;var d=new Date(s);return isNaN(d.getTime())?null:d;}
 function ddiff(d){return Math.round((d.getTime()-TODAY.getTime())/86400000);}
 function isToday(d){return d&&d.toDateString()===TODAYDATE;}
@@ -157,7 +208,76 @@ function badge(lv){var m={critical:{bg:"#fee2e2",c:"#dc2626",i:"🔴"},warning:{
 function cv(row,i){return((row&&row[i])||"").trim();}
 function statCards(stats){return'<div class="srow">'+stats.map(function(s){return'<div class="scard" style="border:2px solid '+s.color+'30"><div class="sval" style="color:'+s.color+'">'+s.value+'</div><div class="slbl">'+s.label+'</div></div>';}).join("")+'</div>';}
 
+// ── DROPBOX LOOKUP ────────────────────────────────────────────────────────────
+function buildDropboxLookup(tabResults){
+  var lookup={};
+  tabResults.forEach(function(t){
+    var rr=t.rr,typeName=t.type;
+    if(!rr||rr.length<2)return;
+    var headers=rr[0].map(function(h){return(h||"").trim();});
+    var propIdx=0,dbPermitIdx=-1,dbFolderIdx=-1;
+    headers.forEach(function(h,i){
+      var hl=h.toLowerCase();
+      if(hl.includes("property")||hl.includes("address"))propIdx=i;
+      if(dbPermitIdx===-1&&hl.includes("dropbox")&&!hl.includes("folder")&&!hl.includes("all"))dbPermitIdx=i;
+      if(dbFolderIdx===-1&&hl.includes("dropbox")&&(hl.includes("folder")||hl.includes("all")))dbFolderIdx=i;
+    });
+    // fallback: any dropbox cols
+    if(dbPermitIdx===-1||dbFolderIdx===-1){
+      var dbc=[];headers.forEach(function(h,i){if(h.toLowerCase().includes("dropbox"))dbc.push(i);});
+      if(dbPermitIdx===-1&&dbc.length>0)dbPermitIdx=dbc[0];
+      if(dbFolderIdx===-1&&dbc.length>1)dbFolderIdx=dbc[1];
+    }
+    rr.slice(1).forEach(function(row){
+      var prop=cv(row,propIdx);if(!prop)return;
+      lookup[prop.toLowerCase()]={dropboxPermit:dbPermitIdx>=0?cv(row,dbPermitIdx):"",dropboxFolder:dbFolderIdx>=0?cv(row,dbFolderIdx):"",type:typeName};
+    });
+  });
+  return lookup;
+}
+
 // ── ANALYSIS ──────────────────────────────────────────────────────────────────
+function analyzeMaster(rr,dropboxLookup){
+  if(!rr||rr.length<2)return{mode:"master",summary:"No data.",stats:[],marketData:[],tR:[],tH:[]};
+  var headers=rr[0].map(function(h){return(h||"").trim();});
+  var marketIdx=-1;
+  headers.forEach(function(h,i){if(h.toLowerCase().includes("market"))marketIdx=i;});
+  var hoaCount=0,cityCount=0,countyCount=0,stateCount=0,totalActive=0;
+  var marketMap={};
+  var tR=[];
+  rr.slice(1).forEach(function(row){
+    var prop=cv(row,0);if(!prop)return;
+    var status=cv(row,1),statusL=status.toLowerCase();
+    var expDate=cv(row,9),license=cv(row,10),notes=cv(row,19),autoType=cv(row,20),autoTypeL=autoType.toLowerCase();
+    var market=marketIdx>=0?cv(row,marketIdx):"";
+    if(autoTypeL.includes("township")||autoTypeL.includes("hoa"))hoaCount++;
+    else if(autoTypeL.includes("city"))cityCount++;
+    else if(autoTypeL.includes("county"))countyCount++;
+    else if(autoTypeL.includes("state"))stateCount++;
+    if(statusL==="active")totalActive++;
+    if(market)marketMap[market]=(marketMap[market]||0)+1;
+    var db=dropboxLookup&&dropboxLookup[prop.toLowerCase()];
+    var dbPermit=db?db.dropboxPermit:"",dbFolder=db?db.dropboxFolder:"";
+    var resolvedType=db?db.type:(autoType||"—");
+    var rc=statusL==="active"?"ro":(statusL.includes("progress")||statusL.includes("due soon"))?"rw":"";
+    tR.push({rc:rc,prop:prop,cols:[prop,status,market||"—",resolvedType,expDate,license,notes,dbPermit,dbFolder]});
+  });
+  var marketData=Object.entries(marketMap).map(function(e){return{name:e[0],count:e[1]};}).sort(function(a,b){return b.count-a.count;});
+  var total=tR.length;
+  return{mode:"master",
+    summary:total+" properties tracked. Active: "+totalActive+". HOA/Township: "+hoaCount+", City: "+cityCount+", County: "+countyCount+", State: "+stateCount+".",
+    stats:[
+      {label:"Total",           value:total,       color:"#0ea5e9"},
+      {label:"✅ Active",       value:totalActive, color:"#16a34a"},
+      {label:"🏘 HOA/Township", value:hoaCount,    color:"#7c3aed"},
+      {label:"🏙 City",         value:cityCount,   color:"#f59e0b"},
+      {label:"🗺 County",       value:countyCount, color:"#10b981"},
+      {label:"🏛 State",        value:stateCount,  color:"#3b82f6"},
+    ],
+    marketData:marketData,
+    tH:["Property","Status","Market","Permit Type","Expire Date","License","Notes","Dropbox Permit","Dropbox All Permits"],
+    tR:tR};
+}
 
 function analyzePermitting(rr){
   if(!rr||rr.length<2)return{mode:"permitting",summary:"No data.",stats:[],callouts:[],tH:["Property Name","Expiration Date","Notes","Last Updated"],tR:[]};
@@ -171,7 +291,7 @@ function analyzePermitting(rr){
     var d2=pdate(dateStr),diff=d2?ddiff(d2):null,lv="ok",label="",rc="ro";
     if(diff!==null){if(diff<0){lv="critical";label="EXPIRED";critical++;rc="rc";}else if(diff<=30){lv="critical";label=diff+"d left";critical++;rc="rc";}else if(diff<=90){lv="warning";label=diff+"d left";warning++;rc="rw";}else ok++;}else ok++;
     if(lv==="critical"||lv==="warning")callouts.push({lv:lv,name:name,dateStr:dateStr,label:label,notes:notes,updated:updated});
-    tR.push({rc:rc,cols:[name,dateStr,notes,updated]});
+    tR.push({rc:rc,prop:name,cols:[name,dateStr,notes,updated]});
   });
   callouts.sort(function(a,b){return({critical:0,warning:1}[a.lv]||0)-({critical:0,warning:1}[b.lv]||0);});
   var tot=tR.length;
@@ -182,8 +302,7 @@ function analyzePermitting(rr){
 
 function analyzeUtilities(rr){
   if(!rr||rr.length<2)return{mode:"utilities",summary:"No data.",sv:{total:"—",validation:"—",setup:"—",age:"—"},tH:[],tR:[]};
-  var sv={total:"—",validation:"—",setup:"—",age:"—"};
-  var tableHdrIdx=-1;
+  var sv={total:"—",validation:"—",setup:"—",age:"—"},tableHdrIdx=-1;
   for(var i=0;i<Math.min(rr.length,12);i++){
     var row=rr[i]||[];
     var b=cv(row,1),c=cv(row,2),d=cv(row,3),e=cv(row,4);
@@ -192,8 +311,7 @@ function analyzeUtilities(rr){
     if(tableHdrIdx===-1&&(first.includes("property")||first.includes("address")||first.includes("name")))tableHdrIdx=i;
   }
   if(tableHdrIdx===-1)tableHdrIdx=4;
-  var rawHdrs=rr[tableHdrIdx]||[];
-  var tH=[],colMap=[];
+  var rawHdrs=rr[tableHdrIdx]||[],tH=[],colMap=[];
   rawHdrs.forEach(function(h,i){var t=(h||"").trim();if(t){tH.push(t);colMap.push(i);}});
   if(!tH.length){tH=["Property Name","Utility","Notes","Validation Age"];colMap=[0,1,2,3];}
   var ISSUE=["fail","missing","incomplete","overdue","n/a","tbd","pending","hold","setup pending","reject"];
@@ -205,62 +323,31 @@ function analyzeUtilities(rr){
     if(ISSUE.some(function(w){return all.includes(w);})){issues++;rc="rw";}
     else if(DONE.some(function(w){return all.includes(w);})){complete++;rc="ro";}
     else pending++;
-    return{rc:rc,cols:cols};
+    return{rc:rc,prop:cols[0],cols:cols};
   });
   return{mode:"utilities",sv:sv,tH:tH,tR:tR,summary:"SUMMARY — "+tR.length+" properties. "+complete+" OK, "+pending+" pending, "+issues+" flagged."};
 }
 
 function analyzeOnboarding(rr){
-  // Sheet structure:
-  // Row 0 = headers: A=Category, B=Owner, C=Task, D=Audit Action, E=Done(Yes/No), F=Notes
-  // Col A has MERGED cells for categories — carry forward the last non-blank value
-  // Use col C (Task) as the row identifier — skip rows with no task
   if(!rr||rr.length<2)return{mode:"onboarding",summary:"No data.",stats:[],tH:[],tR:[]};
-
-  // Find "Done" column by scanning header row
   var headers=rr[0].map(function(h){return(h||"").trim();});
-  var doneIdx=4; // default col E
+  var doneIdx=4;
   headers.forEach(function(h,i){if(h.toLowerCase().includes("done"))doneIdx=i;});
-
-  var total=0,complete=0,inprogress=0,flagged=0,tR=[];
-  var lastCat="";
-
+  var total=0,complete=0,inprogress=0,flagged=0,tR=[],lastCat="";
   rr.slice(1).forEach(function(row){
-    // Carry forward merged category (col A)
-    var catRaw=cv(row,0);
-    if(catRaw)lastCat=catRaw;
-
-    // Skip rows with no task in col C
-    var task=cv(row,2);
-    if(!task)return;
-
+    var catRaw=cv(row,0);if(catRaw)lastCat=catRaw;
+    var task=cv(row,2);if(!task)return;
     total++;
-    var owner=cv(row,1);
-    var auditAction=cv(row,3);
-    var doneRaw=cv(row,doneIdx);
-    var doneLow=doneRaw.toLowerCase();
-    var notes=cv(row,5);
+    var owner=cv(row,1),auditAction=cv(row,3),doneRaw=cv(row,doneIdx),doneLow=doneRaw.toLowerCase(),notes=cv(row,5);
     var rc="";
-
     if(doneLow==="yes"||doneLow==="y"){complete++;rc="ro";}
     else if(doneLow.includes("progress")){inprogress++;rc="rw";}
     else{flagged++;rc="rc";}
-
-    tR.push({rc:rc,cols:[lastCat,owner,task,auditAction,doneRaw||"—",notes]});
+    tR.push({rc:rc,prop:lastCat,cols:[lastCat,owner,task,auditAction,doneRaw||"—",notes]});
   });
-
-  return{
-    mode:"onboarding",
-    summary:total===0?"No data.":total+" items — "+complete+" complete, "+inprogress+" in progress, "+flagged+" not started.",
-    stats:[
-      {label:"Total Items",   value:total,      color:"#10b981"},
-      {label:"✅ Complete",   value:complete,   color:"#16a34a"},
-      {label:"⏳ In Progress",value:inprogress, color:"#d97706"},
-      {label:"🚩 Not Started",value:flagged,    color:"#dc2626"},
-    ],
-    tH:["Category","Owner","Task","Audit Action","Done","Notes"],
-    tR:tR
-  };
+  return{mode:"onboarding",summary:total===0?"No data.":total+" items — "+complete+" complete, "+inprogress+" in progress, "+flagged+" not started.",
+    stats:[{label:"Total Items",value:total,color:"#10b981"},{label:"✅ Complete",value:complete,color:"#16a34a"},{label:"⏳ In Progress",value:inprogress,color:"#d97706"},{label:"🚩 Not Started",value:flagged,color:"#dc2626"}],
+    tH:["Category","Owner","Task","Audit Action","Done","Notes"],tR:tR};
 }
 
 function parseRefTimeline(rr){
@@ -291,7 +378,7 @@ function analyzeVegetation(sn,rr){
     var name=cv(row,nameIdx),service=cv(row,serviceIdx).toLowerCase(),rc="";
     if(service==="yes"||service==="y"){fail++;rc="rc";callouts.push({lv:"critical",title:name,detail:"Needs service"});}
     else if(service==="no"||service==="n"){pass++;rc="ro";}
-    tR.push({rc:rc,cols:dispIdxs.map(function(i){return cv(row,i);})});
+    tR.push({rc:rc,prop:name,cols:dispIdxs.map(function(i){return cv(row,i);})});
   });
   return{mode:"vegetation",summary:dataRows.length===0?"No data.":dataRows.length+" properties — "+pass+" pass, "+fail+" need service. Sorted by most recent.",
     stats:[{label:"Total",value:dataRows.length,color:"#84cc16"},{label:"✅ Pass",value:pass,color:"#16a34a"},{label:"🔴 Needs Service",value:fail,color:"#dc2626"}],
@@ -308,9 +395,7 @@ function analyzeComplaints(rr){
     if(!prop&&!dateStr)return;
     var d2=pdate(dateStr);
     var item={prop:prop,listing:listing,dateStr:dateStr,neighbor:neighbor,method:method,slack:slack,airbnb:airbnb,gmail:gmail,complaint:complaint,action:action,d:d2};
-    if(d2&&isToday(d2))today.push(item);
-    else if(d2&&ddiff(d2)>=-7)recent.push(item);
-    else older.push(item);
+    if(d2&&isToday(d2))today.push(item);else if(d2&&ddiff(d2)>=-7)recent.push(item);else older.push(item);
   });
   var sd=function(a,b){return(b.d||0)-(a.d||0);};
   today.sort(sd);recent.sort(sd);older.sort(sd);
@@ -350,27 +435,47 @@ function analyzeSecurity(rr){
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
-function renderHome(){
-  var trackers=[
-    {icon:"📋",label:"Permitting Tracker",    desc:"Permits expiring soon with notes",               color:"#f59e0b"},
-    {icon:"⚡",label:"Utilities ERM",          desc:"SUMMARY — live utility status overview",         color:"#3b82f6"},
-    {icon:"🏠",label:"Property Onboarding",   desc:"Ref Timeline checklist + all property tabs",     color:"#10b981"},
-    {icon:"🌿",label:"Vegetation Audit",       desc:"Audits sorted by most recent",                   color:"#84cc16"},
-    {icon:"📣",label:"Complaints & Incidents",desc:"Neighbor complaints & guest incident log",        color:"#6366f1"},
-    {icon:"🔒",label:"Security Monitoring",   desc:"Noise alert logs with chart & Hospitable links", color:"#7c3aed"},
-  ];
-  return'<div class="hero"><img src="https://cdn.prod.website-files.com/67a629b102d54dc82c9044c0/67a62bfeeec34081b307ec39_techvestor-logo-2.png" alt="Techvestor"/><h1>Operations Dashboard</h1><p>Centralized real-time tracking across permitting, utilities, property onboarding, vegetation audits, complaints, and security.</p></div>'
-    +'<div class="card"><h2>🎯 What is this dashboard?</h2><p>Pulls live data from our Google Sheets trackers and highlights critical items, expiring permits, pending tasks, service needs, and recent incidents.</p></div>'
-    +'<div class="card"><h2>📁 Trackers</h2><div class="tgrid">'+trackers.map(function(t){return'<div class="tcard"><span style="font-size:20px">'+t.icon+'</span><div><div style="font-weight:700;color:'+t.color+';font-size:13px">'+t.label+'</div><div style="color:#64748b;font-size:12px;margin-top:2px">'+t.desc+'</div></div></div>';}).join("")+'</div></div>'
-    +'<div class="card"><h2>🚀 How to use</h2><ol><li>Click any tracker tab at the top</li><li>Live data loads from Google Sheets automatically</li><li>Hover over date chips in Permitting for descriptions</li><li>Complaints shows today\'s incidents first</li><li>Security shows top 10 chart + recent alert table</li><li>Dashboard auto-refreshes every 15 minutes</li></ol></div>';
+function renderSearchBar(tabId){
+  return'<div class="search-bar"><div class="search-wrap">'
+    +'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>'
+    +'<input type="text" id="search-'+tabId+'" placeholder="Search property name…" oninput="filterTable(\''+tabId+'\')" autocomplete="off"/>'
+    +'</div><span class="search-count" id="sc-'+tabId+'"></span></div>';
+}
+function filterTable(tabId){
+  var inp=document.getElementById("search-"+tabId);if(!inp)return;
+  var q=inp.value.toLowerCase().trim();
+  var rows=document.querySelectorAll("#tbl-"+tabId+" tbody tr");
+  var vis=0;
+  rows.forEach(function(row){var show=!q||row.textContent.toLowerCase().includes(q);row.classList.toggle("hr",!show);if(show)vis++;});
+  var sc=document.getElementById("sc-"+tabId);if(sc)sc.textContent=q?vis+" results":"";
 }
 
-function renderTable(tH,tR,wrapIdxs){
+function renderTable(tH,tR,wrapIdxs,tableId){
   if(!tR||!tR.length)return'<div style="color:#64748b;font-size:13px;font-style:italic;padding:10px">No data found.</div>';
   var wi=wrapIdxs||[];
-  return'<div class="twrap"><table><thead><tr>'+tH.map(function(h){return'<th>'+esc(h)+'</th>';}).join("")+'</tr></thead><tbody>'
-    +tR.map(function(r){return'<tr class="'+(r.rc||"")+'">'+r.cols.map(function(c,i){var wrap=wi.includes(i),isLink=c&&c.startsWith("http");return'<td class="'+(wrap?"wr":"")+'" title="'+(isLink?"":esc(c))+'">'+((isLink)?lnk(c,"🔗 Link"):esc(c))+'</td>';}).join("")+'</tr>';}).join("")
-    +'</tbody></table></div>';
+  var tid=tableId?'id="tbl-'+tableId+'"':"";
+  return'<div class="twrap"><table '+tid+'><thead><tr>'+tH.map(function(h){return'<th>'+esc(h)+'</th>';}).join("")+'</tr></thead><tbody>'
+    +tR.map(function(r){return'<tr class="'+(r.rc||"")+'">'+r.cols.map(function(c,i){
+      var wrap=wi.includes(i),isLink=c&&c.startsWith("http");
+      return'<td class="'+(wrap?"wr":"")+'" title="'+(isLink?"":esc(c))+'">'+((isLink)?lnk(c,"🔗 Link"):esc(c))+'</td>';
+    }).join("")+'</tr>';}).join("")+'</tbody></table></div>';
+}
+
+function renderPieChart(marketData){
+  if(!marketData||!marketData.length)return"";
+  var top=marketData.slice(0,10),total=top.reduce(function(s,m){return s+m.count;},0);
+  var colors=["#0ea5e9","#7c3aed","#f59e0b","#10b981","#dc2626","#3b82f6","#84cc16","#6366f1","#d97706","#06b6d4"];
+  var size=180,cx=90,cy=90,r=70,slices="",angle=-Math.PI/2;
+  top.forEach(function(m,i){
+    var frac=m.count/total,sweep=frac*2*Math.PI-0.02;
+    var x1=cx+r*Math.cos(angle),y1=cy+r*Math.sin(angle);
+    angle+=sweep+0.02;
+    var x2=cx+r*Math.cos(angle),y2=cy+r*Math.sin(angle);
+    slices+='<path d="M'+cx+','+cy+' L'+x1.toFixed(1)+','+y1.toFixed(1)+' A'+r+','+r+' 0 '+(sweep>Math.PI?1:0)+',1 '+x2.toFixed(1)+','+y2.toFixed(1)+' Z" fill="'+colors[i%colors.length]+'" opacity="0.9"><title>'+esc(m.name)+': '+m.count+'</title></path>';
+  });
+  slices+='<circle cx="'+cx+'" cy="'+cy+'" r="32" fill="white"/><text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" font-size="11" fill="#64748b" font-family="Inter,sans-serif">Total</text><text x="'+cx+'" y="'+(cy+10)+'" text-anchor="middle" font-size="18" font-weight="800" fill="#1e293b" font-family="Inter,sans-serif">'+total+'</text>';
+  var legend=top.map(function(m,i){return'<div class="pie-legend-item"><div class="pie-dot" style="background:'+colors[i%colors.length]+'"></div><span style="flex:1">'+esc(m.name)+'</span><strong>'+m.count+'</strong></div>';}).join("");
+  return'<div class="chart-wrap"><div class="chart-title">🗺 Top Markets by Property Count</div><div class="pie-wrap"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'+slices+'</svg><div class="pie-legend">'+legend+'</div></div></div>';
 }
 
 function renderPermCallouts(callouts){
@@ -382,7 +487,7 @@ function renderPermCallouts(callouts){
       +'<div style="margin-top:5px">'
       +(c.dateStr?'<span class="chip" style="background:#f1f5f9;color:#475569" data-tip="Permit expiration date">📅 '+esc(c.dateStr)+'</span>':"")
       +(c.label?'<span class="chip" style="background:'+(c.lv==="critical"?"#fee2e2":"#fef9c3")+';color:'+bc+';font-weight:700" data-tip="Days remaining until expiration">⏱ '+esc(c.label)+'</span>':"")
-      +(c.updated?'<span class="chip" style="background:#f1f5f9;color:#475569" data-tip="Last time this record was updated">🕐 '+esc(c.updated)+'</span>':"")
+      +(c.updated?'<span class="chip" style="background:#f1f5f9;color:#475569" data-tip="Last updated">🕐 '+esc(c.updated)+'</span>':"")
       +'</div>'+(c.notes?'<div class="nbox">📝 '+esc(c.notes)+'</div>':"")+'</div>';
   }).join("");
 }
@@ -393,17 +498,18 @@ function renderRefCard(ref){
   var mkRow=function(item){return'<tr><td style="font-weight:500">'+esc(item.a)+'</td><td style="text-align:center;font-weight:700;color:#10b981">'+esc(item.b)+'</td><td><span style="background:#f0fdf4;color:#16a34a;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600">'+esc(item.c)+'</span></td></tr>';};
   return'<div class="ref-card"><div class="ref-hdr"><div class="ref-title">📌 Onboarding Reference Timeline</div>'
     +(hasMore?'<button class="ref-toggle" id="ref-toggle-btn" onclick="toggleRef()">Show All ('+rows.length+')</button>':"")
-    +'</div><div class="twrap"><table><thead><tr><th>'+esc(ref.colA)+'</th><th style="text-align:center;width:140px">'+esc(ref.colB)+'</th><th>'+esc(ref.colC)+'</th></tr></thead>'
+    +'</div><div class="twrap"><table><thead><tr><th>Onboarding Checklist</th><th style="text-align:center;width:140px">SOP Timeframe (Days)</th><th>Stage</th></tr></thead>'
     +'<tbody>'+rows.slice(0,PREVIEW).map(mkRow).join("")+'</tbody>'
     +(hasMore?'<tbody id="ref-extra" style="display:none">'+rows.slice(PREVIEW).map(mkRow).join("")+'</tbody>':"")
     +'</table></div></div>';
 }
 
-function renderOnboardingTable(sheetName,result,uid){
+function renderOnboardingTable(result,uid){
   var SHOW=15,tR=result.tR,hasMore=tR.length>SHOW;
   var html=statCards(result.stats);
+  html+=renderSearchBar("ob_"+uid);
   html+='<div class="slabel">Checklist Items ('+tR.length+' total)</div>';
-  html+=renderTable(result.tH,tR.slice(0,SHOW),[2,5]);
+  html+=renderTable(result.tH,tR.slice(0,SHOW),[2,5],"ob_"+uid);
   if(hasMore){
     html+='<div id="ob-more-'+uid+'" style="display:none">'+renderTable(result.tH,tR.slice(SHOW),[2,5])+'</div>';
     html+='<button class="more-btn" id="ob-btn-'+uid+'" onclick="toggleOb(\''+uid+'\')">Show More ('+(tR.length-SHOW)+' remaining)</button>';
@@ -423,14 +529,14 @@ function renderComplaintCard(item,hl){
 function renderComplaints(R){
   var html="";
   if(R.todayItems.length>0){
-    html+='<div class="today-banner"><span style="font-size:24px">🚨</span><div><div style="font-weight:800;font-size:15px">'+R.todayItems.length+' Complaint'+(R.todayItems.length>1?"s":"")+" / Incident"+(R.todayItems.length>1?"s":"")+" Today</div><div style=\"font-size:12px;opacity:.85\">"+TODAYSTR+"</div></div></div>";
+    html+='<div class="today-banner"><span style="font-size:24px">🚨</span><div><div style="font-weight:800;font-size:15px">'+R.todayItems.length+' Complaint'+(R.todayItems.length>1?"s":"")+" Today</div><div style=\"font-size:12px;opacity:.85\">"+TODAYSTR+"</div></div></div>";
     html+=R.todayItems.map(function(i){return renderComplaintCard(i,true);}).join("");
     html+='<div style="height:16px"></div>';
-  }else{html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-bottom:16px;font-size:14px;color:#166534">✅ No complaints or incidents today.</div>';}
+  }else{html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-bottom:16px;font-size:14px;color:#166534">✅ No complaints today.</div>';}
   if(R.recentItems.length>0){html+='<div class="slabel">Last 7 Days ('+R.recentItems.length+')</div>';html+=R.recentItems.map(function(i){return renderComplaintCard(i,false);}).join("");html+='<div style="height:16px"></div>';}
   if(R.olderItems.length>0){
     html+='<div class="slabel">Older Records ('+R.olderItems.length+')</div>';
-    html+=renderTable(["Property","Date","Neighbor","Method","Complaint"],R.olderItems.map(function(i){return{rc:"",cols:[i.prop||i.listing,i.dateStr,i.neighbor,i.method,i.complaint]};}), [4]);
+    html+=renderTable(["Property","Date","Neighbor","Method","Complaint"],R.olderItems.map(function(i){return{rc:"",cols:[i.prop||i.listing,i.dateStr,i.neighbor,i.method,i.complaint]};}),[4],"comp_older");
   }
   return html;
 }
@@ -455,7 +561,7 @@ function renderSecurityCards(props){
       +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
       +'<span style="background:'+bbg+';color:'+bc+';padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700">🔔 '+p.count+' Alert'+(p.count!==1?"s":"")+'</span>'
       +(p.hospiLink?'<a href="'+esc(p.hospiLink)+'" target="_blank" style="background:#7c3aed;color:#fff;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none">🔗 Hospitable</a>':"")
-      +(p.slackLink?'<a href="'+esc(p.slackLink)+'" target="_blank" style="background:#4a154b;color:#fff;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none">💬 Slack (3rd Alert)</a>':"")
+      +(p.slackLink?'<a href="'+esc(p.slackLink)+'" target="_blank" style="background:#4a154b;color:#fff;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none">💬 Slack (3rd)</a>':"")
       +'</div></div>'
       +(p.latestDateStr?'<div style="font-size:11px;color:#64748b;margin-bottom:4px">📅 Last alert: <strong>'+esc(p.latestDateStr)+'</strong></div>':"")
       +(p.guests&&p.guests.length?'<div style="font-size:12px;color:#475569"><strong>Guest:</strong> '+esc(p.guests.slice(0,2).join(", "))+'</div>':"")
@@ -468,13 +574,12 @@ function renderSecurityTable(rows,label){
   return'<div class="slabel" style="margin-top:16px">'+label+'</div><div class="twrap"><table><thead><tr>'
     +'<th>Property</th><th>Date</th><th>Guest</th><th>1st Alert</th><th>2nd Alert</th><th>3rd Alert</th><th>Actions Done</th><th>Hospitable</th><th>Slack (3rd)</th>'
     +'</tr></thead><tbody>'
-    +rows.map(function(r){return'<tr>'
-      +'<td>'+esc(r.prop)+'</td><td>'+esc(r.dateStr)+'</td><td>'+esc(r.guest)+'</td>'
+    +rows.map(function(r){return'<tr><td>'+esc(r.prop)+'</td><td>'+esc(r.dateStr)+'</td><td>'+esc(r.guest)+'</td>'
       +'<td class="wr">'+esc(r.a1||"—")+'</td><td class="wr">'+esc(r.a2||"—")+'</td><td class="wr">'+esc(r.a3||"—")+'</td>'
       +'<td class="wr">'+esc(r.actionsDone||"—")+'</td>'
       +'<td>'+(r.hospi?lnk(r.hospi,"🔗 Hospitable"):"—")+'</td>'
-      +'<td>'+(r.slack?lnk(r.slack,"💬 Slack"):"—")+'</td>'
-      +'</tr>';}).join("")+'</tbody></table></div>';
+      +'<td>'+(r.slack?lnk(r.slack,"💬 Slack"):"—")+'</td></tr>';}).join("")
+    +'</tbody></table></div>';
 }
 
 function renderResults(id,allResults,extra){
@@ -487,62 +592,260 @@ function renderResults(id,allResults,extra){
     if(allResults.length>1)html+='<div class="tdiv" style="color:'+cfg.color+';border-left-color:'+cfg.color+'">'+esc(ar.sheetName)+'</div>';
     html+='<div class="sumbox" style="background:'+cfg.color+'12;border:1px solid '+cfg.color+'30">📝 '+R.summary+'</div>';
 
-    if(R.mode==="utilities"){
+    if(R.mode==="master"){
+      html+=statCards(R.stats);
+      html+=renderPieChart(R.marketData);
+      html+=renderSearchBar("master");
+      html+='<div class="slabel">All Properties</div>';
+      html+='<div class="twrap"><table id="tbl-master"><thead><tr>'
+        +R.tH.map(function(h){return'<th>'+esc(h)+'</th>';}).join("")
+        +'</tr></thead><tbody>'
+        +R.tR.map(function(r){
+          return'<tr class="'+(r.rc||"")+'">'+r.cols.map(function(c,i){
+            if((i===7||i===8)&&c&&c.startsWith("http"))return'<td>'+lnk(c,i===7?"📄 Permit":"📁 All Permits")+'</td>';
+            if(i===1){var sc=c.toLowerCase()==="active"?"#16a34a":c.toLowerCase().includes("progress")?"#d97706":"#64748b";var sb=c.toLowerCase()==="active"?"#f0fdf4":c.toLowerCase().includes("progress")?"#fffbeb":"#f1f5f9";return'<td><span style="background:'+sb+';color:'+sc+';padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700">'+esc(c)+'</span></td>';}
+            return'<td class="'+(i===6?"wr":"")+'" title="'+esc(c)+'">'+esc(c)+'</td>';
+          }).join("")+'</tr>';
+        }).join("")
+        +'</tbody></table></div>';
+    } else if(R.mode==="utilities"){
       html+='<div class="util-stats">'
         +'<div class="util-stat"><div class="ul">Total Live Properties</div><div class="uv">'+esc(R.sv.total)+'</div></div>'
-        +'<div class="util-stat"><div class="ul">Properties with Validation Issues</div><div class="uv" style="color:#dc2626">'+esc(R.sv.validation)+'</div></div>'
-        +'<div class="util-stat"><div class="ul">Properties with Setup Issues</div><div class="uv" style="color:#d97706">'+esc(R.sv.setup)+'</div></div>'
-        +'<div class="util-stat"><div class="ul">Utilities Validated &gt;2 Days</div><div class="uv" style="color:#f59e0b">'+esc(R.sv.age)+'</div></div>'
-        +'</div><div class="slabel">All Records</div>'+renderTable(R.tH,R.tR,[R.tH.length-1,R.tH.length-2]);
+        +'<div class="util-stat"><div class="ul">Validation Issues</div><div class="uv" style="color:#dc2626">'+esc(R.sv.validation)+'</div></div>'
+        +'<div class="util-stat"><div class="ul">Setup Issues</div><div class="uv" style="color:#d97706">'+esc(R.sv.setup)+'</div></div>'
+        +'<div class="util-stat"><div class="ul">Validated &gt;2 Days</div><div class="uv" style="color:#f59e0b">'+esc(R.sv.age)+'</div></div>'
+        +'</div>';
+      html+=renderSearchBar("utilities");
+      html+='<div class="slabel">All Records</div>'+renderTable(R.tH,R.tR,[R.tH.length-1,R.tH.length-2],"utilities");
     } else if(R.mode==="permitting"){
       html+=statCards(R.stats);
-      html+='<div class="split"><div><div class="slabel">Action Callouts</div>'+renderPermCallouts(R.callouts)+'</div><div><div class="slabel">All Permits</div>'+renderTable(R.tH,R.tR,[2,3])+'</div></div>';
+      html+='<div class="split"><div><div class="slabel">Action Callouts</div>'+renderPermCallouts(R.callouts)+'</div>'
+        +'<div>'+renderSearchBar("permitting")+'<div class="slabel">All Permits</div>'+renderTable(R.tH,R.tR,[2,3],"permitting")+'</div></div>';
     } else if(R.mode==="complaints"){
-      html+=statCards(R.stats)+renderComplaints(R);
+      html+=statCards(R.stats);
+      html+=renderSearchBar("complaints");
+      html+=renderComplaints(R);
     } else if(R.mode==="security"){
-      html+=statCards(R.stats)+renderSecurityChart(R.chartData);
+      html+=statCards(R.stats);
+      html+=renderSecurityChart(R.chartData);
+      html+=renderSearchBar("security");
       html+='<div class="slabel">All Properties — Sorted by Most Recent Alert</div>'+renderSecurityCards(R.properties);
       if(R.todayRows.length>0)html+=renderSecurityTable(R.todayRows,"📅 Today's Alert Details");
       else html+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-top:16px;font-size:13px;color:#166534">✅ No alerts today.</div>';
       if(R.recentRows.length>0)html+=renderSecurityTable(R.recentRows,"📆 Last 7 Days Alert Details");
     } else if(R.mode==="onboarding"){
       var uid="ob"+idx+ar.sheetName.replace(/\W/g,"");
-      html+=renderOnboardingTable(ar.sheetName,R,uid);
+      html+=renderOnboardingTable(R,uid);
     } else {
       html+=statCards(R.stats);
       if(R.callouts&&R.callouts.length){html+='<div class="slabel">Action Callouts</div>';R.callouts.slice(0,20).forEach(function(c){html+='<div class="cbox"><div class="ctop">'+badge(c.lv)+'<span class="ctitle">'+esc(c.title)+'</span></div><div class="cdet">'+esc(c.detail)+'</div></div>';});}
       else html+='<div style="color:#16a34a;font-size:13px;margin-bottom:16px">✅ No flagged items.</div>';
-      if(R.tR&&R.tR.length)html+='<div class="slabel" style="margin-top:10px">Full Data</div>'+renderTable(R.tH,R.tR,[R.tH.length-1]);
+      html+=renderSearchBar("veg"+idx);
+      if(R.tR&&R.tR.length)html+='<div class="slabel" style="margin-top:10px">Full Data</div>'+renderTable(R.tH,R.tR,[R.tH.length-1],"veg"+idx);
     }
     html+='</div>';
   });
   return html;
 }
 
+// ── HOME PAGE ─────────────────────────────────────────────────────────────────
+function renderHome(){
+  var trackers=[
+    {icon:"📊",label:"Master Tracker",        desc:"Permit counts by type + market breakdown",       color:"#0ea5e9"},
+    {icon:"📋",label:"Permitting Callouts",   desc:"Permits expiring soon with notes",               color:"#f59e0b"},
+    {icon:"🏠",label:"Property Onboarding",   desc:"Ref Timeline checklist + all property tabs",     color:"#10b981"},
+    {icon:"🌿",label:"Vegetation Audit",       desc:"Audits sorted by most recent",                   color:"#84cc16"},
+    {icon:"📣",label:"Complaints & Incidents",desc:"Neighbor complaints & guest incident log",        color:"#6366f1"},
+    {icon:"🔒",label:"Security Monitoring",   desc:"Noise alert logs with chart & Hospitable links", color:"#7c3aed"},
+  ];
+  return'<div class="hero">'
+    +'<img src="https://cdn.prod.website-files.com/67a629b102d54dc82c9044c0/67a62bfeeec34081b307ec39_techvestor-logo-2.png" alt="Techvestor"/>'
+    +'<h1>Operations Dashboard</h1>'
+    +'<p>Centralized real-time tracking across permitting, utilities, property onboarding, vegetation audits, complaints, and security.</p>'
+    +'<div class="prop-search-wrap">'
+    +'<div class="prop-search-label">🔍 Property Lookup — Search any property for a full AI status report</div>'
+    +'<input type="text" id="prop-search-input" placeholder="Type a property name (e.g. Charter Oak 5420)…" oninput="onPropSearch()" autocomplete="off"/>'
+    +'<div class="prop-results" id="prop-suggestions"></div>'
+    +'</div></div>'
+    +'<div id="prop-profile-result"></div>'
+    +'<div class="card"><h2>📁 Trackers</h2><div class="tgrid">'+trackers.map(function(t){return'<div class="tcard"><span style="font-size:20px">'+t.icon+'</span><div><div style="font-weight:700;color:'+t.color+';font-size:13px">'+t.label+'</div><div style="color:#64748b;font-size:12px;margin-top:2px">'+t.desc+'</div></div></div>';}).join("")+'</div></div>'
+    +'<div class="card"><h2>🚀 How to use</h2><ol><li>Use Property Lookup above to get an AI-driven full status snapshot</li><li>Load tracker tabs first for richer AI insights</li><li>Use the search bar in each tab to filter by property name</li><li>Hit ↺ Refresh on any tab to get the latest data immediately</li><li>Dashboard auto-refreshes every 15 minutes</li></ol></div>';
+}
+
+// ── PROPERTY SEARCH ───────────────────────────────────────────────────────────
+var allPropertyNames=[];
+function collectAllProperties(){
+  var names={};
+  Object.values(globalCache).forEach(function(c){
+    if(!c||!c.results)return;
+    c.results.forEach(function(ar){
+      var R=ar.result;if(!R)return;
+      if(R.tR)R.tR.forEach(function(r){if(r.prop&&r.prop.length>2)names[r.prop]=true;});
+      if(R.properties)R.properties.forEach(function(p){if(p.name&&p.name.length>2)names[p.name]=true;});
+      if(R.todayItems||R.recentItems||R.olderItems)[].concat(R.todayItems||[],R.recentItems||[],R.olderItems||[]).forEach(function(i){if(i.prop&&i.prop.length>2)names[i.prop]=true;});
+    });
+  });
+  allPropertyNames=Object.keys(names).sort();
+}
+function onPropSearch(){
+  var q=(document.getElementById("prop-search-input").value||"").toLowerCase().trim();
+  var sug=document.getElementById("prop-suggestions");
+  if(!q||q.length<2){sug.innerHTML="";return;}
+  var matches=allPropertyNames.filter(function(n){return n.toLowerCase().includes(q);}).slice(0,8);
+  sug.innerHTML=matches.map(function(n){return'<span class="prop-suggestion" onclick="lookupProperty(\''+esc(n)+'\')">'+esc(n)+'</span>';}).join("");
+}
+function lookupProperty(name){
+  document.getElementById("prop-search-input").value=name;
+  document.getElementById("prop-suggestions").innerHTML="";
+  var el=document.getElementById("prop-profile-result");
+  el.innerHTML='<div class="prop-profile"><div class="prop-name">🏠 '+esc(name)+'</div><div style="margin-top:12px"><div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Gathering data across all trackers…</span></div></div></div>';
+  setTimeout(function(){buildPropertyProfile(name,el);},100);
+}
+
+async function buildPropertyProfile(name,el){
+  var nl=name.toLowerCase();
+  var found={permits:[],utilities:[],onboarding:[],vegetation:[],complaints:[],security:null,securityRows:[]};
+  Object.entries(globalCache).forEach(function(entry){
+    var id=entry[0],c=entry[1];
+    if(!c||!c.results)return;
+    c.results.forEach(function(ar){
+      var R=ar.result;if(!R)return;
+      if(R.tR){R.tR.forEach(function(r){if(!r.prop||!r.prop.toLowerCase().includes(nl))return;
+        if(id==="master"||id==="permitting")found.permits.push(r);
+        else if(id==="utilities")found.utilities.push(r);
+        else if(id==="onboarding")found.onboarding.push(r);
+        else if(id==="vegetation")found.vegetation.push(r);
+      });}
+      if(id==="security"){
+        if(R.properties)R.properties.forEach(function(p){if(p.name&&p.name.toLowerCase().includes(nl))found.security=p;});
+        [].concat(R.todayRows||[],R.recentRows||[]).forEach(function(r){if(r.prop&&r.prop.toLowerCase().includes(nl))found.securityRows.push(r);});
+      }
+      if(id==="complaints"&&(R.todayItems||R.recentItems||R.olderItems)){
+        [].concat(R.todayItems||[],R.recentItems||[],R.olderItems||[]).forEach(function(i){if((i.prop||"").toLowerCase().includes(nl)||(i.listing||"").toLowerCase().includes(nl))found.complaints.push(i);});
+      }
+    });
+  });
+
+  var hasPermitIssue=found.permits.some(function(r){return r.rc==="rc";});
+  var permitStatus=found.permits.length===0?"— Load Master/Permitting tab first":hasPermitIssue?"⚠️ "+found.permits.filter(function(r){return r.rc==="rc";}).length+" critical/expiring":"✅ "+found.permits.length+" permit(s) OK";
+  var vegFail=found.vegetation.some(function(r){return r.rc==="rc";});
+  var vegStatus=found.vegetation.length===0?"— Load Vegetation tab first":vegFail?"🔴 Needs service":"✅ Pass";
+  var secCount=found.security?found.security.count:0;
+  var secStatus=secCount>0?"🔔 "+secCount+" total alerts":"✅ No alerts";
+  var compStatus=found.complaints.length===0?"✅ None on record":"⚠️ "+found.complaints.length+" complaint(s)";
+  var utilIssue=found.utilities.some(function(r){return r.rc==="rw";});
+  var utilStatus=found.utilities.length===0?"— Load Utilities tab first":utilIssue?"⚠️ Issues found":"✅ OK";
+
+  var cards=[
+    {icon:"📋",label:"Permitting",  val:permitStatus, color:hasPermitIssue?"#dc2626":"#16a34a"},
+    {icon:"⚡",label:"Utilities",   val:utilStatus,   color:utilIssue?"#d97706":"#16a34a"},
+    {icon:"🌿",label:"Vegetation",  val:vegStatus,    color:vegFail?"#dc2626":"#16a34a"},
+    {icon:"🔒",label:"Security",    val:secStatus,    color:secCount>=5?"#dc2626":secCount>=3?"#d97706":"#16a34a"},
+    {icon:"📣",label:"Incidents",   val:compStatus,   color:found.complaints.length?"#d97706":"#16a34a"},
+  ];
+
+  var html='<div class="prop-profile">';
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px"><div class="prop-name">🏠 '+esc(name)+'</div><div style="font-size:11px;color:#94a3b8">'+TODAYSTR+'</div></div>';
+  html+='<div class="prop-status-grid">'+cards.map(function(c){return'<div class="prop-status-card"><div class="prop-status-icon">'+c.icon+'</div><div class="prop-status-label">'+c.label+'</div><div class="prop-status-val" style="color:'+c.color+'">'+c.val+'</div></div>';}).join("")+'</div>';
+
+  if(found.permits.length){
+    html+='<div class="slabel" style="margin-top:12px">Permit Records</div>';
+    html+='<div class="twrap"><table><thead><tr><th>Property</th><th>Status</th><th>Type</th><th>Expire Date</th><th>Notes</th></tr></thead><tbody>';
+    found.permits.slice(0,5).forEach(function(r){
+      var st=r.cols[1]||"",stc=st.toLowerCase()==="active"?"#16a34a":st.toLowerCase().includes("progress")?"#d97706":"#64748b";
+      html+='<tr class="'+(r.rc||"")+'"><td>'+esc(r.cols[0]||"")+'</td>'
+        +'<td><span style="background:'+(st.toLowerCase()==="active"?"#f0fdf4":"#fffbeb")+';color:'+stc+';padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700">'+esc(st)+'</span></td>'
+        +'<td>'+esc(r.cols[3]||"—")+'</td><td>'+esc(r.cols[4]||r.cols[1]||"")+'</td><td class="wr">'+esc(r.cols[6]||r.cols[2]||"")+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  if(found.complaints.length){html+='<div class="slabel" style="margin-top:12px">Recent Incidents</div>';found.complaints.slice(0,3).forEach(function(i){html+=renderComplaintCard(i,false);});}
+  if(found.security){
+    var p=found.security;
+    html+='<div style="margin-top:10px;padding:12px 16px;background:#f5f3ff;border:1px solid #e9d5ff;border-radius:10px">'
+      +'<div style="font-weight:700;color:#7c3aed;margin-bottom:6px">🔒 Security Summary</div>'
+      +'<div style="font-size:13px;color:#475569"><strong>'+p.count+'</strong> total noise alerts'
+      +(p.latestDateStr?' · Last: <strong>'+esc(p.latestDateStr)+'</strong>':"")
+      +(p.guests&&p.guests.length?' · Guest(s): '+esc(p.guests.slice(0,2).join(", ")):"")+'</div>'
+      +(p.hospiLink?'<div style="margin-top:6px">'+lnk(p.hospiLink,"🔗 Hospitable")+'</div>':"")+'</div>';
+  }
+  if(found.vegetation.length){
+    var vr=found.vegetation[0];
+    html+='<div style="margin-top:10px;padding:12px 16px;background:'+(vegFail?"#fff5f5":"#f0fdf4")+';border:1px solid '+(vegFail?"#fecaca":"#bbf7d0")+';border-radius:10px">'
+      +'<div style="font-weight:700;color:'+(vegFail?"#dc2626":"#16a34a")+';margin-bottom:4px">🌿 Vegetation Audit</div>'
+      +'<div style="font-size:13px;color:#475569">'+vr.cols.filter(Boolean).map(function(c){return esc(c);}).join(' · ')+'</div></div>';
+  }
+
+  html+='<div class="insights-box" style="margin-top:16px">'
+    +'<div class="insights-title">✨ AI Insights & Recommendations</div>'
+    +'<div class="insights-text" id="ai-insights-text">'
+    +'<div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Analyzing all data for '+esc(name)+'…</span></div>'
+    +'</div></div>';
+  html+='</div>';
+  el.innerHTML=html;
+
+  // Build rich context for Claude
+  try{
+    var ctx="PROPERTY: "+name+"\nDATE: "+TODAYSTR+"\n\n";
+    ctx+="=== PERMITS ===\n";
+    if(found.permits.length){found.permits.slice(0,10).forEach(function(r){ctx+="- Property: "+(r.cols[0]||name)+", Status: "+(r.cols[1]||"—")+", Type: "+(r.cols[3]||"—")+", Expires: "+(r.cols[4]||"—")+", Notes: "+(r.cols[6]||r.cols[2]||"none")+"\n";});}
+    else ctx+="No permit data loaded yet.\n";
+    ctx+="\n=== UTILITIES ===\n";
+    if(found.utilities.length){found.utilities.slice(0,5).forEach(function(r){ctx+="- "+r.cols.join(" | ")+"\n";});}
+    else ctx+="No utility data loaded yet.\n";
+    ctx+="\n=== VEGETATION AUDIT ===\n";
+    if(found.vegetation.length){found.vegetation.slice(0,5).forEach(function(r){ctx+="- "+r.cols.join(" | ")+"\n";});}
+    else ctx+="No vegetation data loaded yet.\n";
+    ctx+="\n=== SECURITY / NOISE ALERTS ===\n";
+    if(found.security){
+      ctx+="Total alerts on record: "+found.security.count+"\n";
+      ctx+="Last alert date: "+(found.security.latestDateStr||"unknown")+"\n";
+      if(found.securityRows.length){ctx+="Recent alerts:\n";found.securityRows.slice(0,5).forEach(function(r){ctx+="  - "+r.dateStr+": 1st: "+(r.a1||"—")+" | 2nd: "+(r.a2||"—")+" | 3rd: "+(r.a3||"—")+" | Actions: "+(r.actionsDone||"none")+"\n";});}
+    }else ctx+="No security data loaded yet.\n";
+    ctx+="\n=== COMPLAINTS & INCIDENTS ===\n";
+    if(found.complaints.length){found.complaints.slice(0,5).forEach(function(i){ctx+="- Date: "+i.dateStr+", From: "+(i.neighbor||"—")+", Method: "+(i.method||"—")+"\n  Complaint: "+(i.complaint||"—")+"\n  Action: "+(i.action||"none")+"\n";});}
+    else ctx+="No complaints on record.\n";
+
+    var prompt="You are an expert operations analyst for Techvestor, a short-term rental company. "
+      +"Based on the following real property data, provide a clear, actionable analysis for the operations team.\n\n"
+      +ctx+"\n"
+      +"Please provide:\n"
+      +"1. **Overall Status** — 1-2 sentence summary of the property's operational health\n"
+      +"2. **Key Issues** — bullet points of anything urgent or needing attention (permits expiring, service needed, noise alerts, unresolved complaints)\n"
+      +"3. **Recommendations** — specific next steps with priority order\n"
+      +"4. **Positive Notes** — anything that looks good or is well-managed\n\n"
+      +"Be specific, reference actual dates and numbers. If data is missing for a section, note it briefly and suggest loading that tracker tab. Use • for bullets and **bold** for section headers.";
+
+    var insights=await callClaude(prompt);
+    var insightEl=document.getElementById("ai-insights-text");
+    if(insightEl){
+      var formatted=insights.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>").replace(/^• /gm,'<span style="color:#0369a1">•</span> ').replace(/\n\n/g,"</p><p style='margin-top:8px'>").replace(/\n/g,"<br/>");
+      insightEl.innerHTML="<p>"+formatted+"</p>";
+    }
+  }catch(e){
+    var insightEl=document.getElementById("ai-insights-text");
+    if(insightEl)insightEl.innerHTML='<span style="color:#64748b">Could not generate insights. Make sure tracker tabs are loaded first, then search again.</span>';
+  }
+}
+
 // ── TOGGLES ───────────────────────────────────────────────────────────────────
 function toggleRef(){
   var el=document.getElementById("ref-extra"),btn=document.getElementById("ref-toggle-btn");
-  if(!el||!btn)return;
-  var open=el.style.display!=="none";
-  el.style.display=open?"none":"";
-  btn.textContent=open?"Show All":"Show Less";
+  if(!el||!btn)return;var open=el.style.display!=="none";el.style.display=open?"none":"";btn.textContent=open?"Show All":"Show Less";
 }
 function toggleOb(uid){
   var el=document.getElementById("ob-more-"+uid),btn=document.getElementById("ob-btn-"+uid);
-  if(!el||!btn)return;
-  var open=el.style.display!=="none";
-  el.style.display=open?"none":"";
-  btn.textContent=open?"Show More":"Show Less";
+  if(!el||!btn)return;var open=el.style.display!=="none";el.style.display=open?"none":"";btn.textContent=open?"Show More":"Show Less";
 }
 
 // ── LOAD ──────────────────────────────────────────────────────────────────────
-var cache={},activeTab="home";
+var globalCache={},activeTab="home";
 async function loadTab(id,force){
   var el=document.getElementById("content");
-  if(id==="home"){el.innerHTML=renderHome();return;}
-  if(cache[id]&&!force){el.innerHTML=renderResults(id,cache[id].results,cache[id].extra);return;}
+  if(id==="home"){el.innerHTML=renderHome();collectAllProperties();return;}
+  if(globalCache[id]&&!force){el.innerHTML=renderResults(id,globalCache[id].results,globalCache[id].extra);return;}
   var cfg=CFG[id];
-  el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading data…</div><div style="font-size:13px;color:#94a3b8;margin-top:6px">Fetching from Google Sheets</div></div>';
+  el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading data…</div></div>';
   try{
     var allResults=[],extra={};
     if(id==="onboarding"){
@@ -574,18 +877,33 @@ async function loadTab(id,force){
         var vd=await fetchSheet(cfg.sheetId,vs.range);
         allResults.push({sheetName:vs.name,result:analyzeVegetation(vs.name,vd)});
       }
+    } else if(id==="master"){
+      // Load main master tracker tab
+      el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading Master Tracker…</div></div>';
+      var masterData=await fetchSheet(cfg.sheetId,"MASTER TRACKER 1");
+      // Load each permit-type tab for Dropbox links
+      var dropboxTabResults=[];
+      for(var pi=0;pi<cfg.permitTabs.length;pi++){
+        var pt=cfg.permitTabs[pi];
+        el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading permit details: '+pt.name+'…</div></div>';
+        try{var ptd=await fetchSheet(cfg.sheetId,pt.name);dropboxTabResults.push({rr:ptd,type:pt.type});}
+        catch(e){console.warn("Could not load permit tab: "+pt.name);}
+      }
+      var dropboxLookup=buildDropboxLookup(dropboxTabResults);
+      allResults.push({sheetName:"MASTER TRACKER 1",result:analyzeMaster(masterData,dropboxLookup)});
     } else {
       for(var gi=0;gi<cfg.sheets.length;gi++){
         var gs=cfg.sheets[gi];
         el.innerHTML='<div class="stbox"><div class="spin"></div><div style="font-size:15px;font-weight:600;color:#334155">Loading "'+gs.name+'"…</div></div>';
         var gd=await fetchSheet(cfg.sheetId,gs.range);
-        var result=id==="permitting"?analyzePermitting(gd):id==="utilities"?analyzeUtilities(gd):{mode:"standard",summary:"No analyzer.",stats:[],tH:[],tR:[]};
+        var result=id==="permitting"?analyzePermitting(gd):id==="utilities"?analyzeUtilities(gd):{mode:"standard",summary:"",stats:[],tH:[],tR:[]};
         allResults.push({sheetName:gs.name,result:result});
       }
     }
-    cache[id]={results:allResults,extra:extra};
+    globalCache[id]={results:allResults,extra:extra};
     el.innerHTML=renderResults(id,allResults,extra);
     document.getElementById("upd").textContent="Updated "+new Date().toLocaleTimeString();
+    collectAllProperties();
   }catch(e){
     el.innerHTML='<div class="stbox"><div style="font-size:36px;margin-bottom:12px">⚠️</div>'
       +'<div style="font-weight:700;color:#dc2626;font-size:15px;margin-bottom:6px">Could not load data</div>'
@@ -600,7 +918,7 @@ function renderTabs(){
   }).join("");
 }
 function switchTab(id){activeTab=id;renderTabs();loadTab(id);}
-setInterval(function(){Object.keys(cache).forEach(function(id){delete cache[id];});if(activeTab!=="home")loadTab(activeTab,true);},REFRESH);
+setInterval(function(){Object.keys(globalCache).forEach(function(id){delete globalCache[id];});if(activeTab!=="home")loadTab(activeTab,true);},REFRESH);
 renderTabs();
 loadTab("home");
 </script>
