@@ -223,7 +223,12 @@ function analyzeMasterStats(rr){
     if(isYes(cv(row,13)))city++;
     if(isYes(cv(row,17)))county++;
     if(isYes(cv(row,22)))state++;
+    // Also scan all columns for "yes" under state-related headers as fallback
+    // State col W = index 22, but also try scanning if header says "state"
     var market=marketIdx>=0?cv(row,marketIdx):"";
+    if(!market){// fallback: try col C or D for market
+      market=cv(row,2)||cv(row,3)||"";
+    }
     if(market)marketMap[market]=(marketMap[market]||0)+1;
   });
   var marketData=Object.entries(marketMap).map(function(e){return{name:e[0],count:e[1]};}).sort(function(a,b){return b.count-a.count;});
@@ -450,9 +455,16 @@ function renderSearchBar(tabId){
 function filterTable(tabId){
   var inp=document.getElementById("search-"+tabId);if(!inp)return;
   var q=inp.value.toLowerCase().trim();
-  var rows=document.querySelectorAll("#tbl-"+tabId+" tbody tr");
-  var vis=0;rows.forEach(function(row){var show=!q||row.textContent.toLowerCase().includes(q);row.classList.toggle("hr",!show);if(show)vis++;});
-  var sc=document.getElementById("sc-"+tabId);if(sc)sc.textContent=q?vis+" results":"";
+  // Search across ALL tables with this tabId prefix
+  var allTables=document.querySelectorAll("[id^='tbl-"+tabId+"'] tbody tr, #tbl-"+tabId+" tbody tr");
+  var vis=0;
+  allTables.forEach(function(row){
+    var show=!q||row.textContent.toLowerCase().includes(q);
+    row.classList.toggle("hr",!show);
+    if(show)vis++;
+  });
+  var sc=document.getElementById("sc-"+tabId);
+  if(sc)sc.textContent=q?(vis+" result"+(vis===1?"":"s")):"";
 }
 
 function renderTable(tH,tR,wrapIdxs,tableId){
@@ -759,10 +771,20 @@ function onPropSearch(){
   var q=(document.getElementById("prop-search-input").value||"").toLowerCase().trim();
   var sug=document.getElementById("prop-suggestions");
   if(!sug)return;
-  if(!q||q.length<2){sug.innerHTML="";return;}
-  var matches=allPropertyNames.filter(function(n){return n.toLowerCase().includes(q);}).slice(0,8);
-  if(!matches.length){sug.innerHTML='<span style="color:rgba(255,255,255,.5);font-size:12px">No matches found — try loading more tracker tabs first</span>';return;}
-  sug.innerHTML=matches.map(function(n){return'<span class="prop-suggestion" onclick="lookupProperty(\''+esc(n).replace(/'/g,"&#39;")+'\')">'+esc(n)+'</span>';}).join("");
+  if(!q){sug.innerHTML="";return;}
+  var matches=allPropertyNames.filter(function(n){return n.toLowerCase().includes(q);}).slice(0,10);
+  if(!matches.length){
+    sug.innerHTML='<span style="color:rgba(255,255,255,.5);font-size:12px">No matches — try loading tracker tabs first</span>';
+    return;
+  }
+  sug.innerHTML=matches.map(function(n){
+    // Highlight the matching part
+    var lower=n.toLowerCase(),idx=lower.indexOf(q);
+    var highlighted=idx>=0
+      ? esc(n.slice(0,idx))+'<strong>'+esc(n.slice(idx,idx+q.length))+'</strong>'+esc(n.slice(idx+q.length))
+      : esc(n);
+    return'<span class="prop-suggestion" onclick="lookupProperty(\''+n.replace(/\\/g,"\\\\").replace(/'/g,"\\'")+'\')" title="'+esc(n)+'">'+highlighted+'</span>';
+  }).join("");
 }
 
 function lookupProperty(name){
